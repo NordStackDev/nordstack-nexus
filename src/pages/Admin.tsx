@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,17 +15,24 @@ import { Navigation } from "@/components/ui/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { 
-  Upload, 
-  FileText, 
-  Download, 
-  Trash2, 
-  Eye, 
+import {
+  Upload,
+  FileText,
+  Download,
+  Trash2,
+  Eye,
   BarChart3,
   Users,
-  MessageSquare
+  MessageSquare,
 } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
 interface Document {
@@ -33,6 +46,7 @@ interface Document {
   is_public: boolean;
   created_at: string;
   category: string;
+  file_url: string;
 }
 
 interface ContactMessage {
@@ -52,8 +66,10 @@ const Admin = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'documents' | 'upload' | 'messages' | 'stats'>('documents');
-  
+  const [activeTab, setActiveTab] = useState<
+    "documents" | "upload" | "messages" | "stats"
+  >("documents");
+
   // Upload form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -74,10 +90,10 @@ const Admin = () => {
   const fetchDocuments = async () => {
     try {
       const { data, error } = await supabase
-        .from('documents')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
+        .from("documents")
+        .select("*")
+        .order("created_at", { ascending: false });
+
       if (error) throw error;
       setDocuments(data || []);
     } catch (error) {
@@ -92,10 +108,10 @@ const Admin = () => {
   const fetchMessages = async () => {
     try {
       const { data, error } = await supabase
-        .from('contact_messages')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
+        .from("contact_messages")
+        .select("*")
+        .order("created_at", { ascending: false });
+
       if (error) throw error;
       setMessages(data || []);
     } catch (error) {
@@ -114,35 +130,33 @@ const Admin = () => {
     setIsUploading(true);
     try {
       // Upload file to Supabase Storage
-      const fileExt = selectedFile.name.split('.').pop();
+      const fileExt = selectedFile.name.split(".").pop();
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `documents/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('documents')
+        .from("documents")
         .upload(filePath, selectedFile);
 
       if (uploadError) throw uploadError;
 
       // Get public URL
       const { data: urlData } = supabase.storage
-        .from('documents')
+        .from("documents")
         .getPublicUrl(filePath);
 
       // Save document metadata to database
-      const { error: dbError } = await supabase
-        .from('documents')
-        .insert({
-          title,
-          description,
-          file_name: selectedFile.name,
-          file_type: selectedFile.type,
-          file_size: selectedFile.size,
-          file_url: urlData.publicUrl,
-          category,
-          is_public: isPublic,
-          uploaded_by: user.id,
-        });
+      const { error: dbError } = await supabase.from("documents").insert({
+        title,
+        description,
+        file_name: selectedFile.name,
+        file_type: selectedFile.type,
+        file_size: selectedFile.size,
+        file_url: urlData.publicUrl,
+        category,
+        is_public: isPublic,
+        uploaded_by: user.id,
+      });
 
       if (dbError) throw dbError;
 
@@ -157,10 +171,10 @@ const Admin = () => {
       setCategory("");
       setIsPublic(false);
       setSelectedFile(null);
-      
+
       // Refresh documents list
       fetchDocuments();
-      setActiveTab('documents');
+      setActiveTab("documents");
     } catch (error: any) {
       toast({
         title: "Fejl",
@@ -174,10 +188,7 @@ const Admin = () => {
 
   const deleteDocument = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from('documents')
-        .delete()
-        .eq('id', id);
+      const { error } = await supabase.from("documents").delete().eq("id", id);
 
       if (error) throw error;
 
@@ -199,9 +210,9 @@ const Admin = () => {
   const markMessageAsRead = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('contact_messages')
+        .from("contact_messages")
         .update({ is_read: true })
-        .eq('id', id);
+        .eq("id", id);
 
       if (error) throw error;
       fetchMessages();
@@ -215,65 +226,69 @@ const Admin = () => {
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('da-DK');
+    return new Date(dateString).toLocaleDateString("da-DK");
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation 
-        isAuthenticated={!!user} 
-        isAdmin={isAdmin} 
-        onLogout={signOut} 
+      <Navigation
+        isAuthenticated={!!user}
+        isAdmin={isAdmin}
+        onLogout={signOut}
       />
-      
+
       <div className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Administrer dokumenter og beskeder</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Admin Dashboard
+          </h1>
+          <p className="text-muted-foreground">
+            Administrer dokumenter og beskeder
+          </p>
         </div>
 
         {/* Navigation Tabs */}
         <div className="flex space-x-1 mb-8 bg-muted rounded-lg p-1">
           <Button
-            variant={activeTab === 'documents' ? 'default' : 'ghost'}
-            onClick={() => setActiveTab('documents')}
+            variant={activeTab === "documents" ? "default" : "ghost"}
+            onClick={() => setActiveTab("documents")}
             className="flex items-center space-x-2"
           >
             <FileText className="h-4 w-4" />
             <span>Dokumenter</span>
           </Button>
           <Button
-            variant={activeTab === 'upload' ? 'default' : 'ghost'}
-            onClick={() => setActiveTab('upload')}
+            variant={activeTab === "upload" ? "default" : "ghost"}
+            onClick={() => setActiveTab("upload")}
             className="flex items-center space-x-2"
           >
             <Upload className="h-4 w-4" />
             <span>Upload</span>
           </Button>
           <Button
-            variant={activeTab === 'messages' ? 'default' : 'ghost'}
-            onClick={() => setActiveTab('messages')}
+            variant={activeTab === "messages" ? "default" : "ghost"}
+            onClick={() => setActiveTab("messages")}
             className="flex items-center space-x-2"
           >
             <MessageSquare className="h-4 w-4" />
             <span>Beskeder</span>
-            {messages.filter(m => !m.is_read).length > 0 && (
+            {messages.filter((m) => !m.is_read).length > 0 && (
               <Badge variant="destructive" className="ml-2">
-                {messages.filter(m => !m.is_read).length}
+                {messages.filter((m) => !m.is_read).length}
               </Badge>
             )}
           </Button>
           <Button
-            variant={activeTab === 'stats' ? 'default' : 'ghost'}
-            onClick={() => setActiveTab('stats')}
+            variant={activeTab === "stats" ? "default" : "ghost"}
+            onClick={() => setActiveTab("stats")}
             className="flex items-center space-x-2"
           >
             <BarChart3 className="h-4 w-4" />
@@ -282,7 +297,7 @@ const Admin = () => {
         </div>
 
         {/* Documents Tab */}
-        {activeTab === 'documents' && (
+        {activeTab === "documents" && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -310,12 +325,14 @@ const Admin = () => {
                   {documents.map((doc) => (
                     <TableRow key={doc.id}>
                       <TableCell className="font-medium">{doc.title}</TableCell>
-                      <TableCell>{doc.category || 'Ingen'}</TableCell>
+                      <TableCell>{doc.category || "Ingen"}</TableCell>
                       <TableCell>{formatFileSize(doc.file_size)}</TableCell>
                       <TableCell>{doc.download_count}</TableCell>
                       <TableCell>
-                        <Badge variant={doc.is_public ? 'default' : 'secondary'}>
-                          {doc.is_public ? 'Offentlig' : 'Privat'}
+                        <Badge
+                          variant={doc.is_public ? "default" : "secondary"}
+                        >
+                          {doc.is_public ? "Offentlig" : "Privat"}
                         </Badge>
                       </TableCell>
                       <TableCell>{formatDate(doc.created_at)}</TableCell>
@@ -324,7 +341,7 @@ const Admin = () => {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => window.open(doc.file_url, '_blank')}
+                            onClick={() => window.open(doc.file_url, "_blank")}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
@@ -346,7 +363,7 @@ const Admin = () => {
         )}
 
         {/* Upload Tab */}
-        {activeTab === 'upload' && (
+        {activeTab === "upload" && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -394,7 +411,9 @@ const Admin = () => {
                   <Input
                     id="file"
                     type="file"
-                    onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                    onChange={(e) =>
+                      setSelectedFile(e.target.files?.[0] || null)
+                    }
                     required
                   />
                 </div>
@@ -411,7 +430,7 @@ const Admin = () => {
                 </div>
 
                 <Button type="submit" disabled={isUploading || !selectedFile}>
-                  {isUploading ? 'Uploader...' : 'Upload dokument'}
+                  {isUploading ? "Uploader..." : "Upload dokument"}
                 </Button>
               </form>
             </CardContent>
@@ -419,7 +438,7 @@ const Admin = () => {
         )}
 
         {/* Messages Tab */}
-        {activeTab === 'messages' && (
+        {activeTab === "messages" && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -433,11 +452,16 @@ const Admin = () => {
             <CardContent>
               <div className="space-y-4">
                 {messages.map((message) => (
-                  <Card key={message.id} className={!message.is_read ? 'border-primary' : ''}>
+                  <Card
+                    key={message.id}
+                    className={!message.is_read ? "border-primary" : ""}
+                  >
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-lg">{message.subject || 'Ingen emne'}</CardTitle>
+                          <CardTitle className="text-lg">
+                            {message.subject || "Ingen emne"}
+                          </CardTitle>
                           <CardDescription>
                             Fra: {message.name} ({message.email})
                             {message.company && ` - ${message.company}`}
@@ -472,7 +496,7 @@ const Admin = () => {
         )}
 
         {/* Stats Tab */}
-        {activeTab === 'stats' && (
+        {activeTab === "stats" && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -509,7 +533,7 @@ const Admin = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {messages.filter(m => !m.is_read).length}
+                  {messages.filter((m) => !m.is_read).length}
                 </div>
               </CardContent>
             </Card>

@@ -1,5 +1,5 @@
-import { useState, useEffect, createContext, useContext } from "react";
-import { User, Session } from "@supabase/supabase-js";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
+import type { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -8,7 +8,11 @@ interface AuthContextType {
   session: Session | null;
   isLoading: boolean;
   isAdmin: boolean;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName: string
+  ) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
@@ -16,11 +20,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
+  return ctx;
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -30,59 +32,69 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // Check if user is admin
-          setTimeout(async () => {
-            try {
-              const { data } = await supabase
-                .from('user_roles')
-                .select('role')
-                .eq('user_id', session.user.id)
-                .eq('role', 'admin')
-                .single();
-              
-              setIsAdmin(!!data);
-            } catch (error) {
-              setIsAdmin(false);
-            }
-          }, 0);
-        } else {
-          setIsAdmin(false);
-        }
-        
-        setIsLoading(false);
-      }
-    );
+  // prevent setState efter unmount
+  const alive = useRef(true);
+  useEffect(
+    () => () => {
+      alive.current = false;
+    },
+    []
+  );
 
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+  const checkAdminRole = async (userId: string) => {
+    const { data, error } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    if (!alive.current) return;
+
+    if (error) {
+      console.error("[useAuth] Role check error:", error);
+      setIsAdmin(false);
+      return;
+    }
+    setIsAdmin(Boolean(data));
+  };
+
+  // Initial session → ingen race
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!alive.current) return;
+
+      setSession(data.session ?? null);
+      setUser(data.session?.user ?? null);
+      if (data.session?.user) await checkAdminRole(data.session.user.id);
+
       setIsLoading(false);
+    })();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, s) => {
+      if (!alive.current) return;
+      setSession(s);
+      setUser(s?.user ?? null);
+      if (s?.user) {
+        await checkAdminRole(s.user.id);
+      } else {
+        setIsAdmin(false);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
+    const redirectUrl =
+      typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          full_name: fullName,
-        },
-      },
+      options: { emailRedirectTo: redirectUrl, data: { full_name: fullName } },
     });
 
     if (error) {
@@ -97,7 +109,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         description: "Tjek din email for at bekræfte din konto.",
       });
     }
-
     return { error };
   };
 
@@ -106,21 +117,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       email,
       password,
     });
-
     if (error) {
+      console.error("[useAuth] signIn error:", error);
       toast({
         title: "Fejl ved login",
         description: error.message,
         variant: "destructive",
       });
     }
-
     return { error };
   };
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
+      console.error("[useAuth] signOut error:", error);
       toast({
         title: "Fejl ved logout",
         description: error.message,
@@ -129,15 +140,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const value = {
-    user,
-    session,
-    isLoading,
-    isAdmin,
-    signUp,
-    signIn,
-    signOut,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ user, session, isLoading, isAdmin, signUp, signIn, signOut }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
