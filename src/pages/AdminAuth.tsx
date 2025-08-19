@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { Shield } from "lucide-react";
 
 const AdminAuth = () => {
   const { user, signInAdmin, isAdmin } = useAuth();
@@ -48,17 +49,24 @@ const AdminAuth = () => {
   };
 
   return (
-    <div className="flex min-h-[60vh] items-center justify-center bg-gray-50">
+    <div className="flex min-h-[80vh] items-center justify-center p-4">
       <div className="w-full max-w-md mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-6">
+        <div className="bg-card/80 backdrop-blur-md rounded-2xl shadow-elegant border border-border/50 p-8 flex flex-col gap-6 animate-scale-in">
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-2">Admin Login</h2>
-            <p className="text-gray-600">Log ind med dine admin legitimationsoplysninger</p>
+            <div className="w-16 h-16 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Shield className="h-8 w-8 text-primary-foreground" />
+            </div>
+            <h2 className="text-3xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
+              Admin Login
+            </h2>
+            <p className="text-muted-foreground">
+              Log ind med dine admin legitimationsoplysninger
+            </p>
           </div>
           
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-foreground">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -66,11 +74,11 @@ const AdminAuth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="mt-1"
+                className="mt-1 bg-background/50 border-border/50 focus:border-primary"
               />
             </div>
             <div>
-              <Label htmlFor="password">Adgangskode</Label>
+              <Label htmlFor="password" className="text-foreground">Adgangskode</Label>
               <Input
                 id="password"
                 type="password"
@@ -78,10 +86,14 @@ const AdminAuth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="mt-1"
+                className="mt-1 bg-background/50 border-border/50 focus:border-primary"
               />
             </div>
-            <Button type="submit" className="w-full mt-2" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              className="w-full mt-4 bg-primary hover:bg-primary-glow transition-all duration-300 shadow-glow hover:shadow-elegant" 
+              disabled={isLoading}
+            >
               {isLoading ? "Logger ind..." : "Log ind som Admin"}
             </Button>
           </form>
@@ -89,7 +101,7 @@ const AdminAuth = () => {
           <div className="text-center">
             <a
               href="/"
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-primary hover:text-primary-glow transition-colors duration-200"
             >
               Tilbage til forsiden
             </a>
