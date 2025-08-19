@@ -8,15 +8,16 @@ import { Suspense, lazy } from "react";
 import AppShell from "@/components/AppShell";
 import PageTransitionWrapper from "@/components/PageTransitionWrapper";
 import {
-  AdminRoute,
   ProtectedRoute,
   PublicOnlyRoute,
 } from "@/components/RouteGuards";
+import { AdminProtectedRoute } from "@/components/AdminProtectedRoute";
 
 const queryClient = new QueryClient();
 
 const Index = lazy(() => import("./pages/Index"));
 const Auth = lazy(() => import("./pages/Auth"));
+const AdminAuth = lazy(() => import("./pages/AdminAuth"));
 const Admin = lazy(() => import("./pages/Admin"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -33,8 +34,9 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route element={<PublicOnlyRoute />}>
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/admin/login" element={<AdminAuth />} />
                 </Route>
-                <Route element={<AdminRoute />}>
+                <Route element={<AdminProtectedRoute />}>
                   <Route path="/admin" element={<Admin />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />

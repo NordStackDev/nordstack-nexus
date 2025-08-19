@@ -6,8 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 export const loginAsAdmin = async (email: string, password: string) => {
   try {
     // Method 1: Using the edge function for admin verification
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    const supabaseUrl = "https://kzvxlkxjmdzodsxotoya.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6dnhsa3hqbWR6b2RzeG90b3lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1MDg5OTMsImV4cCI6MjA3MTA4NDk5M30.WOma97Vdo6OGRXFA99I66HIC_q7UTyDFj47G891dRkw";
     
     const response = await fetch(`${supabaseUrl}/functions/v1/admin-verify`, {
       method: 'POST',
