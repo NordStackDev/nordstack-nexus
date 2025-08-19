@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Navigation } from "@/components/ui/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -239,11 +238,7 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation
-        isAuthenticated={!!user}
-        isAdmin={isAdmin}
-        onLogout={signOut}
-      />
+  {/* Navigation provided by AppShell */}
 
       <div className="container mx-auto py-8 px-4">
         <div className="mb-8">

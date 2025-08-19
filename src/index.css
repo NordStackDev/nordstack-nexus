@@ -107,5 +107,29 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    transition: background-color 0.4s ease, color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .card-modern {
+    @apply rounded-[--radius] bg-card text-card-foreground;
+    box-shadow: var(--shadow-card);
+    background-image: var(--gradient-card);
+    transition: var(--transition-spring);
+  }
+
+  .btn-modern {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[--radius] text-sm font-medium focus-visible:outline-none;
+    transition: var(--transition-smooth);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  }
+
+  .input-modern {
+    @apply rounded-[--radius] bg-background border border-input px-3 py-2 text-base;
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.01);
+    transition: var(--transition-smooth);
   }
 }
