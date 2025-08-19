@@ -32,16 +32,22 @@ const Auth = () => {
   };
 
   return (
-    <div className="flex min-h-[60vh] items-center justify-center bg-gray-50">
+    <div className="flex min-h-[80vh] items-center justify-center p-4">
       <div className="w-full max-w-md mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg p-8 flex flex-col gap-6">
-          <h2 className="text-2xl font-bold text-center mb-2">
-            {isLogin ? "Log ind" : "Opret konto"}
-          </h2>
+        <div className="bg-card/80 backdrop-blur-md rounded-2xl shadow-elegant border border-border/50 p-8 flex flex-col gap-6 animate-scale-in">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
+              {isLogin ? "Velkommen tilbage" : "Opret din konto"}
+            </h2>
+            <p className="text-muted-foreground">
+              {isLogin ? "Log ind for at fortsætte" : "Kom i gang med Nordstack"}
+            </p>
+          </div>
+          
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
-                <Label htmlFor="fullName">Navn</Label>
+                <Label htmlFor="fullName" className="text-foreground">Navn</Label>
                 <Input
                   id="fullName"
                   type="text"
@@ -49,12 +55,12 @@ const Auth = () => {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
-                  className="mt-1"
+                  className="mt-1 bg-background/50 border-border/50 focus:border-primary"
                 />
               </div>
             )}
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-foreground">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -62,11 +68,11 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="mt-1"
+                className="mt-1 bg-background/50 border-border/50 focus:border-primary"
               />
             </div>
             <div>
-              <Label htmlFor="password">Adgangskode</Label>
+              <Label htmlFor="password" className="text-foreground">Adgangskode</Label>
               <Input
                 id="password"
                 type="password"
@@ -74,10 +80,14 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="mt-1"
+                className="mt-1 bg-background/50 border-border/50 focus:border-primary"
               />
             </div>
-            <Button type="submit" className="w-full mt-2" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              className="w-full mt-4 bg-primary hover:bg-primary-glow transition-all duration-300 shadow-glow hover:shadow-elegant" 
+              disabled={isLoading}
+            >
               {isLoading
                 ? "Vent venligst..."
                 : isLogin
@@ -85,20 +95,23 @@ const Auth = () => {
                 : "Opret konto"}
             </Button>
           </form>
-          <button
-            type="button"
-            className="text-sm text-blue-600 hover:underline focus:outline-none"
-            onClick={() => {
-              setIsLogin((v) => !v);
-              setEmail("");
-              setPassword("");
-              setFullName("");
-            }}
-          >
-            {isLogin
-              ? "Har du ikke en konto? Opret dig her."
-              : "Allerede bruger? Log ind her."}
-          </button>
+          
+          <div className="text-center">
+            <button
+              type="button"
+              className="text-sm text-primary hover:text-primary-glow transition-colors duration-200 focus:outline-none"
+              onClick={() => {
+                setIsLogin((v) => !v);
+                setEmail("");
+                setPassword("");
+                setFullName("");
+              }}
+            >
+              {isLogin
+                ? "Har du ikke en konto? Opret dig her."
+                : "Allerede bruger? Log ind her."}
+            </button>
+          </div>
         </div>
       </div>
     </div>
