@@ -1,4 +1,3 @@
-import { Navigation } from "@/components/ui/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,11 +9,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation 
-        isAuthenticated={!!user} 
-        isAdmin={isAdmin} 
-        onLogout={signOut} 
-      />
+  {/* Navigation provided by AppShell */}
       
       {/* Hero Section */}
       <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-gradient-hero overflow-hidden">
@@ -23,12 +18,9 @@ const Index = () => {
           <div className="max-w-5xl mx-auto">
             <div className="animate-fade-in">
               <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-8 tracking-tight">
-                Nordstack
+                NordStack Nexus
               </h1>
               <div className="relative inline-block">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-primary-glow mb-6 animate-glow">
-                  Pitch Sales Tracker
-                </h2>
                 <div className="absolute -inset-4 bg-primary/10 blur-xl rounded-full"></div>
               </div>
               <p className="text-xl sm:text-2xl text-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed">
