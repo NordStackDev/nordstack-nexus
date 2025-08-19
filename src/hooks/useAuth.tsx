@@ -86,8 +86,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, s) => {
-      // Debug: log auth state change events
-      console.log("[useAuth] onAuthStateChange event:", _event, "session:", s);
       if (!alive.current) return;
       setSession(s);
       setUser(s?.user ?? null);
@@ -140,9 +138,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInAdmin = async (email: string, password: string) => {
     try {
-      // Debug: log start
-      console.log("[useAuth] signInAdmin start", { email });
-
       // Authenticate via Supabase client (frontend)
       const { data: authData, error: authError } =
         await supabase.auth.signInWithPassword({
@@ -217,9 +212,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signOut = async () => {
     if (signingOutRef.current) {
-      console.log(
-        "[useAuth] signOut already in progress, ignoring duplicate call"
-      );
       return;
     }
 
@@ -227,9 +219,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsSigningOut(true);
 
     try {
-      console.log("[useAuth] signOut start");
       const before = await supabase.auth.getSession();
-      console.log("[useAuth] session before signOut:", before);
 
       // Supabase v2: ensure all tokens are cleared globally
       const { error } = await supabase.auth.signOut({ scope: "global" });
@@ -244,7 +234,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       const after = await supabase.auth.getSession();
-      console.log("[useAuth] session after signOut:", after);
 
       if (alive.current) {
         setUser(null);
