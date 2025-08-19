@@ -8,13 +8,17 @@ interface AuthContextType {
   session: Session | null;
   isLoading: boolean;
   isAdmin: boolean;
+  isSigningOut: boolean;
   signUp: (
     email: string,
     password: string,
     fullName: string
   ) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signInAdmin: (email: string, password: string) => Promise<{ error: any; isAdmin?: boolean }>;
+  signInAdmin: (
+    email: string,
+    password: string
+  ) => Promise<{ error: any; isAdmin?: boolean }>;
   signOut: () => Promise<void>;
 }
 
@@ -31,9 +35,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const { toast } = useToast();
 
-  // prevent setState efter unmount
+  const signingOutRef = useRef(false);
+
   const alive = useRef(true);
   useEffect(
     () => () => {
@@ -58,7 +64,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsAdmin(false);
         return;
       }
-      
       setIsAdmin(Boolean(data));
     } catch (error) {
       console.error("[useAuth] Unexpected error checking admin role:", error);
@@ -66,7 +71,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // Initial session → ingen race
+  // Initial session
   useEffect(() => {
     (async () => {
       const { data } = await supabase.auth.getSession();
@@ -75,21 +80,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(data.session ?? null);
       setUser(data.session?.user ?? null);
       if (data.session?.user) await checkAdminRole(data.session.user.id);
-
       setIsLoading(false);
     })();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, s) => {
+      // Debug: log auth state change events
+      console.log("[useAuth] onAuthStateChange event:", _event, "session:", s);
       if (!alive.current) return;
       setSession(s);
       setUser(s?.user ?? null);
-      if (s?.user) {
-        await checkAdminRole(s.user.id);
-      } else {
-        setIsAdmin(false);
-      }
+      if (s?.user) await checkAdminRole(s.user.id);
+      else setIsAdmin(false);
     });
 
     return () => subscription.unsubscribe();
@@ -137,65 +140,145 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInAdmin = async (email: string, password: string) => {
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-      
-      const response = await fetch(`${supabaseUrl}/functions/v1/admin-verify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseKey}`,
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // Debug: log start
+      console.log("[useAuth] signInAdmin start", { email });
 
-      const result = await response.json();
+      // Authenticate via Supabase client (frontend)
+      const { data: authData, error: authError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-      if (!response.ok) {
+      if (authError || !authData.user) {
+        console.error("[useAuth] signInAdmin auth error:", authError);
         toast({
           title: "Admin login fejl",
-          description: result.error || "Kunne ikke logge ind som admin",
+          description:
+            authError?.message || "Ugyldige legitimationsoplysninger",
           variant: "destructive",
         });
-        return { error: result.error, isAdmin: false };
+        return { error: authError, isAdmin: false };
       }
 
-      if (result.session) {
-        await supabase.auth.setSession(result.session);
+      // Check admin role
+      const { data: roleData, error: roleError } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", authData.user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+
+      if (roleError) {
+        console.error("[useAuth] Role check error after signIn:", roleError);
+        toast({
+          title: "Admin login fejl",
+          description: "Fejl ved tjek af admin-rolle",
+          variant: "destructive",
+        });
+        // logout to be safe
+        await supabase.auth.signOut({ scope: "global" });
+        return { error: roleError, isAdmin: false };
       }
+
+      if (!roleData) {
+        // Not an admin — clear session and inform user
+        await supabase.auth.signOut({ scope: "global" });
+        toast({
+          title: "Adgang nægtet",
+          description: "Du har ikke adminrettigheder",
+          variant: "destructive",
+        });
+        return { error: new Error("Access denied"), isAdmin: false };
+      }
+
+      // Success: authData.session should be set by SDK; update state proactively
+      if (authData.session) {
+        setSession(authData.session);
+      }
+
+      await checkAdminRole(authData.user.id);
 
       toast({
         title: "Admin login succesfuld",
         description: "Du er nu logget ind som administrator",
       });
-
       return { error: null, isAdmin: true };
     } catch (error: any) {
-      console.error("[useAuth] signInAdmin error:", error);
+      console.error("[useAuth] signInAdmin unexpected error:", error);
       toast({
         title: "Admin login fejl",
-        description: "Netværksfejl eller server utilgængelig",
+        description: error?.message || "Uventet fejl",
         variant: "destructive",
       });
-      return { error: error.message, isAdmin: false };
+      return { error, isAdmin: false };
     }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error("[useAuth] signOut error:", error);
+    if (signingOutRef.current) {
+      console.log(
+        "[useAuth] signOut already in progress, ignoring duplicate call"
+      );
+      return;
+    }
+
+    signingOutRef.current = true;
+    setIsSigningOut(true);
+
+    try {
+      console.log("[useAuth] signOut start");
+      const before = await supabase.auth.getSession();
+      console.log("[useAuth] session before signOut:", before);
+
+      // Supabase v2: ensure all tokens are cleared globally
+      const { error } = await supabase.auth.signOut({ scope: "global" });
+      if (error) {
+        console.error("[useAuth] signOut error:", error);
+        toast({
+          title: "Fejl ved logout",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const after = await supabase.auth.getSession();
+      console.log("[useAuth] session after signOut:", after);
+
+      if (alive.current) {
+        setUser(null);
+        setSession(null);
+        setIsAdmin(false);
+      }
+
+      toast({ title: "Logout succesfuld", description: "Du er nu logget ud" });
+    } catch (err: any) {
+      console.error("[useAuth] signOut unexpected error:", err);
       toast({
         title: "Fejl ved logout",
-        description: error.message,
+        description: err?.message || "Uventet fejl",
         variant: "destructive",
       });
+    } finally {
+      signingOutRef.current = false;
+      setIsSigningOut(false);
     }
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, session, isLoading, isAdmin, signUp, signIn, signInAdmin, signOut }}
+      value={{
+        user,
+        session,
+        isLoading,
+        isAdmin,
+        isSigningOut,
+        signUp,
+        signIn,
+        signInAdmin,
+        signOut,
+      }}
     >
       {children}
     </AuthContext.Provider>

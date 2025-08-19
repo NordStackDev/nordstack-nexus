@@ -6,9 +6,13 @@ export const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6dnhsa3hqbWR6b2RzeG90b3lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1MDg5OTMsImV4cCI6MjA3MTA4NDk5M30.WOma97Vdo6OGRXFA99I66HIC_q7UTyDFj47G891dRkw",
   {
     auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
+  // Use sessionStorage in browser so sessions don't persist across browser restarts/tabs
+  // This prevents stale localStorage sessions during development and ensures signOut
+  // clears the current tab session.
+  storage: typeof window !== 'undefined' ? sessionStorage : undefined,
+  persistSession: true,
+  autoRefreshToken: true,
+  detectSessionInUrl: true,
     },
   }
 );
