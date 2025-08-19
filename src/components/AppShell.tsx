@@ -3,19 +3,19 @@ import { NavLink } from "react-router-dom";
 
 export default function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <header className="shadow-elegant bg-card/80 backdrop-blur-md sticky top-0 z-10 border-b border-border/50">
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
+      <header className="shadow-sm bg-white sticky top-0 z-10">
         <nav className="container mx-auto flex items-center justify-between py-4 px-4">
-          <div className="font-bold text-2xl tracking-tight bg-gradient-primary bg-clip-text text-transparent">
+          <div className="font-bold text-xl tracking-tight">
             nordstack-nexus
           </div>
-          <div className="flex gap-6">
+          <div className="flex gap-4">
             <NavLink
               to="/"
               className={({ isActive }) =>
                 isActive
-                  ? "text-primary font-semibold relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:rounded-full"
-                  : "text-muted-foreground hover:text-primary transition-colors duration-200"
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-700 hover:text-blue-600 transition"
               }
             >
               Home
@@ -24,8 +24,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
               to="/admin"
               className={({ isActive }) =>
                 isActive
-                  ? "text-primary font-semibold relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:rounded-full"
-                  : "text-muted-foreground hover:text-primary transition-colors duration-200"
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-700 hover:text-blue-600 transition"
               }
             >
               Admin
@@ -34,10 +34,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
         </nav>
       </header>
       <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
-      <footer className="bg-card/50 border-t border-border/50 py-6 text-center text-sm text-muted-foreground backdrop-blur-sm">
-        <div className="container mx-auto">
-          &copy; {new Date().getFullYear()} NordStack Nexus - Professionel dokumenthåndtering og salgsanalyse
-        </div>
+      <footer className="bg-white border-t py-4 text-center text-sm text-gray-500">
+        &copy; {new Date().getFullYear()} NordStack Nexus
       </footer>
     </div>
   );
