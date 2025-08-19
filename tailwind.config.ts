@@ -109,6 +109,12 @@ export default {
 					'0%, 100%': { transform: 'translateY(0px)' },
 					'50%': { transform: 'translateY(-10px)' }
 				}
+				,
+				'slow-bounce': {
+					'0%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-6px)' },
+					'100%': { transform: 'translateY(0px)' }
+				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -117,6 +123,8 @@ export default {
 				'scale-in': 'scale-in 0.3s ease-out',
 				'glow': 'glow 2s ease-in-out infinite',
 				'float': 'float 3s ease-in-out infinite'
+				,
+				'slow-bounce': 'slow-bounce 2s ease-in-out infinite'
 			}
 		}
 	},

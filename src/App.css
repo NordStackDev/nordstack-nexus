@@ -1,42 +1,63 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root{
+  --app-max-width: 1200px;
 }
 
+/* Logo */
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  height: 5.5em;
+  padding: 1rem;
+  will-change: filter, transform;
+  transition: transform 260ms ease, filter 260ms ease;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.logo:hover { transform: translateY(-2px); filter: drop-shadow(0 8px 30px rgba(100,108,255,0.14)); }
+
+@keyframes logo-spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+
+/* Scroll-down arrow button (base) */
+.scroll-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--muted);
+  width: 96px;
+  height: 96px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  box-shadow: 0 10px 36px rgba(2,6,23,0.65);
+  transition: transform 220ms var(--ease), box-shadow 220ms var(--ease), background 220ms var(--ease);
+  cursor: pointer;
+  will-change: transform;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.scroll-button:hover {
+  transform: translateY(-10px) scale(1.06);
+  box-shadow: 0 18px 48px rgba(2,6,23,0.78);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.scroll-button:active {
+  animation: bounce 420ms cubic-bezier(.2,.8,.2,1);
 }
 
-.card {
-  padding: 2em;
+.arrow-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--accent);
+  display: block;
 }
 
-.read-the-docs {
-  color: #888;
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
 }
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-button, .arrow-icon { animation: none; transition: transform 180ms ease; }
+  .scroll-button:active { animation: none; transform: translateY(0); }
+}
+
+.card { padding: 1.25rem; border-radius: 0.75rem; }
+
+.read-the-docs { color: hsl(var(--muted)); }

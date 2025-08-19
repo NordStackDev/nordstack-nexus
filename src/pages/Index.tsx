@@ -12,8 +12,17 @@ const Index = () => {
   {/* Navigation provided by AppShell */}
       
       {/* Hero Section */}
-      <section className="relative py-32 px-4 sm:px-6 lg:px-8 bg-gradient-hero overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2260%22%20height=%2260%22%20viewBox=%220%200%2060%2060%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill=%22none%22%20fill-rule=%22evenodd%22%3E%3Cg%20fill=%22%239C92AC%22%20fill-opacity=%220.05%22%3E%3Ccircle%20cx=%2230%22%20cy=%2230%22%20r=%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+      <section className="relative py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Full-bleed gradient background layer (covers entire section) */}
+        <div className="absolute inset-0 -z-10 bg-gradient-hero bg-cover bg-center"></div>
+        {/* Soft radial overlay to avoid hard square fades in corners */}
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10"
+          style={{
+            background: 'radial-gradient(60% 60% at 90% 10%, rgba(99,102,241,0.12), transparent 35%), radial-gradient(50% 50% at 10% 90%, rgba(15,23,42,0.06), transparent 30%)',
+          }}
+        />
         <div className="container mx-auto text-center relative">
           <div className="max-w-5xl mx-auto">
             <div className="animate-fade-in">
@@ -27,23 +36,26 @@ const Index = () => {
                 Din professionelle løsning til salgs- og dokumenthåndtering. 
                 Organiser, del og spor dine vigtigste forretningsdokumenter med sikkerhed og kontrol.
               </p>
-              {!user && (
-                <Link to="/auth">
-                  <Button 
-                    size="lg" 
-                    className="px-8 py-4 text-lg font-semibold bg-primary hover:bg-primary-glow transition-all duration-300 shadow-glow hover:shadow-elegant hover:scale-105 animate-float"
-                  >
-                    Kom i gang <ArrowRight className="ml-2 h-6 w-6" />
-                  </Button>
-                </Link>
-              )}
+              {/* Scroll-down arrow */}
+              <div className="mt-8 flex justify-center">
+                <button
+                  aria-label="Scroll down"
+                  className="scroll-button"
+                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                >
+                  <svg className="arrow-icon animate-slow-bounce" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 relative">
+  <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 relative">
         <div className="container mx-auto">
           <div className="text-center mb-20 animate-fade-in">
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
