@@ -171,14 +171,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           description: "Fejl ved tjek af admin-rolle",
           variant: "destructive",
         });
-        // logout to be safe
-        await supabase.auth.signOut({ scope: "global" });
+  // logout to be safe
+  await supabase.auth.signOut();
         return { error: roleError, isAdmin: false };
       }
 
       if (!roleData) {
         // Not an admin — clear session and inform user
-        await supabase.auth.signOut({ scope: "global" });
+        await supabase.auth.signOut();
         toast({
           title: "Adgang nægtet",
           description: "Du har ikke adminrettigheder",
@@ -222,7 +222,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const before = await supabase.auth.getSession();
 
       // Supabase v2: ensure all tokens are cleared globally
-      const { error } = await supabase.auth.signOut({ scope: "global" });
+  const { error } = await supabase.auth.signOut();
       if (error) {
         console.error("[useAuth] signOut error:", error);
         toast({
