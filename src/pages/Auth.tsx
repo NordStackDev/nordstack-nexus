@@ -36,18 +36,22 @@ const Auth = () => {
       <div className="w-full max-w-md mx-auto">
         <div className="bg-card/80 backdrop-blur-md rounded-2xl shadow-elegant border border-border/50 p-8 flex flex-col gap-6 animate-scale-in">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold mb-2 text-foreground">
               {isLogin ? "Velkommen tilbage" : "Opret din konto"}
             </h2>
-            <p className="text-muted-foreground">
-              {isLogin ? "Log ind for at fortsætte" : "Kom i gang med Nordstack"}
+            <p className="text-muted">
+              {isLogin
+                ? "Log ind for at fortsætte"
+                : "Kom i gang med Nordstack"}
             </p>
           </div>
-          
+
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
-                <Label htmlFor="fullName" className="text-foreground">Navn</Label>
+                <Label htmlFor="fullName" className="text-foreground">
+                  Navn
+                </Label>
                 <Input
                   id="fullName"
                   type="text"
@@ -60,7 +64,9 @@ const Auth = () => {
               </div>
             )}
             <div>
-              <Label htmlFor="email" className="text-foreground">Email</Label>
+              <Label htmlFor="email" className="text-foreground">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -72,7 +78,9 @@ const Auth = () => {
               />
             </div>
             <div>
-              <Label htmlFor="password" className="text-foreground">Adgangskode</Label>
+              <Label htmlFor="password" className="text-foreground">
+                Adgangskode
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -83,9 +91,9 @@ const Auth = () => {
                 className="mt-1 bg-background/50 border-border/50 focus:border-primary"
               />
             </div>
-            <Button 
-              type="submit" 
-              className="w-full mt-4 bg-primary hover:bg-primary-glow transition-all duration-300 shadow-glow hover:shadow-elegant" 
+            <Button
+              type="submit"
+              className="w-full mt-4 btn-primary"
               disabled={isLoading}
             >
               {isLoading
@@ -95,7 +103,7 @@ const Auth = () => {
                 : "Opret konto"}
             </Button>
           </form>
-          
+
           <div className="text-center">
             <button
               type="button"

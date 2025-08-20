@@ -1,183 +1,227 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/hooks/useAuth";
-import { ArrowRight, FileText, Shield, Upload, BarChart3 } from "lucide-react";
+import { BackgroundBeams } from "@/components/BackgroundBeams";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
 
-const Index = () => {
-  const { user, isAdmin, signOut } = useAuth();
+// Features
+const features = [
+  {
+    title: "Feature 1",
+    description: "Beskrivelse af feature 1",
+    icon: ArrowRight,
+  },
+  {
+    title: "Feature 2",
+    description: "Beskrivelse af feature 2",
+    icon: ArrowRight,
+  },
+  {
+    title: "Feature 3",
+    description: "Beskrivelse af feature 3",
+    icon: ArrowRight,
+  },
+  {
+    title: "Feature 4",
+    description: "Beskrivelse af feature 4",
+    icon: ArrowRight,
+  },
+];
+
+// Mockup Display
+const MockupDisplay: React.FC = () => {
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
   return (
-    <div className="min-h-screen bg-background">
-  {/* Navigation provided by AppShell */}
-      
-      {/* Hero Section */}
-      <section className="relative py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Full-bleed gradient background layer (covers entire section) */}
-        <div className="absolute inset-0 -z-10 bg-gradient-hero bg-cover bg-center"></div>
-        {/* Soft radial overlay to avoid hard square fades in corners */}
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10"
-          style={{
-            background: 'radial-gradient(60% 60% at 90% 10%, rgba(99,102,241,0.12), transparent 35%), radial-gradient(50% 50% at 10% 90%, rgba(15,23,42,0.06), transparent 30%)',
-          }}
-        />
-        <div className="container mx-auto text-center relative">
-          <div className="max-w-5xl mx-auto">
-            <div className="animate-fade-in">
-              <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-8 tracking-tight">
+    <div className="relative w-full flex justify-center items-center overflow-visible px-6">
+      <div
+        className="relative w-[200px] sm:w-[320px] md:w-[360px] lg:w-[400px] xl:w-[440px] 2xl:w-[480px] 
+                   h-[340px] sm:h-[440px] md:h-[480px] lg:h-[520px] xl:h-[560px] 2xl:h-[600px]"
+        style={{ perspective: 1200 }}
+      >
+        {displayMockups.map((mockup, idx) => {
+          if (isMobile && idx !== 1) return null; // kun midten på mobil
+          const variant = mockupVariants[idx];
+
+          const translateXClass =
+            idx === 0
+              ? "-translate-x-[40%] -rotate-6 hidden sm:flex"
+              : idx === 1
+              ? "-translate-x-1/2 rotate-0"
+              : "translate-x-[40%] rotate-6 hidden sm:flex";
+
+          return (
+            <motion.div
+              key={idx}
+              initial={variant.initial}
+              animate={variant.animate}
+              transition={variant.transition}
+              className={`absolute left-1/2 top-1/2 -translate-y-1/2 ${translateXClass} 
+                          w-[80px] sm:w-36 md:w-44 lg:w-48 xl:w-52 2xl:w-56 
+                          aspect-[9/19] rounded-3xl flex justify-center items-center overflow-visible 
+                          border-4 border-white/20 bg-black`}
+              style={{
+                zIndex: idx === 1 ? 30 : 20,
+                boxShadow:
+                  idx === 1
+                    ? "0 24px 60px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.12)"
+                    : "0 16px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)",
+              }}
+            >
+              <img
+                src={mockup.src}
+                alt={mockup.alt}
+                draggable={false}
+                className="relative w-full h-full object-contain rounded-3xl border-2 border-white/10"
+              />
+              {/* Details */}
+              <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-[rgba(255,255,255,0.06)] rounded-full pointer-events-none" />
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-16 h-3 bg-[rgba(255,255,255,0.04)] rounded-full pointer-events-none" />
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// Main Page
+const Index: React.FC = () => {
+  const { user } = useAuth();
+
+  const scrollToFeatures = () => {
+    const el = document.getElementById("features");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <div className="relative min-h-screen overflow-x-hidden overflow-y-visible">
+      <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
+
+      <div className="relative z-10">
+        {/* Hero */}
+        <section className="bg-[color:var(--card)] dark:bg-background pt-8 sm:pt-10 md:pt-14 lg:pt-20 pb-12">
+          <div
+            className="relative grid max-w-screen-xl xl:max-w-[1200px] 2xl:max-w-[1320px] 
+                          px-2 sm:px-4 md:px-8 mx-auto lg:grid-cols-12 gap-10 lg:gap-16 items-center"
+          >
+            {/* Tekst */}
+            <div className="lg:col-span-12 flex flex-col justify-center items-center text-center">
+              <h1 className="text-4xl md:text-5xl xl:text-6xl font-extrabold text-foreground mb-6 leading-tight">
                 NordStack Nexus
               </h1>
-              <div className="relative inline-block">
-                <div className="absolute -inset-4 bg-primary/10 blur-xl rounded-full"></div>
-              </div>
-              <p className="text-xl sm:text-2xl text-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Din professionelle løsning til salgs- og dokumenthåndtering. 
-                Organiser, del og spor dine vigtigste forretningsdokumenter med sikkerhed og kontrol.
+              <p className="text-lg md:text-xl text-muted mb-8 max-w-2xl mx-auto">
+                Din professionelle løsning til salgs- og dokumenthåndtering.
+                Organiser, del og spor dine vigtigste forretningsdokumenter med
+                sikkerhed og kontrol.
               </p>
-              {/* Scroll-down arrow */}
-              <div className="mt-8 flex justify-center">
-                <button
-                  aria-label="Scroll down"
-                  className="scroll-button"
-                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+
+              <div className="flex gap-4 flex-wrap justify-center">
+                <Link
+                  to={user ? "/dashboard" : "/auth"}
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg 
+                             bg-[color:var(--cta-bg)] text-[color:var(--cta-foreground)] 
+                             hover:bg-[color:var(--secondary-bg)] transition"
                 >
-                  <svg className="arrow-icon animate-slow-bounce" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <polyline points="19 12 12 19 5 12"></polyline>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-  <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 relative">
-        <div className="container mx-auto">
-          <div className="text-center mb-20 animate-fade-in">
-            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
-              Hvad vi tilbyder
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Nordstack leverer moderne løsninger til virksomheder, der ønsker at optimere 
-              deres salgsprocesser og dokumenthåndtering med avanceret teknologi.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="bg-gradient-card border-accent/50 hover:border-primary/50 transition-all duration-300 hover:shadow-card hover:scale-105 group animate-scale-in">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto w-16 h-16 bg-gradient-accent rounded-xl flex items-center justify-center mb-6 group-hover:animate-float">
-                  <FileText className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl font-semibold">Dokumenthåndtering</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center text-muted-foreground">
-                  Upload, organiser og del dokumenter sikkert med avanceret adgangskontrol og versionstyring.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-card border-accent/50 hover:border-primary/50 transition-all duration-300 hover:shadow-card hover:scale-105 group animate-scale-in [animation-delay:0.1s]">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto w-16 h-16 bg-gradient-accent rounded-xl flex items-center justify-center mb-6 group-hover:animate-float">
-                  <Shield className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl font-semibold">Sikker adgang</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center text-muted-foreground">
-                  Rollebaseret adgangskontrol med enterprise-grade sikkerhed sikrer kun autoriseret adgang.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-card border-accent/50 hover:border-primary/50 transition-all duration-300 hover:shadow-card hover:scale-105 group animate-scale-in [animation-delay:0.2s]">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto w-16 h-16 bg-gradient-accent rounded-xl flex items-center justify-center mb-6 group-hover:animate-float">
-                  <Upload className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl font-semibold">Let upload</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center text-muted-foreground">
-                  Intuitivt drag-and-drop interface med automatisk kategorisering og metadata-ekstraktion.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-card border-accent/50 hover:border-primary/50 transition-all duration-300 hover:shadow-card hover:scale-105 group animate-scale-in [animation-delay:0.3s]">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto w-16 h-16 bg-gradient-accent rounded-xl flex items-center justify-center mb-6 group-hover:animate-float">
-                  <BarChart3 className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-xl font-semibold">Analyse & rapporter</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center text-muted-foreground">
-                  Avancerede analytics med real-time statistikker og detaljerede performance-rapporter.
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-accent relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%22100%22%20height=%22100%22%20viewBox=%220%200%20100%20100%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg%20fill-rule=%22evenodd%22%3E%3Cg%20fill=%22%23A78BFA%22%20fill-opacity=%220.03%22%3E%3Cpath%20d=%22M50%2050h50v50H50z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
-        <div className="container mx-auto relative">
-          <div className="max-w-5xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-8 animate-fade-in">
-              Om Nordstack
-            </h2>
-            <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-              <p className="animate-fade-in [animation-delay:0.1s]">
-                Vi er specialister i at udvikle moderne webapplikationer med fokus på 
-                brugeroplevelse, sikkerhed og skalerbarhed. Vores Pitch Sales Tracker er bygget til 
-                at understøtte virksomheder i deres digitale transformation.
-              </p>
-              <p className="animate-fade-in [animation-delay:0.2s]">
-                Med vores platform kan du centralisere din dokumenthåndtering, 
-                forbedre samarbejdet og få bedre kontrol over dine salgsprocesser 
-                gennem avanceret analytics og intelligent automatisering.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      {!user && (
-        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-hero relative overflow-hidden">
-          <div className="absolute inset-0 bg-primary/5"></div>
-          <div className="container mx-auto text-center relative">
-            <div className="animate-fade-in">
-              <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-8">
-                Klar til at komme i gang?
-              </h2>
-              <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
-                Kontakt os i dag for at lære mere om, hvordan Nordstack kan transformere 
-                din virksomheds dokumenthåndtering og salgsprocesser.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link to="/auth">
-                  <Button 
-                    size="lg" 
-                    className="px-8 py-4 text-lg font-semibold bg-primary hover:bg-primary-glow transition-all duration-300 shadow-glow hover:shadow-elegant hover:scale-105"
-                  >
-                    Log ind eller registrer dig
-                  </Button>
+                  <ArrowRight className="w-5 h-5 mr-2" />
+                  {user ? "Gå til Dashboard" : "Kom i gang"}
+                </Link>
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg border 
+                             border-[color:var(--border)] text-muted 
+                             hover:bg-[rgba(255,255,255,0.04)] transition"
+                >
+                  Kontakt os
                 </Link>
               </div>
             </div>
           </div>
         </section>
-      )}
+
+        {/* Projekter Section */}
+        <section
+          id="projects"
+          className="relative py-20 sm:py-24 bg-transparent"
+        >
+          <div className="max-w-2xl mx-auto text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Projekter</h2>
+            <p className="text-lg text-muted-foreground">
+              Se et udvalg af vores projekter og løsninger, der illustrerer
+              hvordan NordStack Nexus kan bruges i praksis.
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <MockupDisplay />
+          </div>
+        </section>
+
+        {/* Scroll Arrow */}
+        <div className="flex justify-center mt-32">
+          <button
+            aria-label="Scroll ned til features"
+            onClick={scrollToFeatures}
+            className="group flex flex-col items-center focus:outline-none"
+            type="button"
+          >
+            <span className="animate-bounce">
+              <ArrowRight
+                className="w-10 h-10 text-muted rotate-90 group-hover:text-foreground transition-colors duration-200"
+                aria-hidden="true"
+              />
+            </span>
+            <span className="sr-only">Scroll ned</span>
+          </button>
+        </div>
+
+        {/* Features */}
+        <section id="features" className="py-32 px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20 mt-16 animate-fade-in">
+            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-8">
+              Hvad vi tilbyder
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Nordstack leverer moderne løsninger til virksomheder, der ønsker
+              at optimere deres salgsprocesser og dokumenthåndtering med
+              avanceret teknologi.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, idx) => (
+              <Card
+                key={idx}
+                className="p-6 hover:scale-105 transition-transform duration-300 group"
+              >
+                <CardHeader className="text-center pb-4">
+                  <div
+                    className="mx-auto w-16 h-16 rounded-xl flex items-center justify-center mb-6 
+                                  bg-transparent border border-[rgba(255,255,255,0.03)] 
+                                  group-hover:shadow-card"
+                  >
+                    <feature.icon className="w-8 h-8 text-muted" />
+                  </div>
+                  <CardTitle className="text-xl font-semibold">
+                    {feature.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-center text-muted">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   );
 };
