@@ -35,6 +35,38 @@ const features = [
   },
 ];
 
+// Mockup data
+const displayMockups = [
+  {
+    src: "/mockups/mockup1.png",
+    alt: "Mockup 1",
+  },
+  {
+    src: "/mockups/mockup2.png",
+    alt: "Mockup 2",
+  },
+  {
+    src: "/mockups/mockup3.png",
+    alt: "Mockup 3",
+  },
+];
+
+// Mockup animation varianter (uden transition)
+const mockupVariants = [
+  {
+    initial: { opacity: 0, x: -50, rotate: -6 },
+    animate: { opacity: 1, x: 0, rotate: -6 },
+  },
+  {
+    initial: { opacity: 0, y: 50 },
+    animate: { opacity: 1, y: 0 },
+  },
+  {
+    initial: { opacity: 0, x: 50, rotate: 6 },
+    animate: { opacity: 1, x: 0, rotate: 6 },
+  },
+];
+
 // Mockup Display
 const MockupDisplay: React.FC = () => {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
@@ -62,7 +94,7 @@ const MockupDisplay: React.FC = () => {
               key={idx}
               initial={variant.initial}
               animate={variant.animate}
-              transition={variant.transition}
+              transition={{ duration: 0.6 + idx * 0.2, ease: "easeOut" }}
               className={`absolute left-1/2 top-1/2 -translate-y-1/2 ${translateXClass} 
                           w-[80px] sm:w-36 md:w-44 lg:w-48 xl:w-52 2xl:w-56 
                           aspect-[9/19] rounded-3xl flex justify-center items-center overflow-visible 
@@ -146,25 +178,10 @@ const Index: React.FC = () => {
           </div>
         </section>
 
-        {/* Projekter Section */}
-        <section
-          id="projects"
-          className="relative py-20 sm:py-24 bg-transparent"
-        >
-          <div className="max-w-2xl mx-auto text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Projekter</h2>
-            <p className="text-lg text-muted-foreground">
-              Se et udvalg af vores projekter og løsninger, der illustrerer
-              hvordan NordStack Nexus kan bruges i praksis.
-            </p>
-          </div>
-          <div className="flex justify-center">
-            <MockupDisplay />
-          </div>
-        </section>
+  {/* Projekter Section removed here and moved below Features for better flow */}
 
         {/* Scroll Arrow */}
-        <div className="flex justify-center mt-32">
+        <div className="flex justify-center mt-12">
           <button
             aria-label="Scroll ned til features"
             onClick={scrollToFeatures}
@@ -219,6 +236,34 @@ const Index: React.FC = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </section>
+
+        {/* Projekter Section (moved below Features) */}
+        <section id="projects" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-transparent">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl sm:text-4xl font-bold mb-4">Projekter</h3>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Se et udvalg af vores projekter og løsninger — klik for at se flere detaljer.
+              </p>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 items-start">
+              {displayMockups.map((m, i) => (
+                <article key={i} className="group bg-card/60 p-4 rounded-2xl border border-border/30 hover:shadow-glow transition transform hover:-translate-y-2">
+                  <img src={m.src} alt={m.alt} className="w-full h-44 object-cover rounded-xl mb-4" />
+                  <h4 className="font-semibold text-lg text-foreground mb-2">Projekt {i + 1}</h4>
+                  <p className="text-sm text-muted-foreground">Kort beskrivelse af projektet med fokus på værdi og outcome.</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-8 flex justify-center">
+              <Link to="/projects" className="inline-flex items-center px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary-glow shadow-glow">
+                Se flere projekter
+              </Link>
+            </div>
           </div>
         </section>
       </div>
