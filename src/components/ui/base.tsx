@@ -1,38 +1,63 @@
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, InputHTMLAttributes } from "react";
+import clsx from "clsx";
+
+/* ------------------ BUTTON ------------------ */
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "primary" | "cta" | "ghost";
+};
 
 export function Button({
   className = "",
+  variant = "primary",
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement>) {
+}: ButtonProps) {
+  const base = "btn-modern px-4 py-2";
+  const styles = {
+    primary: "btn-primary",
+    cta: "btn-cta",
+    ghost:
+      "bg-transparent border border-[color:var(--border)] hover:border-[color:var(--border)] text-[color:var(--muted)] hover:text-[color:var(--foreground)]",
+  };
+
   return (
-    <button
-      className={`px-4 py-2 rounded-lg bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400 ${className}`}
-      {...props}
-    />
+    <button className={clsx(base, styles[variant], className)} {...props} />
   );
 }
 
+/* ------------------ INPUT ------------------ */
 export function Input({
   className = "",
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) {
+}: InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <input
-      className={`px-3 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition bg-white text-gray-900 ${className}`}
+    <input className={clsx("input-modern w-full", className)} {...props} />
+  );
+}
+
+/* ------------------ CARD ------------------ */
+type CardProps = React.HTMLAttributes<HTMLDivElement> & {
+  hoverable?: boolean;
+};
+
+export function Card({
+  className = "",
+  hoverable = false,
+  ...props
+}: CardProps) {
+  return (
+    <div
+      className={clsx(
+        "card-modern p-6",
+        hoverable &&
+          "transition-transform hover:-translate-y-1 hover:shadow-glow",
+        className
+      )}
       {...props}
     />
   );
 }
 
-export function Card({
-  className = "",
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={`bg-white rounded-xl shadow p-6 ${className}`} {...props} />
-  );
-}
-
+/* ------------------ STAT ------------------ */
 export function Stat({
   label,
   value,
@@ -41,9 +66,11 @@ export function Stat({
   value: string | number;
 }) {
   return (
-    <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg">
-      <span className="text-2xl font-bold text-gray-900">{value}</span>
-      <span className="text-xs text-gray-500 mt-1">{label}</span>
+    <div className="flex flex-col items-center p-4 rounded-[var(--radius)] bg-[color:var(--card)] shadow-card">
+      <span className="text-3xl font-extrabold tracking-tight text-card-foreground">
+        {value}
+      </span>
+      <span className="mt-1 text-sm text-muted">{label}</span>
     </div>
   );
 }

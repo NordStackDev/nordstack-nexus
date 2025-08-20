@@ -2,134 +2,158 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
+/* 🌑 Design tokens and modern dark theme for NordStack */
 @layer base {
   :root {
-    /* Modern dark theme as default */
-    --background: 222 16% 6%;
-    --foreground: 210 40% 95%;
-    --card: 222 16% 8%;
-    --card-foreground: 210 40% 95%;
-    --popover: 222 16% 8%;
-    --popover-foreground: 210 40% 95%;
-    --primary: 234 89% 74%;
-    --primary-foreground: 222 16% 6%;
-    --primary-glow: 234 89% 84%;
-    --secondary: 240 10% 15%;
-    --secondary-foreground: 210 40% 95%;
-    --muted: 240 8% 12%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 240 12% 18%;
-    --accent-foreground: 210 40% 95%;
-    --destructive: 0 75% 65%;
-    --destructive-foreground: 210 40% 95%;
-    --border: 240 8% 18%;
-    --input: 240 8% 18%;
-    --ring: 234 89% 74%;
-    
-    /* Beautiful gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(234 89% 74%), hsl(234 89% 84%));
-    --gradient-hero: linear-gradient(135deg, hsl(222 16% 6%) 0%, hsl(234 20% 12%) 50%, hsl(234 89% 74% / 0.1) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(240 8% 12%), hsl(240 10% 15%));
-    --gradient-accent: linear-gradient(135deg, hsl(234 89% 74% / 0.1), hsl(234 89% 84% / 0.05));
-    
-    /* Shadows */
-    --shadow-elegant: 0 20px 40px -12px hsl(222 16% 3% / 0.8);
-    --shadow-glow: 0 0 60px hsl(234 89% 74% / 0.3);
-    --shadow-card: 0 8px 32px hsl(222 16% 3% / 0.6);
-    
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    
-    --radius: 0.75rem;
+    /* Minimalist gray/white palette */
+    --background: 0 0% 6%; /* #0f0f0f */
+    --foreground: 0 0% 98%; /* #fafafa */
+    --muted: 0 0% 65%; /* #a0a0a0 */
 
-    --sidebar-background: 222 16% 8%;
-    --sidebar-foreground: 210 40% 95%;
-    --sidebar-primary: 234 89% 74%;
-    --sidebar-primary-foreground: 222 16% 6%;
-    --sidebar-accent: 240 12% 18%;
-    --sidebar-accent-foreground: 210 40% 95%;
-    --sidebar-border: 240 8% 18%;
-    --sidebar-ring: 234 89% 74%;
+    /* Border / surfaces */
+    --border: 0 0% 20%; /* #333 */
+    --card: 0 0% 6%; /* same as background */
+    --card-foreground: var(--foreground);
+
+    /* Buttons */
+    --cta-bg: 0 0% 98%; /* white */
+    --cta-foreground: 0 0% 6%; /* dark text */
+    --secondary-bg: 0 0% 88%; /* light gray */
+    --secondary-foreground: 0 0% 6%;
+
+    /* Shadows and motion */
+    --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.6);
+    --shadow-elegant: 0 14px 40px rgba(0, 0, 0, 0.65);
+    --transition-smooth: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.36s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --radius: 0.75rem;
   }
 
   .light {
-    /* Light theme for those who prefer it */
-    --background: 0 0% 98%;
-    --foreground: 222 16% 15%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 16% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 16% 15%;
-    --primary: 234 89% 64%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 234 89% 74%;
-    --secondary: 210 15% 92%;
-    --secondary-foreground: 222 16% 15%;
-    --muted: 210 15% 96%;
-    --muted-foreground: 215 20% 45%;
-    --accent: 210 15% 88%;
-    --accent-foreground: 222 16% 15%;
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 210 15% 88%;
-    --input: 210 15% 88%;
-    --ring: 234 89% 64%;
-    
-    --gradient-primary: linear-gradient(135deg, hsl(234 89% 64%), hsl(234 89% 74%));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 98%) 0%, hsl(210 15% 96%) 50%, hsl(234 89% 64% / 0.1) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 15% 98%));
-    --gradient-accent: linear-gradient(135deg, hsl(234 89% 64% / 0.1), hsl(234 89% 74% / 0.05));
-    
-    --shadow-elegant: 0 20px 40px -12px hsl(222 16% 15% / 0.15);
-    --shadow-glow: 0 0 60px hsl(234 89% 64% / 0.3);
-    --shadow-card: 0 8px 32px hsl(222 16% 15% / 0.1);
-    
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222 16% 15%;
-    --sidebar-primary: 234 89% 64%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 210 15% 96%;
-    --sidebar-accent-foreground: 222 16% 15%;
-    --sidebar-border: 210 15% 88%;
-    --sidebar-ring: 234 89% 64%;
+    /* reserved for accessibility light theme */
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
-    transition: background-color 0.4s ease, color 0.3s ease;
+    transition: background-color 0.4s ease, color 0.35s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 }
 
+/* 🧩 Components */
 @layer components {
+  /* Cards */
   .card-modern {
-    @apply rounded-[--radius] bg-card text-card-foreground;
+    @apply rounded-[var(--radius)];
+    background: transparent;
+    border: 1px solid hsl(var(--border));
+    color: var(--card-foreground);
     box-shadow: var(--shadow-card);
-    background-image: var(--gradient-card);
     transition: var(--transition-spring);
   }
+  .card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elegant);
+  }
 
+  /* Buttons */
   .btn-modern {
-    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[--radius] text-sm font-medium focus-visible:outline-none;
+    @apply inline-flex items-center justify-center gap-3 whitespace-nowrap text-sm font-medium focus-visible:outline-none;
+    border-radius: var(--radius);
     transition: var(--transition-smooth);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    will-change: transform, box-shadow;
   }
 
+  /* Primary CTA: white background, dark text */
+  .btn-primary {
+    @apply btn-modern;
+    background: hsl(var(--cta-bg));
+    color: hsl(var(--cta-foreground));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  }
+  .btn-primary:hover {
+    background: hsl(var(--secondary-bg));
+  }
+
+  /* Secondary: light gray background, dark text */
+  .btn-cta {
+    @apply btn-modern;
+    background: hsl(var(--secondary-bg));
+    color: hsl(var(--secondary-foreground));
+    border: 1px solid hsl(var(--border));
+  }
+  .btn-cta:hover {
+    background: hsl(0 0% 78%);
+  }
+
+  /* Inputs */
   .input-modern {
-    @apply rounded-[--radius] bg-background border border-input px-3 py-2 text-base;
-    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.01);
+    @apply rounded-[var(--radius)] px-3 py-2 text-base text-foreground bg-transparent;
+    border: 1px solid hsl(var(--border));
     transition: var(--transition-smooth);
   }
+  .input-modern:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.04);
+    border-color: hsl(var(--border));
+  }
+
+  /* Layout helpers */
+  .hero-plate {
+    @apply w-full rounded-[var(--radius)] overflow-hidden relative;
+    background: hsl(var(--background));
+    box-shadow: var(--shadow-elegant);
+  }
+
+  .services-grid {
+    @apply grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .service-card {
+    @apply card-modern p-6;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+  }
+
+  .saas-mockup {
+    @apply rounded-[var(--radius)] shadow-card overflow-hidden;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.02),
+      rgba(0, 0, 0, 0.06)
+    );
+  }
+
+  .testimonial-rail {
+    @apply flex gap-6 items-center overflow-x-auto py-4;
+  }
+
+  .testimonial-card {
+    @apply min-w-[280px] p-4 rounded-[var(--radius)] bg-[color:var(--card)] text-card-foreground;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+  }
+
+  .footer-structured {
+    @apply bg-[color:var(--card)] text-card-foreground py-12;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  /* Animations */
+  .enter-fade {
+    animation: fade-in 0.7s ease-out both;
+  }
+  .enter-scale {
+    animation: scale-in 0.45s ease-out both;
+  }
+}
+
+/* Small helper */
+.rounded-lg {
+  border-radius: var(--radius);
 }

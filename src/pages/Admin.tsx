@@ -238,16 +238,14 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-background">
-  {/* Navigation provided by AppShell */}
+      {/* Navigation provided by AppShell */}
 
       <div className="container mx-auto py-8 px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
             Admin Dashboard
           </h1>
-          <p className="text-muted-foreground">
-            Administrer dokumenter og beskeder
-          </p>
+          <p className="text-muted">Administrer dokumenter og beskeder</p>
         </div>
 
         {/* Navigation Tabs */}
@@ -466,7 +464,7 @@ const Admin = () => {
                           {!message.is_read && (
                             <Badge variant="destructive">Ny</Badge>
                           )}
-                          <span className="text-sm text-muted-foreground">
+                          <span className="text-sm text-muted">
                             {formatDate(message.created_at)}
                           </span>
                         </div>
@@ -498,7 +496,7 @@ const Admin = () => {
                 <CardTitle className="text-sm font-medium">
                   Total dokumenter
                 </CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
+                <FileText className="h-4 w-4 text-muted" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{documents.length}</div>
@@ -510,7 +508,7 @@ const Admin = () => {
                 <CardTitle className="text-sm font-medium">
                   Total downloads
                 </CardTitle>
-                <Download className="h-4 w-4 text-muted-foreground" />
+                <Download className="h-4 w-4 text-muted" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
@@ -524,7 +522,7 @@ const Admin = () => {
                 <CardTitle className="text-sm font-medium">
                   Ulæste beskeder
                 </CardTitle>
-                <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                <MessageSquare className="h-4 w-4 text-muted" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">

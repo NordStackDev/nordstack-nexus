@@ -26,10 +26,13 @@ const AdminAuth = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
-      const { error, isAdmin: adminStatus } = await signInAdmin(email, password);
-      
+      const { error, isAdmin: adminStatus } = await signInAdmin(
+        email,
+        password
+      );
+
       if (error) {
         toast.error(error.message || "Admin login fejlede");
         return;
@@ -53,20 +56,22 @@ const AdminAuth = () => {
       <div className="w-full max-w-md mx-auto">
         <div className="bg-card/80 backdrop-blur-md rounded-2xl shadow-elegant border border-border/50 p-8 flex flex-col gap-6 animate-scale-in">
           <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Shield className="h-8 w-8 text-primary-foreground" />
+            <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4 bg-transparent border border-[rgba(255,255,255,0.03)]">
+              <Shield className="h-8 w-8 text-muted" />
             </div>
-            <h2 className="text-3xl font-bold mb-2 bg-gradient-primary bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold mb-2 text-foreground">
               Admin Login
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted">
               Log ind med dine admin legitimationsoplysninger
             </p>
           </div>
-          
+
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
-              <Label htmlFor="email" className="text-foreground">Email</Label>
+              <Label htmlFor="email" className="text-foreground">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -78,7 +83,9 @@ const AdminAuth = () => {
               />
             </div>
             <div>
-              <Label htmlFor="password" className="text-foreground">Adgangskode</Label>
+              <Label htmlFor="password" className="text-foreground">
+                Adgangskode
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -89,15 +96,15 @@ const AdminAuth = () => {
                 className="mt-1 bg-background/50 border-border/50 focus:border-primary"
               />
             </div>
-            <Button 
-              type="submit" 
-              className="w-full mt-4 bg-primary hover:bg-primary-glow transition-all duration-300 shadow-glow hover:shadow-elegant" 
+            <Button
+              type="submit"
+              className="w-full mt-4 btn-primary"
               disabled={isLoading}
             >
               {isLoading ? "Logger ind..." : "Log ind som Admin"}
             </Button>
           </form>
-          
+
           <div className="text-center">
             <a
               href="/"
