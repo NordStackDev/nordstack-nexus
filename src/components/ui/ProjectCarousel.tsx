@@ -125,7 +125,7 @@ export const ProjectCarousel: React.FC = () => {
             </div>
 
             {/* Glow behind phone */}
-            <div className="absolute -inset-3 bg-gradient-to-b from-[#fff200]/30 via-[#fff200]/20 to-[#fff200]/10 rounded-[4rem] -z-10 blur-xl"/>
+            <div className="absolute -inset-3 bg-gradient-to-b from-[#fff200]/50 via-[#fff200]/50 to-[#fff200]/50 rounded-[4rem] -z-10"/>
           </motion.div>
         </div>
 

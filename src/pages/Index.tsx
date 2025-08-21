@@ -90,7 +90,7 @@ const Index: React.FC = () => {
               className="text-center mb-20"
             >
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                Projekter
+                Cases
               </h2>
               <div className="w-full max-w-2xl mx-auto h-10 relative flex items-center justify-center mb-8">
                 <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />

@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import { Globe, Code2, Palette, Smartphone, Database, Zap } from "lucide-react";
 
@@ -54,6 +55,14 @@ const services = [
 ];
 
 export const ServicesSection: React.FC = () => {
+  const { user } = useAuth();
+  // Udtræk fornavn fra full_name eller email
+  let firstName = "";
+  if (user?.user_metadata?.full_name) {
+    firstName = user.user_metadata.full_name.split(" ")[0];
+  } else if (user?.email) {
+    firstName = user.email.split("@")[0];
+  }
   return (
     <section className="pt-32 pb-24 px-4 sm:px-6 md:px-8">
       <div className="w-full max-w-7xl mx-auto">
@@ -65,7 +74,7 @@ export const ServicesSection: React.FC = () => {
           className="text-center mb-20"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Hvad vi tilbyder
+            Her er hvad vi kan tilbyde dig {firstName}.
           </h2>
           <div className="w-full max-w-2xl mx-auto h-10 relative flex items-center justify-center mb-8">
             <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />

@@ -140,12 +140,10 @@ const Admin = () => {
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
       const { data: urlData } = supabase.storage
         .from("documents")
         .getPublicUrl(filePath);
 
-      // Save document metadata to database
       const { error: dbError } = await supabase.from("documents").insert({
         title,
         description,
@@ -250,110 +248,169 @@ const Admin = () => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex space-x-1 mb-8 bg-muted rounded-lg p-1">
-          <Button
-            variant={activeTab === "documents" ? "default" : "ghost"}
-            onClick={() => setActiveTab("documents")}
-            className="flex items-center space-x-2"
-          >
-            <FileText className="h-4 w-4" />
-            <span>Dokumenter</span>
-          </Button>
-          <Button
-            variant={activeTab === "upload" ? "default" : "ghost"}
-            onClick={() => setActiveTab("upload")}
-            className="flex items-center space-x-2"
-          >
-            <Upload className="h-4 w-4" />
-            <span>Upload</span>
-          </Button>
-          <Button
-            variant={activeTab === "messages" ? "default" : "ghost"}
-            onClick={() => setActiveTab("messages")}
-            className="flex items-center space-x-2"
-          >
-            <MessageSquare className="h-4 w-4" />
-            <span>Beskeder</span>
-            {messages.filter((m) => !m.is_read).length > 0 && (
-              <Badge variant="destructive" className="ml-2">
-                {messages.filter((m) => !m.is_read).length}
-              </Badge>
-            )}
-          </Button>
-          <Button
-            variant={activeTab === "stats" ? "default" : "ghost"}
-            onClick={() => setActiveTab("stats")}
-            className="flex items-center space-x-2"
-          >
-            <BarChart3 className="h-4 w-4" />
-            <span>Statistik</span>
-          </Button>
+        <div className="flex space-x-1 mb-8 rounded-lg p-1 bg-muted/">
+          {/* Nav tab style ala navLinkClasses */}
+          {(() => {
+            const tabClasses = (active: boolean) =>
+              [
+                "relative flex items-center space-x-2 px-3 py-2 rounded-[--radius] text-sm font-medium transition-colors duration-200",
+                active ? "text-white" : "text-gray-300 hover:text-white",
+                "after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[3px] after:rounded after:bg-gradient-to-r after:from-transparent after:via-[#FFD700] after:to-transparent after:opacity-100",
+                active
+                  ? "after:scale-x-100"
+                  : "after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+              ].join(" ");
+            return (
+              <>
+                <Button
+                  variant="ghost"
+                  onClick={() => setActiveTab("documents")}
+                  className={tabClasses(activeTab === "documents")}
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>Dokumenter</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setActiveTab("upload")}
+                  className={tabClasses(activeTab === "upload")}
+                >
+                  <Upload className="h-4 w-4" />
+                  <span>Upload</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setActiveTab("messages")}
+                  className={tabClasses(activeTab === "messages")}
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  <span>Beskeder</span>
+                  {messages.filter((m) => !m.is_read).length > 0 && (
+                    <Badge variant="destructive" className="ml-2">
+                      {messages.filter((m) => !m.is_read).length}
+                    </Badge>
+                  )}
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setActiveTab("stats")}
+                  className={tabClasses(activeTab === "stats")}
+                >
+                  <BarChart3 className="h-4 w-4" />
+                  <span>Statistik</span>
+                </Button>
+              </>
+            );
+          })()}
         </div>
 
-        {/* Documents Tab */}
+        {/* Documents Tab inkl. statistik */}
         {activeTab === "documents" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <FileText className="h-5 w-5" />
-                <span>Dokumenter</span>
-              </CardTitle>
-              <CardDescription>
-                Administrer uploadede dokumenter
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Titel</TableHead>
-                    <TableHead>Kategori</TableHead>
-                    <TableHead>Størrelse</TableHead>
-                    <TableHead>Downloads</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Oprettet</TableHead>
-                    <TableHead>Handlinger</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {documents.map((doc) => (
-                    <TableRow key={doc.id}>
-                      <TableCell className="font-medium">{doc.title}</TableCell>
-                      <TableCell>{doc.category || "Ingen"}</TableCell>
-                      <TableCell>{formatFileSize(doc.file_size)}</TableCell>
-                      <TableCell>{doc.download_count}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={doc.is_public ? "default" : "secondary"}
-                        >
-                          {doc.is_public ? "Offentlig" : "Privat"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{formatDate(doc.created_at)}</TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => window.open(doc.file_url, "_blank")}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => deleteDocument(doc.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
+          <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-[#FFD700]">
+                    Total dokumenter
+                  </CardTitle>
+                  <FileText className="h-4 w-4 text-muted" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-white">{documents.length}</div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-[#FFD700]">
+                    Total downloads
+                  </CardTitle>
+                  <Download className="h-4 w-4 text-muted" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-white">
+                    {documents.reduce((sum, doc) => sum + doc.download_count, 0)}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-[#FFD700]">
+                    Ulæste beskeder
+                  </CardTitle>
+                  <MessageSquare className="h-4 w-4 text-muted" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-white">
+                    {messages.filter((m) => !m.is_read).length}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            <br />
+            {/* Dokument under dokumentlisten */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <FileText className="h-5 w-5" />
+                  <span>Dokumenter</span>
+                </CardTitle>
+                <CardDescription>
+                  Administrer uploadede dokumenter
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Titel</TableHead>
+                      <TableHead>Kategori</TableHead>
+                      <TableHead>Størrelse</TableHead>
+                      <TableHead>Downloads</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Oprettet</TableHead>
+                      <TableHead>Handlinger</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                  </TableHeader>
+                  <TableBody>
+                    {documents.map((doc) => (
+                      <TableRow key={doc.id}>
+                        <TableCell className="font-medium">{doc.title}</TableCell>
+                        <TableCell>{doc.category || "Ingen"}</TableCell>
+                        <TableCell>{formatFileSize(doc.file_size)}</TableCell>
+                        <TableCell>{doc.download_count}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={doc.is_public ? "default" : "secondary"}
+                          >
+                            {doc.is_public ? "Offentlig" : "Privat"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{formatDate(doc.created_at)}</TableCell>
+                        <TableCell>
+                          <div className="flex space-x-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => window.open(doc.file_url, "_blank")}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => deleteDocument(doc.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </>
         )}
 
         {/* Upload Tab */}
@@ -488,9 +545,9 @@ const Admin = () => {
             </CardContent>
           </Card>
         )}
-
+        {/* Start her, men husk og ændre til brugerhåndtering. "Under udvikling" */}
         {/* Stats Tab */}
-        {activeTab === "stats" && (
+        {/* {activeTab === "stats" && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -532,10 +589,11 @@ const Admin = () => {
               </CardContent>
             </Card>
           </div>
-        )}
-      </div>
+        )} */}
+      </div> 
     </div>
   );
 };
 
+// Slut her, men husk og ændre til brugerhåndtering. "Under udvikling"
 export default Admin;
