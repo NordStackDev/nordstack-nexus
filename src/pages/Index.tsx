@@ -69,7 +69,7 @@ const Index: React.FC = () => {
         {/* Features Section */}
         <section
           id="features"
-          className="pt-32 pb-24 px-4 sm:px-6 md:px-8 bg-gray-900/20"
+          className="pt-32 pb-24 px-4 sm:px-6 md:px-8"
         >
           <div className="text-center mb-12 max-w-3xl mx-auto animate-fade-in">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
@@ -116,11 +116,11 @@ const Index: React.FC = () => {
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
                 Projekter
               </h2>
-              <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto">
+              <p className=" mb-8 text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto">
                 Et udvalg af vores løsninger i praksis.
               </p>
             </motion.div>
-            <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <div className="grid gap-12 lg:grid-cols-2 items-center mt-8">
               <div className="order-2 lg:order-1">
                 <IPhoneMockup />
               </div>
