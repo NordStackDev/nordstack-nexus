@@ -29,13 +29,9 @@ const Index: React.FC = () => {
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
                 NordStack Nexus
               </h1>
-              {/* Gradient lines under title */}
               <div className="w-full max-w-2xl mx-auto h-10 relative flex items-center justify-center mb-8">
-                {/* Første linje: stærk gul */}
                 <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />
                 <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-px w-3/4" />
-
-                {/* Anden linje: gylden gul (lidt mørkere) */}
                 <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[5px] w-1/4 blur-sm" />
                 <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-1/4" />
               </div>
@@ -143,7 +139,7 @@ const Index: React.FC = () => {
                   direkte fra din mobil. Bygget som en moderne web-app med fokus
                   på brugervenlighed.
                 </p>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white mt-2">
+                <Button className="relative bg-transparent text-white hover:text-[#FFD700] mt-2 px-6 py-3 font-medium rounded-lg transition group">
                   <Link
                     to="/projects/pitch-n-sales"
                     className="flex items-center"
@@ -151,6 +147,8 @@ const Index: React.FC = () => {
                     Læs mere
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
+                  {/* Gul gradient streg under */}
+                  <span className="absolute -bottom-1 left-0 w-full h-[2px] rounded bg-gradient-to-r from-transparent via-[#FFD700] to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </Button>
               </motion.div>
             </div>

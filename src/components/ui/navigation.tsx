@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "./button";
 import { LogIn, Home, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LogOut } from "lucide-react";
 
 interface NavigationProps {
   isAuthenticated?: boolean;
@@ -15,6 +16,16 @@ export const Navigation = ({
   onLogout,
 }: NavigationProps) => {
   const location = useLocation();
+
+  const navLinkClasses = (active: boolean) =>
+    cn(
+      "relative flex items-center space-x-2 px-3 py-2 rounded-[--radius] text-sm font-medium transition-colors duration-200",
+      active ? "text-white" : "text-gray-300 hover:text-white",
+      "after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[3px] after:rounded after:bg-gradient-to-r after:from-transparent after:via-[#FFD700] after:to-transparent after:opacity-100",
+      active
+        ? "after:scale-x-100"
+        : "after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+    );
 
   return (
     <nav className="border-b border-border bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
@@ -44,15 +55,7 @@ export const Navigation = ({
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
-            <Link
-              to="/"
-              className={cn(
-                "flex items-center space-x-2 px-3 py-2 rounded-[--radius] text-sm font-medium transition-colors duration-200",
-                location.pathname === "/"
-                  ? "text-foreground bg-[rgba(255,255,255,0.02)]"
-                  : "text-muted hover:text-foreground"
-              )}
-            >
+            <Link to="/" className={navLinkClasses(location.pathname === "/")}>
               <Home className="h-5 w-5" />
               <span>Hjem</span>
             </Link>
@@ -62,21 +65,17 @@ export const Navigation = ({
                 {isAdmin && (
                   <Link
                     to="/admin"
-                    className={cn(
-                      "flex items-center space-x-2 px-3 py-2 rounded-[--radius] text-sm font-medium transition-colors duration-200",
-                      location.pathname === "/admin"
-                        ? "text-foreground bg-[rgba(255,255,255,0.02)]"
-                        : "text-muted hover:text-foreground"
-                    )}
+                    className={navLinkClasses(location.pathname === "/admin")}
                   >
                     <Shield className="h-5 w-5" />
                     <span>Admin</span>
                   </Link>
                 )}
 
-                <Button onClick={onLogout} variant="outline" size="sm">
-                  Log ud
-                </Button>
+                <button onClick={onLogout} className={navLinkClasses(false)}>
+                  <LogOut className="h-5 w-5" />
+                  <span>Log ud</span>
+                </button>
               </>
             ) : (
               <Link to="/auth">
