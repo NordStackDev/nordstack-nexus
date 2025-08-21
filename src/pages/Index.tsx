@@ -2,71 +2,12 @@ import React from "react";
 import { BackgroundBeams } from "@/components/BackgroundBeams";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, Cloud, Laptop, Code, Database } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { IPhoneMockup } from "@/components/ui/IphoneCarousel";
-
-const floatingIcons = [
-  { Icon: Cloud, delay: 0 },
-  { Icon: Laptop, delay: 0.5 },
-  { Icon: Code, delay: 1 },
-  { Icon: Database, delay: 1.5 },
-];
-
-const scrollToFeatures = (offset = 0) => {
-  const el = document.getElementById("features");
-  if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - offset;
-  window.scrollTo({ top, behavior: "smooth" });
-};
-
-const FloatingIcons: React.FC = () => (
-  <div className="absolute inset-0 pointer-events-none">
-    {floatingIcons.map(({ Icon, delay }, idx) => (
-      <motion.div
-        key={idx}
-        className="absolute text-white/20"
-        style={{ top: `${20 + idx * 15}%`, left: `${10 + idx * 20}%` }}
-        animate={{ y: [0, -20, 0], x: [0, 10, 0], rotate: [0, 5, -5, 0] }}
-        transition={{
-          duration: 4 + idx,
-          delay,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      >
-        <Icon size={24 + idx * 4} />
-      </motion.div>
-    ))}
-  </div>
-);
-
-const ScrollArrow: React.FC<{ offset?: number }> = ({ offset = 0 }) => (
-  <motion.div
-    className="flex justify-center mt-12"
-    initial={{ opacity: 0 }}
-    animate={{
-      opacity: [0, 1, 1, 0],
-      y: [0, 0, 12, 12],
-      scale: [1, 1.04, 1.04, 1],
-    }}
-    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-  >
-    <button
-      aria-label="Scroll ned til features"
-      onClick={() => scrollToFeatures(offset)}
-      className="group flex flex-col items-center focus:outline-none"
-      type="button"
-    >
-      <ArrowRight
-        className="w-10 h-10 text-white/60 rotate-90 group-hover:text-white/80 transition-colors duration-200"
-        aria-hidden
-      />
-      <span className="sr-only">Scroll ned</span>
-    </button>
-  </motion.div>
-);
+import FloatingIcons from "@/components/ui/FloatingIcons";
+import ScrollArrow from "@/components/ui/ScrollArrow";
 
 const Index: React.FC = () => {
   const { user } = useAuth();
@@ -90,11 +31,15 @@ const Index: React.FC = () => {
               </h1>
               {/* Gradient lines under title */}
               <div className="w-full max-w-2xl mx-auto h-10 relative flex items-center justify-center mb-8">
-                <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
-                <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
-                <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
-                <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+                {/* Første linje: stærk gul */}
+                <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />
+                <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-px w-3/4" />
+
+                {/* Anden linje: gylden gul (lidt mørkere) */}
+                <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[5px] w-1/4 blur-sm" />
+                <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-1/4" />
               </div>
+
               <p className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-10">
                 Vi leverer digitale løsninger til vækst og effektivitet.
               </p>
@@ -110,6 +55,7 @@ const Index: React.FC = () => {
                     Kom i gang
                   </Link>
                 </Button>
+
                 <Button
                   asChild
                   variant="outline"
@@ -198,7 +144,10 @@ const Index: React.FC = () => {
                   på brugervenlighed.
                 </p>
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white mt-2">
-                  <Link to="/projects/pitch-n-sales" className="flex items-center">
+                  <Link
+                    to="/projects/pitch-n-sales"
+                    className="flex items-center"
+                  >
                     Læs mere
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>

@@ -33,6 +33,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { BackgroundBeams } from "@/components/BackgroundBeams";
 
 interface Document {
   id: string;
@@ -238,8 +239,8 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
       {/* Navigation provided by AppShell */}
-
       <div className="container mx-auto py-8 px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">

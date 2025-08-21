@@ -1,37 +1,38 @@
 import { supabase } from "@/integrations/supabase/client";
 
-/**
- * Frontend example: Admin login request
- */
+
 export const loginAsAdmin = async (email: string, password: string) => {
   try {
-    // Method 1: Using the edge function for admin verification
-    const supabaseUrl = "https://kzvxlkxjmdzodsxotoya.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6dnhsa3hqbWR6b2RzeG90b3lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1MDg5OTMsImV4cCI6MjA3MTA4NDk5M30.WOma97Vdo6OGRXFA99I66HIC_q7UTyDFj47G891dRkw";
-    
+    const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string) || "";
+    const supabaseAnon = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || "";
+
+    if (!supabaseUrl) {
+      throw new Error("Missing VITE_SUPABASE_URL in environment");
+    }
+
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (supabaseAnon) headers["apikey"] = supabaseAnon;
+
     const response = await fetch(`${supabaseUrl}/functions/v1/admin-verify`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${supabaseKey}`,
-      },
+      method: "POST",
+      headers,
       body: JSON.stringify({ email, password }),
     });
 
     const result = await response.json();
 
     if (!response.ok) {
-      throw new Error(result.error || 'Admin login failed');
+      throw new Error(result.error || "Admin login failed");
     }
 
-    // If successful, set the session
+    // If successful, set the session via the client SDK using returned session data (if provided)
     if (result.session) {
       await supabase.auth.setSession(result.session);
     }
 
     return { success: true, user: result.user };
   } catch (error: any) {
-    console.error('Admin login error:', error);
+    console.error("Admin login error:", error);
     throw error;
   }
 };

@@ -73,24 +73,87 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Initial session
   useEffect(() => {
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!alive.current) return;
+    console.debug("[useAuth] initializing auth provider...");
+    let loadingWatchdog: ReturnType<typeof setTimeout> | null = null;
 
-      setSession(data.session ?? null);
-      setUser(data.session?.user ?? null);
-      if (data.session?.user) await checkAdminRole(data.session.user.id);
-      setIsLoading(false);
+    // allow public pages to render immediately — don't block UI while we check session
+    if (alive.current) setIsLoading(false);
+
+    // keep a short watchdog in case the background check hangs
+    loadingWatchdog = setTimeout(() => {
+      console.warn(
+        "[useAuth] loading watchdog triggered - forcing isLoading=false"
+      );
+      if (alive.current) setIsLoading(false);
+    }, 1200);
+
+    (async () => {
+      try {
+        console.debug("[useAuth] attempting getSession (with 400ms timeout)");
+
+        const getSessionPromise = supabase.auth.getSession();
+
+        const timeout = new Promise<{ data: any }>((resolve) =>
+          setTimeout(() => resolve({ data: null }), 400)
+        );
+
+        const { data } = (await Promise.race([
+          getSessionPromise,
+          timeout,
+        ])) as any;
+
+        if (!alive.current) return;
+
+        if (!data) {
+          console.warn("[useAuth] getSession timed out or returned empty");
+          setSession(null);
+          setUser(null);
+          setIsAdmin(false);
+          return;
+        }
+
+        setSession(data.session ?? null);
+        setUser(data.session?.user ?? null);
+        // don't block initial render on role lookup; run in background
+        if (data.session?.user) {
+          void checkAdminRole(data.session.user.id);
+        }
+      } catch (err) {
+        console.error("[useAuth] initial session error:", err);
+        if (alive.current) {
+          setSession(null);
+          setUser(null);
+          setIsAdmin(false);
+        }
+      } finally {
+        if (alive.current) setIsLoading(false);
+        if (loadingWatchdog) {
+          clearTimeout(loadingWatchdog);
+          loadingWatchdog = null;
+        }
+      }
     })();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, s) => {
-      if (!alive.current) return;
-      setSession(s);
-      setUser(s?.user ?? null);
-      if (s?.user) await checkAdminRole(s.user.id);
-      else setIsAdmin(false);
+      try {
+        if (!alive.current) return;
+        setSession(s);
+        setUser(s?.user ?? null);
+        // run role-check in background to avoid delaying UI updates
+        if (s?.user) {
+          void checkAdminRole(s.user.id);
+        } else {
+          setIsAdmin(false);
+        }
+      } catch (err) {
+        console.error("[useAuth] onAuthStateChange handler error:", err);
+        if (alive.current) setIsAdmin(false);
+      } finally {
+        // ensure we clear the loading flag after any auth state change
+        if (alive.current) setIsLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -171,8 +234,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           description: "Fejl ved tjek af admin-rolle",
           variant: "destructive",
         });
-  // logout to be safe
-  await supabase.auth.signOut();
+        // logout to be safe
+        await supabase.auth.signOut();
         return { error: roleError, isAdmin: false };
       }
 
@@ -222,7 +285,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const before = await supabase.auth.getSession();
 
       // Supabase v2: ensure all tokens are cleared globally
-  const { error } = await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
       if (error) {
         console.error("[useAuth] signOut error:", error);
         toast({
