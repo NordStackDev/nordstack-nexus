@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+
+import { useState, useEffect, useMemo } from "react";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,6 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AdminStatsCards } from "@/components/ui/admin/AdminStatsCards";
+import { FolderGrid } from "@/components/ui/admin/FolderGrid";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,7 +26,22 @@ import {
   BarChart3,
   Users,
   MessageSquare,
+  Folder,
+  Image as ImageIcon,
+  File as FileIcon,
+  User,
+  ArrowLeft,
 } from "lucide-react";
+import React from "react";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import { FileUpload } from "@/components/ui/admin/file-upload";
+import { CategoryModal } from "@/components/ui/admin/CategoryModal";
 import {
   Table,
   TableBody,
@@ -60,22 +78,69 @@ interface ContactMessage {
   created_at: string;
 }
 
+// Minimal Profile interface used for admin user management
+interface Profile {
+  id: string;
+  full_name?: string | null;
+  email?: string | null;
+  company?: string | null;
+  role?: { role: string }[];
+  user_id?: string;
+}
+
+
 const Admin = () => {
   const { user, isAdmin, signOut } = useAuth();
   const { toast } = useToast();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [activeFolderFilter, setActiveFolderFilter] = useState<string | null>(null);
+  // Modal / pending upload state
+  const [pendingFiles, setPendingFiles] = useState<File[] | null>(null);
+  const [pendingCategories, setPendingCategories] = useState<Record<string, string>>({});
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [bulkCategory, setBulkCategory] = useState<string>("");
+  // Optional pending metadata for single-file upload (from Upload form)
+  const [pendingMeta, setPendingMeta] = useState<{
+    title: string;
+    description: string;
+    isPublic: boolean;
+  } | null>(null);
   const [activeTab, setActiveTab] = useState<
     "documents" | "upload" | "messages" | "stats"
   >("documents");
+  // Track which file is selected for preview
+  const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
+
+  // Category counts memoized
+  const categoryCounts = useMemo(() => {
+    return Object.entries(
+      documents.reduce((acc: Record<string, number>, d) => {
+        const c = d.category || "Andre";
+        acc[c] = (acc[c] || 0) + 1;
+        return acc;
+      }, {})
+    );
+  }, [documents]);
+
+  // Pagination for folder view
+  const [folderPage, setFolderPage] = useState(1);
+  const PAGE_SIZE = 10;
+  const filesInActiveFolder = useMemo(() => documents.filter((d) => d.category === activeFolderFilter), [documents, activeFolderFilter]);
+  const totalPages = Math.max(1, Math.ceil(filesInActiveFolder.length / PAGE_SIZE));
+  const pagedFiles = useMemo(() => filesInActiveFolder.slice((folderPage - 1) * PAGE_SIZE, folderPage * PAGE_SIZE), [filesInActiveFolder, folderPage]);
 
   // Upload form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [isPublic, setIsPublic] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
+
+  // User management state
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [isLoadingProfiles, setIsLoadingProfiles] = useState(false);
 
   // Redirect if not admin
   if (!user || !isAdmin) {
@@ -105,6 +170,19 @@ const Admin = () => {
     }
   };
 
+  // Prepare files (single or multiple) for modal confirmation
+  const prepareFilesUpload = (files: File[] | FileList | null, meta?: { title?: string; description?: string; isPublic?: boolean }) => {
+    if (!files) return;
+    const arr = Array.isArray(files) ? files : Array.from(files);
+    if (arr.length === 0) return;
+    const seeded: Record<string, string> = {};
+    arr.forEach((f) => (seeded[f.name] = autoDetectCategory(f)));
+    setPendingFiles(arr);
+    setPendingCategories(seeded);
+    setIsCategoryModalOpen(true);
+    if (meta) setPendingMeta({ title: meta.title || "", description: meta.description || "", isPublic: !!meta.isPublic });
+  };
+
   const fetchMessages = async () => {
     try {
       const { data, error } = await supabase
@@ -122,63 +200,99 @@ const Admin = () => {
       });
     }
   };
+  
 
   const handleFileUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedFile) return;
+    // Queue selected files (from Upload form) into modal for confirmation
+    if (!selectedFiles || selectedFiles.length === 0) return;
+    prepareFilesUpload(selectedFiles, { title, description, isPublic });
+  };
 
+  // Helper to detect category from file
+  const autoDetectCategory = (file: File) => {
+    const name = file.name.toLowerCase();
+    const type = (file.type || "").toLowerCase();
+    if (type.startsWith("image/")) return "Billeder";
+    if (name.includes("invoice") || name.includes("faktura") || type === "application/pdf") return "Faktura";
+    if (name.includes("contract") || name.includes("kontrakt") || name.includes("agreement")) return "Kontrakt";
+    return "Andre";
+  };
+
+  // Handle files from the FileUpload component (drag & drop) — open modal to confirm categories
+  const uploadFiles = async (files: File[] | undefined) => {
+    if (!files || files.length === 0) return;
+    // Seed detected categories and open modal for confirmation
+    const seeded: Record<string, string> = {};
+    files.forEach((f) => {
+      seeded[f.name] = autoDetectCategory(f);
+    });
+    setPendingCategories(seeded);
+    setPendingFiles(files);
+    setIsCategoryModalOpen(true);
+  };
+
+  const cancelPendingUpload = () => {
+    setPendingFiles(null);
+    setPendingCategories({});
+    setIsCategoryModalOpen(false);
+    setPendingMeta(null);
+  };
+
+  const confirmUpload = async () => {
+    if (!pendingFiles || pendingFiles.length === 0) return;
+    // Show a small summary toast before starting the upload
+    try {
+      const summary = pendingFiles.reduce((acc: Record<string, number>, f) => {
+        const c = pendingCategories[f.name] || autoDetectCategory(f);
+        acc[c] = (acc[c] || 0) + 1;
+        return acc;
+      }, {});
+      const desc = Object.entries(summary).map(([c, n]) => `${c}: ${n}`).join(", ");
+      toast({ title: `Uploader ${pendingFiles.length} filer`, description: desc });
+    } catch (err) {
+      // ignore
+    }
     setIsUploading(true);
     try {
-      // Upload file to Supabase Storage
-      const fileExt = selectedFile.name.split(".").pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `documents/${fileName}`;
+      for (const file of pendingFiles) {
+        const categoryForFile = pendingCategories[file.name] || autoDetectCategory(file);
+        const sanitized = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+        const fileName = `${Date.now()}-${Math.floor(Math.random() * 10000)}-${sanitized}`;
+        const filePath = `documents/${categoryForFile}/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from("documents")
-        .upload(filePath, selectedFile);
+        const { error: uploadError } = await supabase.storage
+          .from("documents")
+          .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+        if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage
-        .from("documents")
-        .getPublicUrl(filePath);
+        const { data: urlData } = supabase.storage
+          .from("documents")
+          .getPublicUrl(filePath);
 
-      const { error: dbError } = await supabase.from("documents").insert({
-        title,
-        description,
-        file_name: selectedFile.name,
-        file_type: selectedFile.type,
-        file_size: selectedFile.size,
-        file_url: urlData.publicUrl,
-        category,
-        is_public: isPublic,
-        uploaded_by: user.id,
-      });
+        const isSingle = pendingFiles && pendingFiles.length === 1 && pendingMeta;
+        const { error: dbError } = await supabase.from("documents").insert({
+          title: isSingle ? pendingMeta!.title || file.name : file.name,
+          description: isSingle ? pendingMeta!.description || "" : "",
+          file_name: file.name,
+          file_type: file.type,
+          file_size: file.size,
+          file_url: urlData.publicUrl,
+          category: categoryForFile,
+          is_public: true, // Always public so all admins can see
+          uploaded_by: user.id,
+        });
 
-      if (dbError) throw dbError;
+        if (dbError) throw dbError;
+      }
 
-      toast({
-        title: "Success",
-        description: "Dokument uploaded successfully",
-      });
-
-      // Reset form
-      setTitle("");
-      setDescription("");
-      setCategory("");
-      setIsPublic(false);
-      setSelectedFile(null);
-
-      // Refresh documents list
-      fetchDocuments();
+      toast({ title: "Success", description: "Files uploaded" });
+      await fetchDocuments();
       setActiveTab("documents");
+      cancelPendingUpload();
     } catch (error: any) {
-      toast({
-        title: "Fejl",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast({ title: "Fejl", description: error.message, variant: "destructive" });
     } finally {
       setIsUploading(false);
     }
@@ -244,7 +358,9 @@ const Admin = () => {
           <h1 className="text-3xl font-bold text-foreground mb-2">
             Admin Dashboard
           </h1>
-          <p className="text-muted">Administrer dokumenter og beskeder</p>
+          <p className="text-lg text-white font-semibold mb-1">
+            Velkommen tilbage{user?.user_metadata?.full_name ? ` ${user.user_metadata.full_name}` : user?.email ? `, ${user.email}` : ''}!
+          </p>
         </div>
 
         {/* Navigation Tabs */}
@@ -272,14 +388,6 @@ const Admin = () => {
                 </Button>
                 <Button
                   variant="ghost"
-                  onClick={() => setActiveTab("upload")}
-                  className={tabClasses(activeTab === "upload")}
-                >
-                  <Upload className="h-4 w-4" />
-                  <span>Upload</span>
-                </Button>
-                <Button
-                  variant="ghost"
                   onClick={() => setActiveTab("messages")}
                   className={tabClasses(activeTab === "messages")}
                 >
@@ -296,8 +404,8 @@ const Admin = () => {
                   onClick={() => setActiveTab("stats")}
                   className={tabClasses(activeTab === "stats")}
                 >
-                  <BarChart3 className="h-4 w-4" />
-                  <span>Statistik</span>
+                  <User className="h-4 w-4" />
+                  <span>Brugerhåndtering</span>
                 </Button>
               </>
             );
@@ -307,185 +415,179 @@ const Admin = () => {
         {/* Documents Tab inkl. statistik */}
         {activeTab === "documents" && (
           <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-[#FFD700]">
-                    Total dokumenter
-                  </CardTitle>
-                  <FileText className="h-4 w-4 text-muted" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-white">{documents.length}</div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-[#FFD700]">
-                    Total downloads
-                  </CardTitle>
-                  <Download className="h-4 w-4 text-muted" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-white">
-                    {documents.reduce((sum, doc) => sum + doc.download_count, 0)}
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-[#FFD700]">
-                    Ulæste beskeder
-                  </CardTitle>
-                  <MessageSquare className="h-4 w-4 text-muted" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-white">
-                    {messages.filter((m) => !m.is_read).length}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <AdminStatsCards
+              totalDocuments={documents.length}
+              totalDownloads={documents.reduce((sum, doc) => sum + doc.download_count, 0)}
+              unreadMessages={messages.filter((m) => !m.is_read).length}
+            />
             <br />
             {/* Dokument under dokumentlisten */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <FileText className="h-5 w-5" />
-                  <span>Dokumenter</span>
+                  <span className="text-[#FFD700]">Dokumenter</span>
                 </CardTitle>
                 <CardDescription>
                   Administrer uploadede dokumenter
                 </CardDescription>
               </CardHeader>
+              <div className="w-full max-w-5xl mx-auto mt-6">
+                <div className=" rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                  <div className="mx-auto max-w-3xl">
+                    
+
+                    {/* Category data for folder view */}
+                    {/** compute once for folder grid/table rendering **/}
+                    
+                    <div className="px-6 py-4 mb-8">
+                      <FileUpload onChange={uploadFiles} />
+                    </div>
+                    {/* Extra spacing below upload before folder grid/table */}
+                    <div className="h-8" />
+                    {/* Category confirmation modal for pending uploads */}
+                    <CategoryModal
+                      open={isCategoryModalOpen}
+                      pendingFiles={pendingFiles}
+                      pendingCategories={pendingCategories}
+                      bulkCategory={bulkCategory}
+                      isUploading={isUploading}
+                      onBulkCategoryChange={setBulkCategory}
+                      onCategoryChange={(fileName, value) => setPendingCategories((s) => ({ ...s, [fileName]: value }))}
+                      onBulkApply={() => {
+                        if (!bulkCategory || !pendingFiles) return;
+                        const updated: Record<string, string> = { ...pendingCategories };
+                        pendingFiles.forEach((f) => (updated[f.name] = bulkCategory));
+                        setPendingCategories(updated);
+                      }}
+                      onCancel={cancelPendingUpload}
+                      onConfirm={confirmUpload}
+                    />
+                  </div>
+                </div>
+              </div>
               <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Titel</TableHead>
-                      <TableHead>Kategori</TableHead>
-                      <TableHead>Størrelse</TableHead>
-                      <TableHead>Downloads</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Oprettet</TableHead>
-                      <TableHead>Handlinger</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {documents.map((doc) => (
-                      <TableRow key={doc.id}>
-                        <TableCell className="font-medium">{doc.title}</TableCell>
-                        <TableCell>{doc.category || "Ingen"}</TableCell>
-                        <TableCell>{formatFileSize(doc.file_size)}</TableCell>
-                        <TableCell>{doc.download_count}</TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={doc.is_public ? "default" : "secondary"}
-                          >
-                            {doc.is_public ? "Offentlig" : "Privat"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{formatDate(doc.created_at)}</TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => window.open(doc.file_url, "_blank")}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => deleteDocument(doc.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                {!activeFolderFilter ? (
+                  <div className="mt-6">
+                    <FolderGrid
+                      categoryCounts={categoryCounts}
+                      onOpenFolder={(cat) => { setActiveFolderFilter(cat); setFolderPage(1); }}
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="mb-6">
+                        <Button
+                          variant="ghost"
+                          onClick={() => setActiveFolderFilter(null)}
+                          className="flex items-center space-x-2 text-yellow-400 hover:bg-yellow-900/10 transition-colors px-3 py-2 rounded-full font-medium"
+                        >
+                          <ArrowLeft className="h-4 w-4 mr-1 text-yellow-400" />
+                          <span className="text-yellow-400">Tilbage til mapper</span>
+                        </Button>
+                      </div>
+                      <div className="text-sm text-[#FFD700]">Viser mappe: {activeFolderFilter}</div>
+                    </div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Titel</TableHead>
+                          <TableHead>Preview</TableHead>
+                          <TableHead>Størrelse</TableHead>
+                          <TableHead>Downloads</TableHead>
+                          <TableHead>Oprettet</TableHead>
+                          <TableHead>Handlinger</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {pagedFiles.map((doc) => (
+                          <TableRow key={doc.id}>
+                            <TableCell className="font-medium">{doc.title}</TableCell>
+                            <TableCell>
+                              <div className="w-10 h-10 rounded bg-muted/10 flex items-center justify-center">
+                                {doc.file_type.startsWith("image/") ? (
+                                  // small image thumbnail
+                                  // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                                  <img src={doc.file_url} alt={`thumb-${doc.title}`} className="w-10 h-10 object-cover rounded" />
+                                ) : (
+                                  <FileIcon className="h-5 w-5" />
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>{formatFileSize(doc.file_size)}</TableCell>
+                            <TableCell>{doc.download_count}</TableCell>
+                            <TableCell>{formatDate(doc.created_at)}</TableCell>
+                            <TableCell>
+                              <div className="flex space-x-2">
+                                {/* Download button always visible */}
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  onClick={async () => {
+                                    try {
+                                      const response = await fetch(doc.file_url);
+                                      const blob = await response.blob();
+                                      const url = window.URL.createObjectURL(blob);
+                                      const link = document.createElement('a');
+                                      link.href = url;
+                                      link.download = doc.file_name || 'download';
+                                      document.body.appendChild(link);
+                                      link.click();
+                                      setTimeout(() => {
+                                        window.URL.revokeObjectURL(url);
+                                        document.body.removeChild(link);
+                                      }, 100);
+                                    } catch (e) {
+                                      alert('Kunne ikke downloade filen.');
+                                    }
+                                  }}
+                                >
+                                  <Download className="h-4 w-4 text-yellow-400" />
+                                </Button>
+                                {/* Preview button only visible if selected */}
+                                {selectedDocId === doc.id ? (
+                                  <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    onClick={() => window.open(doc.file_url, "_blank")}
+                                  >
+                                    <Eye className="h-4 w-4 text-yellow-400" />
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    onClick={() => setSelectedDocId(doc.id)}
+                                  >
+                                    <Eye className="h-4 w-4 text-yellow-400" />
+                                  </Button>
+                                )}
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() => deleteDocument(doc.id)}
+                                >
+                                  <Trash2 className="h-4 w-4 text-yellow-400" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="text-sm text-muted">Side {folderPage} af {totalPages}</div>
+                      <div className="space-x-2">
+                        <Button size="sm" variant="ghost" onClick={() => setFolderPage((p) => Math.max(1, p - 1))} disabled={folderPage <= 1}>Forrige</Button>
+                        <Button size="sm" onClick={() => setFolderPage((p) => Math.min(totalPages, p + 1))} disabled={folderPage >= totalPages}>Næste</Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </>
-        )}
-
-        {/* Upload Tab */}
-        {activeTab === "upload" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Upload className="h-5 w-5" />
-                <span>Upload dokument</span>
-              </CardTitle>
-              <CardDescription>
-                Upload et nyt dokument til systemet
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleFileUpload} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Titel</Label>
-                    <Input
-                      id="title"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="category">Kategori</Label>
-                    <Input
-                      id="category"
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Beskrivelse</Label>
-                  <Textarea
-                    id="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    rows={3}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="file">Fil</Label>
-                  <Input
-                    id="file"
-                    type="file"
-                    onChange={(e) =>
-                      setSelectedFile(e.target.files?.[0] || null)
-                    }
-                    required
-                  />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="isPublic"
-                    checked={isPublic}
-                    onChange={(e) => setIsPublic(e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="isPublic">Gør offentlig tilgængelig</Label>
-                </div>
-
-                <Button type="submit" disabled={isUploading || !selectedFile}>
-                  {isUploading ? "Uploader..." : "Upload dokument"}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
         )}
 
         {/* Messages Tab */}
@@ -545,51 +647,6 @@ const Admin = () => {
             </CardContent>
           </Card>
         )}
-        {/* Start her, men husk og ændre til brugerhåndtering. "Under udvikling" */}
-        {/* Stats Tab */}
-        {/* {activeTab === "stats" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total dokumenter
-                </CardTitle>
-                <FileText className="h-4 w-4 text-muted" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{documents.length}</div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total downloads
-                </CardTitle>
-                <Download className="h-4 w-4 text-muted" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {documents.reduce((sum, doc) => sum + doc.download_count, 0)}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Ulæste beskeder
-                </CardTitle>
-                <MessageSquare className="h-4 w-4 text-muted" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {messages.filter((m) => !m.is_read).length}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )} */}
       </div> 
     </div>
   );
