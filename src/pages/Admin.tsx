@@ -634,10 +634,26 @@ const Admin = () => {
             </CardContent>
           </Card>
         )}
-      </div> 
+
+        {/* User Management Tab */}
+        {activeTab === "stats" && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <User className="h-5 w-5" />
+                <span>Brugerhåndtering</span>
+              </CardTitle>
+              <CardDescription>
+                Administrer brugere, roller og adgang
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {/* <UserManagementTable /> */}
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 };
-
-// Slut her, men husk og ændre til brugerhåndtering. "Under udvikling"
 export default Admin;
