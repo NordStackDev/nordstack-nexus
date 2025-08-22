@@ -11,9 +11,6 @@ import {
 } from "@/components/ui/card";
 import { AdminStatsCards } from "@/components/ui/admin/AdminStatsCards";
 import { FolderGrid } from "@/components/ui/admin/FolderGrid";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,13 +30,6 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import React from "react";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
 import { FileUpload } from "@/components/ui/admin/file-upload";
 import { CategoryModal } from "@/components/ui/admin/CategoryModal";
 import {
@@ -435,10 +425,7 @@ const Admin = () => {
               <div className="w-full max-w-5xl mx-auto mt-6">
                 <div className=" rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
                   <div className="mx-auto max-w-3xl">
-                    
 
-                    {/* Category data for folder view */}
-                    {/** compute once for folder grid/table rendering **/}
                     
                     <div className="px-6 py-4 mb-8">
                       <FileUpload onChange={uploadFiles} />
@@ -509,7 +496,7 @@ const Admin = () => {
                                 {doc.file_type.startsWith("image/") ? (
                                   // small image thumbnail
                                   // eslint-disable-next-line jsx-a11y/img-redundant-alt
-                                  <img src={doc.file_url} alt={`thumb-${doc.title}`} className="w-10 h-10 object-cover rounded" />
+                                  <img src={doc.file_url} alt={`thumb-${doc.title}`} className="w-10 h-10 object-cover rounded" loading="lazy" />
                                 ) : (
                                   <FileIcon className="h-5 w-5" />
                                 )}

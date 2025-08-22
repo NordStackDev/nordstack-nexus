@@ -47,6 +47,7 @@ export const IPhoneMockup: React.FC = () => {
               key={index}
               src={iphoneImages[index]}
               alt="Pitch 'N Sales App Screenshot"
+              loading="lazy"
               initial={{ y: 120, scale: 1.1, opacity: 0, rotateX: -20 }}
               animate={{ y: 0, scale: 1, opacity: 1, rotateX: 0 }}
               exit={{ y: -120, scale: 0.95, opacity: 0, rotateX: 20 }}

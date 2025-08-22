@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Wifi, Signal, Battery } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,14 +41,15 @@ const projects = [
   }
 ];
 
-export const ProjectCarousel: React.FC = () => {
+
+const ProjectCarouselComponent: React.FC = () => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [time, setTime] = useState<string>(
     new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   );
 
-  const currentProject = projects[currentProjectIndex];
+  const currentProject = useMemo(() => projects[currentProjectIndex], [currentProjectIndex]);
 
   // Auto-rotate images within current project
   useEffect(() => {
@@ -66,15 +67,15 @@ export const ProjectCarousel: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     setCurrentProjectIndex((prev) => (prev - 1 + projects.length) % projects.length);
     setCurrentImageIndex(0);
-  };
+  }, []);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setCurrentProjectIndex((prev) => (prev + 1) % projects.length);
     setCurrentImageIndex(0);
-  };
+  }, []);
 
   return (
     <div className="relative w-full max-w-6xl mx-auto">
@@ -98,6 +99,7 @@ export const ProjectCarousel: React.FC = () => {
                     key={`${currentProjectIndex}-${currentImageIndex}`}
                     src={currentProject.images[currentImageIndex]}
                     alt={`${currentProject.title} Screenshot`}
+                    loading="lazy"
                     initial={{ y: 120, scale: 1.1, opacity: 0, rotateX: -20 }}
                     animate={{ y: 0, scale: 1, opacity: 1, rotateX: 0 }}
                     exit={{ y: -120, scale: 0.95, opacity: 0, rotateX: 20 }}
@@ -198,10 +200,10 @@ export const ProjectCarousel: React.FC = () => {
         {projects.map((_, index) => (
           <button
             key={index}
-            onClick={() => {
+            onClick={useCallback(() => {
               setCurrentProjectIndex(index);
               setCurrentImageIndex(0);
-            }}
+            }, [])}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               index === currentProjectIndex 
                 ? 'bg-[#FFD700] scale-125 shadow-lg' 
@@ -213,3 +215,5 @@ export const ProjectCarousel: React.FC = () => {
     </div>
   );
 };
+
+export const ProjectCarousel = memo(ProjectCarouselComponent);
