@@ -20,113 +20,108 @@ const PATHS = [
   "M-44 -573C-44 -573 24 -168 488 -41C952 86 1020 491 1020 491",
 ];
 
-
 function getIsMobile() {
   if (typeof window === "undefined") return false;
   return window.innerWidth < 768;
 }
 
-
 function getPathConfigs(count: number) {
-  // Use fewer paths for performance, especially on desktop
+  // Gør beams hurtigere: duration reduceret fra 14–17s til 7–9s
   return Array.from({ length: count }, (_, i) => ({
     path: PATHS[i % PATHS.length],
     delay: i * 0.3,
-    duration: 14 + (i % 4),
+    duration: 7 + (i % 3),
     y2: `${93 + (i % 6)}%`,
   }));
 }
 
-
 const BackgroundBeamsComponent = ({ className }: { className?: string }) => {
-    // Use fewer animated paths for desktop, even fewer for mobile
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    const pathCount = isMobile ? 6 : 8;
-    const pathConfigs = useMemo(() => getPathConfigs(pathCount), [pathCount]);
+  const isMobile = getIsMobile();
+  const pathCount = isMobile ? 6 : 8;
+  const pathConfigs = useMemo(() => getPathConfigs(pathCount), [pathCount]);
 
-    return (
-      <div
-        className={cn(
-          "absolute inset-0 flex h-full w-full items-center justify-center bg-transparent",
-          className
-        )}
-        style={{ willChange: "transform, opacity" }}
+  return (
+    <div
+      className={cn(
+        "absolute inset-0 flex h-full w-full items-center justify-center bg-transparent",
+        className
+      )}
+      style={{ willChange: "transform, opacity" }}
+    >
+      <svg
+        className="pointer-events-none absolute z-0 h-full w-full"
+        width="100%"
+        height="100%"
+        viewBox="0 0 696 316"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <svg
-          className="pointer-events-none absolute z-0 h-full w-full"
-          width="100%"
-          height="100%"
-          viewBox="0 0 696 316"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d={PATHS.slice(0, pathCount).join("")}
-            stroke="url(#paint0_radial_242_278)"
-            strokeOpacity="0.05"
+        <path
+          d={PATHS.slice(0, pathCount).join("")}
+          stroke="url(#paint0_radial_242_278)"
+          strokeOpacity="0.05"
+          strokeWidth="0.5"
+        />
+
+        {pathConfigs.map((cfg, index) => (
+          <motion.path
+            key={`path-` + index}
+            d={cfg.path}
+            stroke={`url(#linearGradient-${index})`}
+            strokeOpacity="0.4"
             strokeWidth="0.5"
+            initial={false}
+            animate={false}
           />
-
+        ))}
+        <defs>
           {pathConfigs.map((cfg, index) => (
-            <motion.path
-              key={`path-` + index}
-              d={cfg.path}
-              stroke={`url(#linearGradient-${index})`}
-              strokeOpacity="0.4"
-              strokeWidth="0.5"
-              initial={false}
-              animate={false}
-            />
-          ))}
-          <defs>
-            {pathConfigs.map((cfg, index) => (
-              <motion.linearGradient
-                id={`linearGradient-${index}`}
-                key={`gradient-${index}`}
-                initial={{
-                  x1: "0%",
-                  x2: "0%",
-                  y1: "0%",
-                  y2: "0%",
-                }}
-                animate={{
-                  x1: ["0%", "100%"],
-                  x2: ["0%", "95%"],
-                  y1: ["0%", "100%"],
-                  y2: ["0%", cfg.y2],
-                }}
-                transition={{
-                  duration: cfg.duration,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                  delay: cfg.delay,
-                }}
-              >
-                <stop stopColor="#fff200" stopOpacity="0"></stop>
-                <stop stopColor="#fff421ff"></stop>
-                <stop offset="50%" stopColor="#FFD700"></stop>
-                <stop offset="100%" stopColor="#FFC300" stopOpacity="0"></stop>
-              </motion.linearGradient>
-            ))}
-
-            <radialGradient
-              id="paint0_radial_242_278"
-              cx="0"
-              cy="0"
-              r="1"
-              gradientUnits="userSpaceOnUse"
-              gradientTransform="translate(352 34) rotate(90) scale(555 1560.62)"
+            <motion.linearGradient
+              id={`linearGradient-${index}`}
+              key={`gradient-${index}`}
+              initial={{
+                x1: "0%",
+                x2: "0%",
+                y1: "0%",
+                y2: "0%",
+              }}
+              animate={{
+                x1: ["0%", "100%"],
+                x2: ["0%", "95%"],
+                y1: ["0%", "100%"],
+                y2: ["0%", cfg.y2],
+              }}
+              transition={{
+                duration: cfg.duration,
+                ease: "easeInOut",
+                repeat: Infinity,
+                delay: cfg.delay,
+              }}
             >
-              <stop offset="0.0666667" stopColor="#d4d4d4"></stop>
-              <stop offset="0.243243" stopColor="#d4d4d4"></stop>
-              <stop offset="0.43594" stopColor="white" stopOpacity="0"></stop>
-            </radialGradient>
-          </defs>
-        </svg>
-      </div>
-    );
+              <stop stopColor="#fff200" stopOpacity="0"></stop>
+              <stop stopColor="#fff421ff"></stop>
+              <stop offset="50%" stopColor="#FFD700"></stop>
+              <stop offset="100%" stopColor="#FFC300" stopOpacity="0"></stop>
+            </motion.linearGradient>
+          ))}
 
-  };
+          <radialGradient
+            id="paint0_radial_242_278"
+            cx="0"
+            cy="0"
+            r="1"
+            gradientUnits="userSpaceOnUse"
+            gradientTransform="translate(352 34) rotate(90) scale(555 1560.62)"
+          >
+            <stop offset="0.0666667" stopColor="#d4d4d4"></stop>
+            <stop offset="0.243243" stopColor="#d4d4d4"></stop>
+            <stop offset="0.43594" stopColor="white" stopOpacity="0"></stop>
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+  );
+};
 
 const BackgroundBeams = React.memo(BackgroundBeamsComponent);
 BackgroundBeams.displayName = "BackgroundBeams";

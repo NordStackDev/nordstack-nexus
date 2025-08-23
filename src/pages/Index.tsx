@@ -16,11 +16,11 @@ const Index: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden overflow-y-visible">
-      <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
-      <div className="relative z-10">
+  <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
+  <FloatingIcons />
+  <div className="relative z-10">
         {/* Hero Section */}
-        <section className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen">
-          <FloatingIcons />
+  <section className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen">
           <div className="w-full max-w-5xl mx-auto text-center relative z-10 flex flex-col justify-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -41,7 +41,10 @@ const Index: React.FC = () => {
                   <div className="absolute inset-x-32 sm:inset-x-40 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-2/3" />
                 </div>
                 
-                <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                <div className="relative w-full flex flex-row items-center justify-center h-7 mt-0 mb-0 left-12">
+                  <FloatingIcons />
+                </div>
+                <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-300 max-w-4xl mx-auto leading-relaxed mt-2">
                   Vi leverer digitale løsninger til vækst og effektivitet.
                 </p>
               </div>
@@ -106,6 +109,7 @@ const Index: React.FC = () => {
             <ProjectCarousel />
           </div>
         </section>
+
 
         {/* Final CTA Section */}
         <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
