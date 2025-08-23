@@ -343,23 +343,23 @@ const Admin = () => {
     <div className="min-h-screen bg-background">
       <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
       {/* Navigation provided by AppShell */}
-      <div className="container mx-auto py-8 px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+      <div className="container mx-auto py-6 px-2 sm:px-4 md:px-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
             Admin Dashboard
           </h1>
-          <p className="text-lg text-white font-semibold mb-1">
+          <p className="text-base sm:text-lg text-white font-semibold mb-1">
             Velkommen tilbage{user?.user_metadata?.full_name ? ` ${user.user_metadata.full_name}` : user?.email ? `, ${user.email}` : ''}!
           </p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex space-x-1 mb-8 rounded-lg p-1 bg-muted/">
+        <div className="flex flex-col sm:flex-row gap-2 sm:space-x-1 mb-6 sm:mb-8 rounded-lg p-1 bg-muted/">
           {/* Nav tab style ala navLinkClasses */}
           {(() => {
             const tabClasses = (active: boolean) =>
               [
-                "relative flex items-center space-x-2 px-3 py-2 rounded-[--radius] text-sm font-medium transition-colors duration-200",
+                "relative flex items-center justify-center space-x-2 px-2 sm:px-3 py-2 rounded-[--radius] text-sm font-medium transition-colors duration-200",
                 active ? "text-white" : "text-gray-300 hover:text-white",
                 "after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[3px] after:rounded after:bg-gradient-to-r after:from-transparent after:via-[#FFD700] after:to-transparent after:opacity-100",
                 active
@@ -422,16 +422,14 @@ const Admin = () => {
                   Administrer uploadede dokumenter
                 </CardDescription>
               </CardHeader>
-              <div className="w-full max-w-5xl mx-auto mt-6">
-                <div className=" rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+              <div className="w-full max-w-5xl mx-auto mt-4 sm:mt-6">
+                <div className="rounded-2xl p-2 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
                   <div className="mx-auto max-w-3xl">
-
-                    
-                    <div className="px-6 py-4 mb-8">
+                    <div className="px-2 py-2 sm:px-6 sm:py-4 mb-6 sm:mb-8">
                       <FileUpload onChange={uploadFiles} />
                     </div>
                     {/* Extra spacing below upload before folder grid/table */}
-                    <div className="h-8" />
+                    <div className="h-4 sm:h-8" />
                     {/* Category confirmation modal for pending uploads */}
                     <CategoryModal
                       open={isCategoryModalOpen}
@@ -476,93 +474,95 @@ const Admin = () => {
                       </div>
                       <div className="text-sm text-[#FFD700]">Viser mappe: {activeFolderFilter}</div>
                     </div>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Titel</TableHead>
-                          <TableHead>Preview</TableHead>
-                          <TableHead>Størrelse</TableHead>
-                          <TableHead>Downloads</TableHead>
-                          <TableHead>Oprettet</TableHead>
-                          <TableHead>Handlinger</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {pagedFiles.map((doc) => (
-                          <TableRow key={doc.id}>
-                            <TableCell className="font-medium">{doc.title}</TableCell>
-                            <TableCell>
-                              <div className="w-10 h-10 rounded bg-muted/10 flex items-center justify-center">
-                                {doc.file_type.startsWith("image/") ? (
-                                  // small image thumbnail
-                                  // eslint-disable-next-line jsx-a11y/img-redundant-alt
-                                  <img src={doc.file_url} alt={`thumb-${doc.title}`} className="w-10 h-10 object-cover rounded" loading="lazy" />
-                                ) : (
-                                  <FileIcon className="h-5 w-5" />
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell>{formatFileSize(doc.file_size)}</TableCell>
-                            <TableCell>{doc.download_count}</TableCell>
-                            <TableCell>{formatDate(doc.created_at)}</TableCell>
-                            <TableCell>
-                              <div className="flex space-x-2">
-                                {/* Download button always visible */}
-                                <Button
-                                  size="sm"
-                                  variant="secondary"
-                                  onClick={async () => {
-                                    try {
-                                      const response = await fetch(doc.file_url);
-                                      const blob = await response.blob();
-                                      const url = window.URL.createObjectURL(blob);
-                                      const link = document.createElement('a');
-                                      link.href = url;
-                                      link.download = doc.file_name || 'download';
-                                      document.body.appendChild(link);
-                                      link.click();
-                                      setTimeout(() => {
-                                        window.URL.revokeObjectURL(url);
-                                        document.body.removeChild(link);
-                                      }, 100);
-                                    } catch (e) {
-                                      alert('Kunne ikke downloade filen.');
-                                    }
-                                  }}
-                                >
-                                  <Download className="h-4 w-4 text-yellow-400" />
-                                </Button>
-                                {/* Preview button only visible if selected */}
-                                {selectedDocId === doc.id ? (
-                                  <Button
-                                    size="sm"
-                                    variant="secondary"
-                                    onClick={() => window.open(doc.file_url, "_blank")}
-                                  >
-                                    <Eye className="h-4 w-4 text-yellow-400" />
-                                  </Button>
-                                ) : (
-                                  <Button
-                                    size="sm"
-                                    variant="secondary"
-                                    onClick={() => setSelectedDocId(doc.id)}
-                                  >
-                                    <Eye className="h-4 w-4 text-yellow-400" />
-                                  </Button>
-                                )}
-                                <Button
-                                  size="sm"
-                                  variant="destructive"
-                                  onClick={() => deleteDocument(doc.id)}
-                                >
-                                  <Trash2 className="h-4 w-4 text-yellow-400" />
-                                </Button>
-                              </div>
-                            </TableCell>
+                    <div className="overflow-x-auto">
+                      <Table className="min-w-[600px]">
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Titel</TableHead>
+                            <TableHead>Preview</TableHead>
+                            <TableHead>Størrelse</TableHead>
+                            <TableHead>Downloads</TableHead>
+                            <TableHead>Oprettet</TableHead>
+                            <TableHead>Handlinger</TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                        </TableHeader>
+                        <TableBody>
+                          {pagedFiles.map((doc) => (
+                            <TableRow key={doc.id}>
+                              <TableCell className="font-medium">{doc.title}</TableCell>
+                              <TableCell>
+                                <div className="w-10 h-10 rounded bg-muted/10 flex items-center justify-center">
+                                  {doc.file_type.startsWith("image/") ? (
+                                    // small image thumbnail
+                                    // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                                    <img src={doc.file_url} alt={`thumb-${doc.title}`} className="w-10 h-10 object-cover rounded" loading="lazy" />
+                                  ) : (
+                                    <FileIcon className="h-5 w-5" />
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>{formatFileSize(doc.file_size)}</TableCell>
+                              <TableCell>{doc.download_count}</TableCell>
+                              <TableCell>{formatDate(doc.created_at)}</TableCell>
+                              <TableCell>
+                                <div className="flex flex-wrap gap-2">
+                                  {/* Download button always visible */}
+                                  <Button
+                                    size="sm"
+                                    variant="secondary"
+                                    onClick={async () => {
+                                      try {
+                                        const response = await fetch(doc.file_url);
+                                        const blob = await response.blob();
+                                        const url = window.URL.createObjectURL(blob);
+                                        const link = document.createElement('a');
+                                        link.href = url;
+                                        link.download = doc.file_name || 'download';
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        setTimeout(() => {
+                                          window.URL.revokeObjectURL(url);
+                                          document.body.removeChild(link);
+                                        }, 100);
+                                      } catch (e) {
+                                        alert('Kunne ikke downloade filen.');
+                                      }
+                                    }}
+                                  >
+                                    <Download className="h-4 w-4 text-yellow-400" />
+                                  </Button>
+                                  {/* Preview button only visible if selected */}
+                                  {selectedDocId === doc.id ? (
+                                    <Button
+                                      size="sm"
+                                      variant="secondary"
+                                      onClick={() => window.open(doc.file_url, "_blank")}
+                                    >
+                                      <Eye className="h-4 w-4 text-yellow-400" />
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      size="sm"
+                                      variant="secondary"
+                                      onClick={() => setSelectedDocId(doc.id)}
+                                    >
+                                      <Eye className="h-4 w-4 text-yellow-400" />
+                                    </Button>
+                                  )}
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    onClick={() => deleteDocument(doc.id)}
+                                  >
+                                    <Trash2 className="h-4 w-4 text-yellow-400" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
                     <div className="flex items-center justify-between mt-4">
                       <div className="text-sm text-muted">Side {folderPage} af {totalPages}</div>
                       <div className="space-x-2">
