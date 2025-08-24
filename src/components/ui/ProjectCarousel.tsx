@@ -17,29 +17,30 @@ const projects = [
     ],
     link: "/projects/pitch-n-sales"
   },
-  {
-    id: 2,
-    title: "NordStack CRM",
-    description: "Et kraftfuldt CRM-system bygget til moderne virksomheder. Administrer kunder, leads og salgsprocesser alt sammen på ét sted.",
-    images: [
-      "/iphone_images/IphoneMockup1.png", // Placeholder - replace with actual images
-      "/iphone_images/IphoneMockup2.png",
-      "/iphone_images/IphoneMockup3.png",
-    ],
-    link: "/projects/nordstack-crm"
-  },
-  {
-    id: 3,
-    title: "WebApp Builder",
-    description: "En avanceret platform til at bygge custom web-applikationer. Fra prototyper til færdige løsninger med skalerbare funktioner.",
-    images: [
-      "/iphone_images/IphoneMockup1.png", // Placeholder - replace with actual images
-      "/iphone_images/IphoneMockup2.png",
-      "/iphone_images/IphoneMockup3.png",
-    ],
-    link: "/projects/webapp-builder"
-  }
 ];
+
+  // {
+  //   id: 2,
+  //   title: "NordStack CRM",
+  //   description: "Et kraftfuldt CRM-system bygget til moderne virksomheder. Administrer kunder, leads og salgsprocesser alt sammen på ét sted.",
+  //   images: [
+  //     "/iphone_images/IphoneMockup1.png", // Placeholder - replace with actual images
+  //     "/iphone_images/IphoneMockup2.png",
+  //     "/iphone_images/IphoneMockup3.png",
+  //   ],
+  //   link: "/projects/nordstack-crm"
+  // },
+  // {
+  //   id: 3,
+  //   title: "WebApp Builder",
+  //   description: "En avanceret platform til at bygge custom web-applikationer. Fra prototyper til færdige løsninger med skalerbare funktioner.",
+  //   images: [
+  //     "/iphone_images/IphoneMockup1.png", // Placeholder - replace with actual images
+  //     "/iphone_images/IphoneMockup2.png",
+  //     "/iphone_images/IphoneMockup3.png",
+  //   ],
+  //   link: "/projects/webapp-builder"
+  // }
 
 
 const ProjectCarouselComponent: React.FC = () => {
@@ -177,41 +178,44 @@ const ProjectCarouselComponent: React.FC = () => {
       </div>
 
       {/* Navigation */}
-      <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none">
-        <Button
-          onClick={goToPrevious}
-          className="pointer-events-auto -translate-x-4 bg-black/20 border border-white/10 hover:bg-white/10 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110"
-          size="icon"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </Button>
-        
-        <Button
-          onClick={goToNext}
-          className="pointer-events-auto translate-x-4 bg-black/20 border border-white/10 hover:bg-white/10 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110"
-          size="icon"
-        >
-          <ChevronRight className="h-6 w-6" />
-        </Button>
-      </div>
+      {projects.length > 1 && (
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none">
+          <Button
+            onClick={goToPrevious}
+            className="pointer-events-auto -translate-x-4 bg-black/20 border border-white/10 hover:bg-white/10 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110"
+            size="icon"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+          <Button
+            onClick={goToNext}
+            className="pointer-events-auto translate-x-4 bg-black/20 border border-white/10 hover:bg-white/10 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110"
+            size="icon"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </Button>
+        </div>
+      )}
 
       {/* Project dots indicator */}
-      <div className="flex justify-center mt-8 space-x-3">
-        {projects.map((_, index) => (
-          <button
-            key={index}
-            onClick={useCallback(() => {
-              setCurrentProjectIndex(index);
-              setCurrentImageIndex(0);
-            }, [])}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentProjectIndex 
-                ? 'bg-[#FFD700] scale-125 shadow-lg' 
-                : 'bg-white/30 hover:bg-white/50'
-            }`}
-          />
-        ))}
-      </div>
+      {projects.length > 1 && (
+        <div className="flex justify-center mt-8 space-x-3">
+          {projects.map((_, index) => (
+            <button
+              key={index}
+              onClick={useCallback(() => {
+                setCurrentProjectIndex(index);
+                setCurrentImageIndex(0);
+              }, [])}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentProjectIndex 
+                  ? 'bg-[#FFD700] scale-125 shadow-lg' 
+                  : 'bg-white/30 hover:bg-white/50'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

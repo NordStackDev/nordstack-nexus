@@ -74,7 +74,7 @@ export const ServicesSection: React.FC = () => {
           className="text-center mb-20"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Her er hvad vi kan tilbyde dig {firstName}.
+            Her er hvad vi kan tilbyde dig {firstName}
           </h2>
           <div className="w-full max-w-2xl mx-auto h-10 relative flex items-center justify-center mb-8">
             <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />
@@ -101,13 +101,15 @@ export const ServicesSection: React.FC = () => {
               }}
               className="group relative"
             >
-              <div className={`
-                relative p-8 rounded-2xl bg-gradient-to-br ${service.gradient} 
-                backdrop-blur-sm border ${service.border}
-                hover:border-opacity-40 transition-all duration-500
-                shadow-lg hover:shadow-2xl hover:shadow-black/20
-                overflow-hidden
-              `}>
+              <div
+                className={
+                  `relative p-8 rounded-2xl bg-gradient-to-br ${service.gradient} ` +
+                  `backdrop-blur-sm border ${service.border} ` +
+                  `hover:border-opacity-40 transition-all duration-500 ` +
+                  `shadow-lg hover:shadow-2xl hover:shadow-black/20 overflow-hidden ` +
+                  `min-h-[340px] flex flex-col`
+                }
+              >
                 {/* Background glow effect */}
                 <div className={`
                   absolute inset-0 bg-gradient-to-br ${service.gradient} 

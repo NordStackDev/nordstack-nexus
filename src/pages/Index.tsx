@@ -16,8 +16,7 @@ const Index: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden overflow-y-visible">
-      <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
-      <FloatingIcons />
+  <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
       <div className="relative z-10">
         {/* Hero Section */}
         <section className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen">
