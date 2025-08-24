@@ -16,11 +16,11 @@ const Index: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden overflow-y-visible">
-  <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
-  <FloatingIcons />
-  <div className="relative z-10">
+      <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
+      <FloatingIcons />
+      <div className="relative z-10">
         {/* Hero Section */}
-  <section className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen">
+        <section className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen">
           <div className="w-full max-w-5xl mx-auto text-center relative z-10 flex flex-col justify-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -32,15 +32,18 @@ const Index: React.FC = () => {
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight tracking-tight">
                   NordStack Nexus
                 </h1>
-                
-                {/* Decorative line */}
-                <div className="w-full max-w-3xl mx-auto h-10 relative flex items-center justify-center">
-                  <div className="absolute inset-x-16 sm:inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-5/6 blur-sm" />
-                  <div className="absolute inset-x-16 sm:inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-px w-5/6" />
-                  <div className="absolute inset-x-32 sm:inset-x-40 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[5px] w-2/3 blur-sm" />
-                  <div className="absolute inset-x-32 sm:inset-x-40 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-2/3" />
+                {/* Mobil: én centreret gul linje, desktop: flere gradient-linjer */}
+                <div className="w-full max-w-2xl mx-auto h-10 relative items-center justify-center mb-8">
+                  {/* Mobil version */}
+                  <div className="absolute left-1/2 top-0 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[2px] w-1/2 sm:hidden" />
+                  {/* Desktop version */}
+                  <div className="hidden sm:block">
+                    <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />
+                    <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-px w-3/4" />
+                    <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[5px] w-1/4 blur-sm" />
+                    <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-1/4" />
+                  </div>
                 </div>
-                
                 <div className="relative w-full flex flex-row items-center justify-center h-7 mt-0 mb-0 left-12">
                   <FloatingIcons />
                 </div>
@@ -71,7 +74,7 @@ const Index: React.FC = () => {
                   <Link to="/contact">Kontakt os</Link>
                 </Button>
               </div>
-              
+
               <div className="pt-16">
                 <ScrollArrow offset={headerOffset} />
               </div>
@@ -102,14 +105,14 @@ const Index: React.FC = () => {
                 <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-1/4" />
               </div>
               <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Et udvalg af vores løsninger i praksis. Se hvordan vi hjælper virksomheder med at transformere deres digitale tilstedeværelse.
+                Et udvalg af vores løsninger i praksis. Se hvordan vi hjælper
+                virksomheder med at transformere deres digitale tilstedeværelse.
               </p>
             </motion.div>
-            
+
             <ProjectCarousel />
           </div>
         </section>
-
 
         {/* Final CTA Section */}
         <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
@@ -125,7 +128,8 @@ const Index: React.FC = () => {
                 Klar til at transformere din virksomhed?
               </h3>
               <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-                Lad os hjælpe dig med at skabe moderne digitale løsninger, der driver vækst og effektivitet.
+                Lad os hjælpe dig med at skabe moderne digitale løsninger, der
+                driver vækst og effektivitet.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Button

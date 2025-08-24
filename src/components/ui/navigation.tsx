@@ -45,10 +45,7 @@ export const Navigation = ({
             </div>
             <div className="hidden sm:block ml-2">
               <span className="text-xl font-bold text-foreground">
-                Nordstack
-              </span>
-              <span className="text-sm text-muted block leading-tight">
-                Pitch Sales Tracker
+                Nordstack Nexus
               </span>
             </div>
           </Link>

@@ -1,5 +1,3 @@
-
-
 import { motion } from "framer-motion";
 import { Cloud, Laptop, Code, Database } from "lucide-react";
 
@@ -17,10 +15,14 @@ const FloatingIcons: React.FC = () => (
         key={text}
         className="relative group text-white/20 cursor-pointer"
         animate={{ y: [0, -16, 0] }}
-        transition={{ duration: 4 + idx * 0.5, delay: idx * 0.5, repeat: Infinity, ease: "easeInOut" }}
+        transition={{
+          duration: 4 + idx * 0.5,
+          delay: idx * 0.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
       >
         <Icon size={28} />
-  {/* Kun én tooltip pr. ikon */}
         <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 mt-3 w-max px-4 py-2 rounded bg-black/80 text-base text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 whitespace-nowrap shadow-lg font-semibold">
           {text}
         </div>
