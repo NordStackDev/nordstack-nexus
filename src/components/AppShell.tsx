@@ -1,8 +1,10 @@
 
+
 import { ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigation } from "@/components/ui/navigation";
 import Footer from "@/components/ui/Footer";
+import MobileNavBar from "@/components/MobileNavBar";
 
 export default function AppShell({ children }: { children: ReactNode }) {
   const { user, signOut, isAdmin, isSigningOut } = useAuth();
@@ -20,6 +22,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
         {children}
       </main>
   <Footer />
+  <MobileNavBar isAuthenticated={Boolean(user)} isAdmin={isAdmin} onLogout={signOut} />
     </div>
   );
 }
