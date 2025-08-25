@@ -9,6 +9,7 @@ import AppShell from "@/components/AppShell";
 import PageTransitionWrapper from "@/components/PageTransitionWrapper";
 import { PublicOnlyRoute } from "@/components/RouteGuards";
 import { AdminProtectedRoute } from "@/components/AdminProtectedRoute";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -18,7 +19,10 @@ const AdminAuth = lazy(() => import("./pages/AdminAuth"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Contact = lazy(() => import("./pages/Contact"));
 const PitchNSales = lazy(() => import("./pages/projects/PitchNSales"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+
+const Terms = lazy(() => import("./pages/terms"));
+const Privacy = lazy(() => import("./pages/privacy"));
+const Tos = lazy(() => import("./pages/tos"));
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -43,6 +47,9 @@ const App = () => (
                   path="/projects/pitch-n-sales"
                   element={<PitchNSales />}
                 />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/tos" element={<Tos />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
