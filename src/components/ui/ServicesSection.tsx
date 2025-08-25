@@ -1,57 +1,64 @@
 import React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
+import { YellowGradientLine } from "@/components/ui/YellowGradientLine";
 import { Globe, Code2, Palette, Smartphone, Database, Zap } from "lucide-react";
 
 const services = [
   {
     icon: Globe,
     title: "Hjemmesider",
-    description: "Moderne, responsive hjemmesider der konverterer besøgende til kunder. SEO-optimeret og hurtig indlæsning.",
+    description:
+      "Moderne, responsive hjemmesider der konverterer besøgende til kunder. SEO-optimeret og hurtig indlæsning.",
     gradient: "from-blue-500/20 to-cyan-500/20",
     iconColor: "text-blue-400",
-    border: "border-blue-500/20"
+    border: "border-blue-500/20",
   },
   {
     icon: Code2,
     title: "Web Applikationer",
-    description: "Skalerbare web-applikationer og systemer tilpasset din virksomheds behov. Fra CRM til custom løsninger.",
+    description:
+      "Skalerbare web-applikationer og systemer tilpasset din virksomheds behov. Fra CRM til custom løsninger.",
     gradient: "from-green-500/20 to-emerald-500/20",
     iconColor: "text-green-400",
-    border: "border-green-500/20"
+    border: "border-green-500/20",
   },
   {
     icon: Palette,
     title: "Design & Branding",
-    description: "Komplet visuel identitet fra logo til brandguides. Skab en sammenhængende oplevelse på tværs af platforme.",
+    description:
+      "Komplet visuel identitet fra logo til brandguides. Skab en sammenhængende oplevelse på tværs af platforme.",
     gradient: "from-purple-500/20 to-pink-500/20",
     iconColor: "text-purple-400",
-    border: "border-purple-500/20"
+    border: "border-purple-500/20",
   },
   {
     icon: Smartphone,
     title: "Mobile-First Design",
-    description: "Alle løsninger optimeres til mobil fra dag ét. Perfekt brugeroplevelse på alle enheder.",
+    description:
+      "Alle løsninger optimeres til mobil fra dag ét. Perfekt brugeroplevelse på alle enheder.",
     gradient: "from-orange-500/20 to-red-500/20",
     iconColor: "text-orange-400",
-    border: "border-orange-500/20"
+    border: "border-orange-500/20",
   },
   {
     icon: Database,
     title: "Database & Backend",
-    description: "Robuste backend-systemer og databaser der skalerer med din vækst. Sikker og pålidelig arkitektur.",
+    description:
+      "Robuste backend-systemer og databaser der skalerer med din vækst. Sikker og pålidelig arkitektur.",
     gradient: "from-indigo-500/20 to-blue-600/20",
     iconColor: "text-indigo-400",
-    border: "border-indigo-500/20"
+    border: "border-indigo-500/20",
   },
   {
     icon: Zap,
     title: "Performance & SEO",
-    description: "Lynhurtige websites med top SEO-resultater. Optimeret for søgemaskiner og konvertering.",
+    description:
+      "Lynhurtige websites med top SEO-resultater. Optimeret for søgemaskiner og konvertering.",
     gradient: "from-yellow-500/20 to-amber-500/20",
     iconColor: "text-yellow-400",
-    border: "border-yellow-500/20"
-  }
+    border: "border-yellow-500/20",
+  },
 ];
 
 export const ServicesSection: React.FC = () => {
@@ -76,14 +83,12 @@ export const ServicesSection: React.FC = () => {
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
             Her er hvad vi kan tilbyde dig {firstName}
           </h2>
-          <div className="w-full max-w-2xl mx-auto h-10 relative flex items-center justify-center mb-8">
-            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />
-            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-px w-3/4" />
-            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[5px] w-1/4 blur-sm" />
-            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-1/4" />
-          </div>
+          <YellowGradientLine />
+          {/* Mobil: én centreret gul linje, desktop: flere gradient-linjer */}
           <p className="text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
-            NordStack leverer moderne løsninger til virksomheder, der ønsker at optimere deres digitale tilstedeværelse og processer med avanceret teknologi.
+            NordStack leverer moderne løsninger til virksomheder, der ønsker at
+            optimere deres digitale tilstedeværelse og processer med avanceret
+            teknologi.
           </p>
         </motion.div>
 
@@ -95,9 +100,9 @@ export const ServicesSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
-                transition: { duration: 0.2 }
+                transition: { duration: 0.2 },
               }}
               className="group relative"
             >
@@ -111,26 +116,32 @@ export const ServicesSection: React.FC = () => {
                 }
               >
                 {/* Background glow effect */}
-                <div className={`
+                <div
+                  className={`
                   absolute inset-0 bg-gradient-to-br ${service.gradient} 
                   opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl
-                `} />
-                
+                `}
+                />
+
                 {/* Content */}
                 <div className="relative z-10">
                   <div className="flex items-center mb-6">
-                    <div className={`
+                    <div
+                      className={`
                       p-3 rounded-xl bg-black/20 backdrop-blur-sm 
                       group-hover:scale-110 transition-transform duration-300
-                    `}>
-                      <service.icon className={`h-8 w-8 ${service.iconColor}`} />
+                    `}
+                    >
+                      <service.icon
+                        className={`h-8 w-8 ${service.iconColor}`}
+                      />
                     </div>
                   </div>
-                  
+
                   <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 group-hover:text-[#FFD700] transition-colors duration-300">
                     {service.title}
                   </h3>
-                  
+
                   <p className="text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-300">
                     {service.description}
                   </p>

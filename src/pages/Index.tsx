@@ -1,4 +1,5 @@
 import React from "react";
+import { YellowGradientLine } from "@/components/ui/YellowGradientLine";
 import { BackgroundBeams } from "@/components/BackgroundBeams";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -16,7 +17,7 @@ const Index: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden overflow-y-visible">
-  <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
+      <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
       <div className="relative z-10">
         {/* Hero Section */}
         <section className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen">
@@ -97,12 +98,7 @@ const Index: React.FC = () => {
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                 Cases
               </h2>
-              <div className="w-full max-w-2xl mx-auto h-10 relative flex items-center justify-center mb-8">
-                <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />
-                <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-px w-3/4" />
-                <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[5px] w-1/4 blur-sm" />
-                <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-1/4" />
-              </div>
+              <YellowGradientLine />
               <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
                 Et udvalg af vores løsninger i praksis. Se hvordan vi hjælper
                 virksomheder med at transformere deres digitale tilstedeværelse.

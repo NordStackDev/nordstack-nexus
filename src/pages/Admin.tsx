@@ -77,6 +77,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { BackgroundBeams } from "@/components/BackgroundBeams";
+import { MessagesList } from "@/components/ui/admin/MessagesList";
 
 interface Document {
   id: string;
@@ -96,9 +97,8 @@ interface ContactMessage {
   id: string;
   name: string;
   email: string;
-  subject: string;
+  phone?: string;
   message: string;
-  company: string;
   is_read: boolean;
   created_at: string;
 }
@@ -239,6 +239,7 @@ const Admin = () => {
         .select("*")
         .order("created_at", { ascending: false });
 
+      console.log("[DEBUG] Fetched messages:", data, error);
       if (error) throw error;
       setMessages(data || []);
     } catch (error) {
@@ -439,7 +440,6 @@ const Admin = () => {
             !
           </p>
         </div>
-
         {/* Navigation Tabs */}
         <div className="flex flex-col sm:flex-row gap-2 sm:space-x-1 mb-6 sm:mb-8 rounded-lg p-1 bg-muted/">
           {/* Nav tab style ala navLinkClasses */}
@@ -488,7 +488,6 @@ const Admin = () => {
             );
           })()}
         </div>
-
         {/* Documents Tab inkl. statistik */}
         {activeTab === "documents" && (
           <>
@@ -719,79 +718,15 @@ const Admin = () => {
             </Card>
           </>
         )}
-
         {/* Messages Tab */}
         {activeTab === "messages" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <MessageSquare className="h-5 w-5" />
-                <span>Beskeder</span>
-              </CardTitle>
-              <CardDescription>
-                Se og administrer kontaktbeskeder
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {messages.map((message) => (
-                  <Card
-                    key={message.id}
-                    className={!message.is_read ? "border-primary" : ""}
-                  >
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-lg">
-                            {message.subject || "Ingen emne"}
-                          </CardTitle>
-                          <CardDescription>
-                            Fra: {message.name} ({message.email})
-                            {message.company && ` - ${message.company}`}
-                          </CardDescription>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {!message.is_read && (
-                            <Badge variant="destructive">Ny</Badge>
-                          )}
-                          <span className="text-sm text-muted">
-                            {formatDate(message.created_at)}
-                          </span>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="mb-4 whitespace-pre-line text-base text-foreground">
-                        {message.message}
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant={message.is_read ? "outline" : "secondary"}
-                          onClick={() =>
-                            toggleReadMessage(message.id, message.is_read)
-                          }
-                        >
-                          {message.is_read
-                            ? "Markér som ulæst"
-                            : "Markér som læst"}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => deleteMessage(message.id)}
-                        >
-                          Slet
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <MessagesList
+            messages={messages}
+            formatDate={formatDate}
+            toggleReadMessage={toggleReadMessage}
+            deleteMessage={deleteMessage}
+          />
         )}
-
         {/* User Management Tab */}
         {activeTab === "stats" && (
           <Card>
