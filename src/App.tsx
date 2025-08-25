@@ -7,9 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { lazy } from "react";
 import AppShell from "@/components/AppShell";
 import PageTransitionWrapper from "@/components/PageTransitionWrapper";
-import {
-  PublicOnlyRoute,
-} from "@/components/RouteGuards";
+import { PublicOnlyRoute } from "@/components/RouteGuards";
 import { AdminProtectedRoute } from "@/components/AdminProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -18,6 +16,8 @@ const Index = lazy(() => import("./pages/Index"));
 const Auth = lazy(() => import("./pages/Auth"));
 const AdminAuth = lazy(() => import("./pages/AdminAuth"));
 const Admin = lazy(() => import("./pages/Admin"));
+const Contact = lazy(() => import("./pages/Contact"));
+const PitchNSales = lazy(() => import("./pages/projects/PitchNSales"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => (
@@ -38,6 +38,11 @@ const App = () => (
                 <Route element={<AdminProtectedRoute />}>
                   <Route path="/admin" element={<Admin />} />
                 </Route>
+                <Route path="/contact" element={<Contact />} />
+                <Route
+                  path="/projects/pitch-n-sales"
+                  element={<PitchNSales />}
+                />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>

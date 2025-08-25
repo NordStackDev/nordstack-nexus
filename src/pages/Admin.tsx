@@ -1,4 +1,39 @@
+// Slet besked
+const deleteMessage = async (id: string) => {
+  try {
+    const { error } = await supabase.from("messages").delete().eq("id", id);
+    if (error) throw error;
+    toast({
+      title: "Success",
+      description: "Besked slettet",
+    });
+    fetchMessages();
+  } catch (error: any) {
+    toast({
+      title: "Fejl",
+      description: error.message || "Kunne ikke slette besked",
+      variant: "destructive",
+    });
+  }
+};
 
+// Markér som læst/ulæst
+const toggleReadMessage = async (id: string, isRead: boolean) => {
+  try {
+    const { error } = await supabase
+      .from("messages")
+      .update({ is_read: !isRead })
+      .eq("id", id);
+    if (error) throw error;
+    fetchMessages();
+  } catch (error: any) {
+    toast({
+      title: "Fejl",
+      description: error.message || "Kunne ikke opdatere besked",
+      variant: "destructive",
+    });
+  }
+};
 import { useState, useEffect, useMemo } from "react";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -78,17 +113,20 @@ interface Profile {
   user_id?: string;
 }
 
-
 const Admin = () => {
   const { user, isAdmin, signOut } = useAuth();
   const { toast } = useToast();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [activeFolderFilter, setActiveFolderFilter] = useState<string | null>(null);
+  const [activeFolderFilter, setActiveFolderFilter] = useState<string | null>(
+    null
+  );
   // Modal / pending upload state
   const [pendingFiles, setPendingFiles] = useState<File[] | null>(null);
-  const [pendingCategories, setPendingCategories] = useState<Record<string, string>>({});
+  const [pendingCategories, setPendingCategories] = useState<
+    Record<string, string>
+  >({});
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [bulkCategory, setBulkCategory] = useState<string>("");
   // Optional pending metadata for single-file upload (from Upload form)
@@ -117,9 +155,22 @@ const Admin = () => {
   // Pagination for folder view
   const [folderPage, setFolderPage] = useState(1);
   const PAGE_SIZE = 10;
-  const filesInActiveFolder = useMemo(() => documents.filter((d) => d.category === activeFolderFilter), [documents, activeFolderFilter]);
-  const totalPages = Math.max(1, Math.ceil(filesInActiveFolder.length / PAGE_SIZE));
-  const pagedFiles = useMemo(() => filesInActiveFolder.slice((folderPage - 1) * PAGE_SIZE, folderPage * PAGE_SIZE), [filesInActiveFolder, folderPage]);
+  const filesInActiveFolder = useMemo(
+    () => documents.filter((d) => d.category === activeFolderFilter),
+    [documents, activeFolderFilter]
+  );
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filesInActiveFolder.length / PAGE_SIZE)
+  );
+  const pagedFiles = useMemo(
+    () =>
+      filesInActiveFolder.slice(
+        (folderPage - 1) * PAGE_SIZE,
+        folderPage * PAGE_SIZE
+      ),
+    [filesInActiveFolder, folderPage]
+  );
 
   // Upload form state
   const [title, setTitle] = useState("");
@@ -161,7 +212,10 @@ const Admin = () => {
   };
 
   // Prepare files (single or multiple) for modal confirmation
-  const prepareFilesUpload = (files: File[] | FileList | null, meta?: { title?: string; description?: string; isPublic?: boolean }) => {
+  const prepareFilesUpload = (
+    files: File[] | FileList | null,
+    meta?: { title?: string; description?: string; isPublic?: boolean }
+  ) => {
     if (!files) return;
     const arr = Array.isArray(files) ? files : Array.from(files);
     if (arr.length === 0) return;
@@ -170,13 +224,18 @@ const Admin = () => {
     setPendingFiles(arr);
     setPendingCategories(seeded);
     setIsCategoryModalOpen(true);
-    if (meta) setPendingMeta({ title: meta.title || "", description: meta.description || "", isPublic: !!meta.isPublic });
+    if (meta)
+      setPendingMeta({
+        title: meta.title || "",
+        description: meta.description || "",
+        isPublic: !!meta.isPublic,
+      });
   };
 
   const fetchMessages = async () => {
     try {
       const { data, error } = await supabase
-        .from("contact_messages")
+        .from("messages")
         .select("*")
         .order("created_at", { ascending: false });
 
@@ -190,7 +249,6 @@ const Admin = () => {
       });
     }
   };
-  
 
   const handleFileUpload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -204,8 +262,18 @@ const Admin = () => {
     const name = file.name.toLowerCase();
     const type = (file.type || "").toLowerCase();
     if (type.startsWith("image/")) return "Billeder";
-    if (name.includes("invoice") || name.includes("faktura") || type === "application/pdf") return "Faktura";
-    if (name.includes("contract") || name.includes("kontrakt") || name.includes("agreement")) return "Kontrakt";
+    if (
+      name.includes("invoice") ||
+      name.includes("faktura") ||
+      type === "application/pdf"
+    )
+      return "Faktura";
+    if (
+      name.includes("contract") ||
+      name.includes("kontrakt") ||
+      name.includes("agreement")
+    )
+      return "Kontrakt";
     return "Andre";
   };
 
@@ -238,17 +306,25 @@ const Admin = () => {
         acc[c] = (acc[c] || 0) + 1;
         return acc;
       }, {});
-      const desc = Object.entries(summary).map(([c, n]) => `${c}: ${n}`).join(", ");
-      toast({ title: `Uploader ${pendingFiles.length} filer`, description: desc });
+      const desc = Object.entries(summary)
+        .map(([c, n]) => `${c}: ${n}`)
+        .join(", ");
+      toast({
+        title: `Uploader ${pendingFiles.length} filer`,
+        description: desc,
+      });
     } catch (err) {
       // ignore
     }
     setIsUploading(true);
     try {
       for (const file of pendingFiles) {
-        const categoryForFile = pendingCategories[file.name] || autoDetectCategory(file);
+        const categoryForFile =
+          pendingCategories[file.name] || autoDetectCategory(file);
         const sanitized = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-        const fileName = `${Date.now()}-${Math.floor(Math.random() * 10000)}-${sanitized}`;
+        const fileName = `${Date.now()}-${Math.floor(
+          Math.random() * 10000
+        )}-${sanitized}`;
         const filePath = `documents/${categoryForFile}/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
@@ -261,7 +337,8 @@ const Admin = () => {
           .from("documents")
           .getPublicUrl(filePath);
 
-        const isSingle = pendingFiles && pendingFiles.length === 1 && pendingMeta;
+        const isSingle =
+          pendingFiles && pendingFiles.length === 1 && pendingMeta;
         const { error: dbError } = await supabase.from("documents").insert({
           title: isSingle ? pendingMeta!.title || file.name : file.name,
           description: isSingle ? pendingMeta!.description || "" : "",
@@ -282,7 +359,11 @@ const Admin = () => {
       setActiveTab("documents");
       cancelPendingUpload();
     } catch (error: any) {
-      toast({ title: "Fejl", description: error.message, variant: "destructive" });
+      toast({
+        title: "Fejl",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setIsUploading(false);
     }
@@ -312,7 +393,7 @@ const Admin = () => {
   const markMessageAsRead = async (id: string) => {
     try {
       const { error } = await supabase
-        .from("contact_messages")
+        .from("messages")
         .update({ is_read: true })
         .eq("id", id);
 
@@ -349,7 +430,13 @@ const Admin = () => {
             Admin Dashboard
           </h1>
           <p className="text-base sm:text-lg text-white font-semibold mb-1">
-            Velkommen tilbage{user?.user_metadata?.full_name ? ` ${user.user_metadata.full_name}` : user?.email ? `, ${user.email}` : ''}!
+            Velkommen tilbage
+            {user?.user_metadata?.full_name
+              ? ` ${user.user_metadata.full_name}`
+              : user?.email
+              ? `, ${user.email}`
+              : ""}
+            !
           </p>
         </div>
 
@@ -364,7 +451,7 @@ const Admin = () => {
                 "after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[3px] after:rounded after:bg-gradient-to-r after:from-transparent after:via-[#FFD700] after:to-transparent after:opacity-100",
                 active
                   ? "after:scale-x-100"
-                  : "after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+                  : "after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
               ].join(" ");
             return (
               <>
@@ -407,7 +494,10 @@ const Admin = () => {
           <>
             <AdminStatsCards
               totalDocuments={documents.length}
-              totalDownloads={documents.reduce((sum, doc) => sum + doc.download_count, 0)}
+              totalDownloads={documents.reduce(
+                (sum, doc) => sum + doc.download_count,
+                0
+              )}
               unreadMessages={messages.filter((m) => !m.is_read).length}
             />
             <br />
@@ -438,11 +528,20 @@ const Admin = () => {
                       bulkCategory={bulkCategory}
                       isUploading={isUploading}
                       onBulkCategoryChange={setBulkCategory}
-                      onCategoryChange={(fileName, value) => setPendingCategories((s) => ({ ...s, [fileName]: value }))}
+                      onCategoryChange={(fileName, value) =>
+                        setPendingCategories((s) => ({
+                          ...s,
+                          [fileName]: value,
+                        }))
+                      }
                       onBulkApply={() => {
                         if (!bulkCategory || !pendingFiles) return;
-                        const updated: Record<string, string> = { ...pendingCategories };
-                        pendingFiles.forEach((f) => (updated[f.name] = bulkCategory));
+                        const updated: Record<string, string> = {
+                          ...pendingCategories,
+                        };
+                        pendingFiles.forEach(
+                          (f) => (updated[f.name] = bulkCategory)
+                        );
                         setPendingCategories(updated);
                       }}
                       onCancel={cancelPendingUpload}
@@ -456,7 +555,10 @@ const Admin = () => {
                   <div className="mt-6">
                     <FolderGrid
                       categoryCounts={categoryCounts}
-                      onOpenFolder={(cat) => { setActiveFolderFilter(cat); setFolderPage(1); }}
+                      onOpenFolder={(cat) => {
+                        setActiveFolderFilter(cat);
+                        setFolderPage(1);
+                      }}
                     />
                   </div>
                 ) : (
@@ -469,10 +571,14 @@ const Admin = () => {
                           className="flex items-center space-x-2 text-yellow-400 hover:bg-yellow-900/10 transition-colors px-3 py-2 rounded-full font-medium"
                         >
                           <ArrowLeft className="h-4 w-4 mr-1 text-yellow-400" />
-                          <span className="text-yellow-400">Tilbage til mapper</span>
+                          <span className="text-yellow-400">
+                            Tilbage til mapper
+                          </span>
                         </Button>
                       </div>
-                      <div className="text-sm text-[#FFD700]">Viser mappe: {activeFolderFilter}</div>
+                      <div className="text-sm text-[#FFD700]">
+                        Viser mappe: {activeFolderFilter}
+                      </div>
                     </div>
                     <div className="overflow-x-auto">
                       <Table className="min-w-[600px]">
@@ -489,21 +595,32 @@ const Admin = () => {
                         <TableBody>
                           {pagedFiles.map((doc) => (
                             <TableRow key={doc.id}>
-                              <TableCell className="font-medium">{doc.title}</TableCell>
+                              <TableCell className="font-medium">
+                                {doc.title}
+                              </TableCell>
                               <TableCell>
                                 <div className="w-10 h-10 rounded bg-muted/10 flex items-center justify-center">
                                   {doc.file_type.startsWith("image/") ? (
                                     // small image thumbnail
                                     // eslint-disable-next-line jsx-a11y/img-redundant-alt
-                                    <img src={doc.file_url} alt={`thumb-${doc.title}`} className="w-10 h-10 object-cover rounded" loading="lazy" />
+                                    <img
+                                      src={doc.file_url}
+                                      alt={`thumb-${doc.title}`}
+                                      className="w-10 h-10 object-cover rounded"
+                                      loading="lazy"
+                                    />
                                   ) : (
                                     <FileIcon className="h-5 w-5" />
                                   )}
                                 </div>
                               </TableCell>
-                              <TableCell>{formatFileSize(doc.file_size)}</TableCell>
+                              <TableCell>
+                                {formatFileSize(doc.file_size)}
+                              </TableCell>
                               <TableCell>{doc.download_count}</TableCell>
-                              <TableCell>{formatDate(doc.created_at)}</TableCell>
+                              <TableCell>
+                                {formatDate(doc.created_at)}
+                              </TableCell>
                               <TableCell>
                                 <div className="flex flex-wrap gap-2">
                                   {/* Download button always visible */}
@@ -512,12 +629,17 @@ const Admin = () => {
                                     variant="secondary"
                                     onClick={async () => {
                                       try {
-                                        const response = await fetch(doc.file_url);
+                                        const response = await fetch(
+                                          doc.file_url
+                                        );
                                         const blob = await response.blob();
-                                        const url = window.URL.createObjectURL(blob);
-                                        const link = document.createElement('a');
+                                        const url =
+                                          window.URL.createObjectURL(blob);
+                                        const link =
+                                          document.createElement("a");
                                         link.href = url;
-                                        link.download = doc.file_name || 'download';
+                                        link.download =
+                                          doc.file_name || "download";
                                         document.body.appendChild(link);
                                         link.click();
                                         setTimeout(() => {
@@ -525,7 +647,7 @@ const Admin = () => {
                                           document.body.removeChild(link);
                                         }, 100);
                                       } catch (e) {
-                                        alert('Kunne ikke downloade filen.');
+                                        alert("Kunne ikke downloade filen.");
                                       }
                                     }}
                                   >
@@ -536,7 +658,9 @@ const Admin = () => {
                                     <Button
                                       size="sm"
                                       variant="secondary"
-                                      onClick={() => window.open(doc.file_url, "_blank")}
+                                      onClick={() =>
+                                        window.open(doc.file_url, "_blank")
+                                      }
                                     >
                                       <Eye className="h-4 w-4 text-yellow-400" />
                                     </Button>
@@ -564,10 +688,29 @@ const Admin = () => {
                       </Table>
                     </div>
                     <div className="flex items-center justify-between mt-4">
-                      <div className="text-sm text-muted">Side {folderPage} af {totalPages}</div>
+                      <div className="text-sm text-muted">
+                        Side {folderPage} af {totalPages}
+                      </div>
                       <div className="space-x-2">
-                        <Button size="sm" variant="ghost" onClick={() => setFolderPage((p) => Math.max(1, p - 1))} disabled={folderPage <= 1}>Forrige</Button>
-                        <Button size="sm" onClick={() => setFolderPage((p) => Math.min(totalPages, p + 1))} disabled={folderPage >= totalPages}>Næste</Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() =>
+                            setFolderPage((p) => Math.max(1, p - 1))
+                          }
+                          disabled={folderPage <= 1}
+                        >
+                          Forrige
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            setFolderPage((p) => Math.min(totalPages, p + 1))
+                          }
+                          disabled={folderPage >= totalPages}
+                        >
+                          Næste
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -618,15 +761,29 @@ const Admin = () => {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-foreground mb-4">{message.message}</p>
-                      {!message.is_read && (
+                      <div className="mb-4 whitespace-pre-line text-base text-foreground">
+                        {message.message}
+                      </div>
+                      <div className="flex gap-2">
                         <Button
                           size="sm"
-                          onClick={() => markMessageAsRead(message.id)}
+                          variant={message.is_read ? "outline" : "secondary"}
+                          onClick={() =>
+                            toggleReadMessage(message.id, message.is_read)
+                          }
                         >
-                          Marker som læst
+                          {message.is_read
+                            ? "Markér som ulæst"
+                            : "Markér som læst"}
                         </Button>
-                      )}
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => deleteMessage(message.id)}
+                        >
+                          Slet
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -647,9 +804,7 @@ const Admin = () => {
                 Administrer brugere, roller og adgang
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              {/* <UserManagementTable /> */}
-            </CardContent>
+            <CardContent>{/* <UserManagementTable /> */}</CardContent>
           </Card>
         )}
       </div>
