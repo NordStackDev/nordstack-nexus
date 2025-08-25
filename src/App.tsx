@@ -20,7 +20,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const Contact = lazy(() => import("./pages/Contact"));
 const PitchNSales = lazy(() => import("./pages/projects/PitchNSales"));
 
-const Terms = lazy(() => import("./pages/terms"));
+const Terms = lazy(() => import("./pages/paymentterms"));
 const Privacy = lazy(() => import("./pages/privacy"));
 const Tos = lazy(() => import("./pages/tos"));
 
