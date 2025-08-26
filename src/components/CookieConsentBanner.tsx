@@ -38,7 +38,7 @@ export default function CookieConsentBanner() {
         left: "50%",
         right: "auto",
         transform: "translateX(-50%)",
-        bottom: "5.5rem", // move up above mobile navbar (adjust as needed)
+        bottom: "5.5rem",
         maxWidth: "95vw",
       }}
     >

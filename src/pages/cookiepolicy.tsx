@@ -2,7 +2,7 @@ import React from "react";
 
 const CookiePolicy: React.FC = () => (
   <div className="min-h-screen py-12 px-4 flex items-center justify-center">
-    <div className="w-full max-w-4xl mx-auto bg-white/5 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-8 md:p-12 text-white">
+  <div className="w-full max-w-4xl mx-auto bg-white/5 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-8 md:p-12 text-white pb-32 md:pb-12 mb-24 md:mb-0">
       <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-center tracking-tight">
         Cookiepolitik – Nordstack
       </h1>
