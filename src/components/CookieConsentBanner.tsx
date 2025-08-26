@@ -32,8 +32,17 @@ export default function CookieConsentBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[95vw] max-w-sm card-modern p-4 flex flex-col gap-4 items-start border border-border bg-background/95 text-foreground shadow-elegant backdrop-blur-md animate-in fade-in slide-in-from-bottom-4">
-      <div className="text-sm md:text-base">
+    <div
+      className="fixed z-50 w-[95vw] max-w-sm card-modern p-4 flex flex-col gap-4 items-start border border-border bg-background/95 text-foreground shadow-elegant backdrop-blur-md animate-in fade-in slide-in-from-bottom-4"
+      style={{
+        left: "50%",
+        right: "auto",
+        transform: "translateX(-50%)",
+        bottom: "5.5rem", // move up above mobile navbar (adjust as needed)
+        maxWidth: "95vw",
+      }}
+    >
+  <div className="text-sm md:text-base">
         Vi bruger cookies for at forbedre din oplevelse. Læs vores{" "}
         <a
           href="/cookiepolicy"
@@ -45,7 +54,7 @@ export default function CookieConsentBanner() {
         </a>
         .
       </div>
-      <div className="flex gap-2 self-end">
+  <div className="flex gap-2 self-end">
         <button
           onClick={handleAccept}
           className="btn-primary px-5 py-2 font-semibold shadow-card hover:scale-[1.04] focus-visible:ring-2 focus-visible:ring-primary/60"

@@ -9,7 +9,7 @@ interface MobileNavBarProps {
   onLogout?: () => void;
 }
 
-const MobileNavBar: React.FC<MobileNavBarProps> = ({ isAuthenticated, isAdmin, onLogout }) => {
+const  MobileNavBar: React.FC<MobileNavBarProps> = ({ isAuthenticated, isAdmin, onLogout }) => {
   const location = useLocation();
   return (
     <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[95vw] max-w-md bg-card/90 border border-white/10 rounded-2xl shadow-xl flex justify-around items-center py-2 px-2 backdrop-blur-md md:hidden">
