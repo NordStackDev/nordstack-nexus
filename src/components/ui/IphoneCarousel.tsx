@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Wifi, Signal, BatteryFull } from "lucide-react";
 
 const iphoneImages = [
-  "/iphone_images/Login.png",
-  "/iphone_images/LogPitchNSale.png",
-  "/iphone_images/Dashboard.png",
+  "/iphone_images/Login.webp",
+  "/iphone_images/LogPitchNSale.webp",
+  "/iphone_images/Dashboard.webp",
 ];
 
 export const IPhoneMockup: React.FC = () => {

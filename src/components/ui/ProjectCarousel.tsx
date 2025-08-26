@@ -13,9 +13,9 @@ const projects = [
     description:
       "Pitch 'N Sales gør det nemt at præsentere, dele og lukke salg direkte fra din mobil. Bygget som en moderne web-app med fokus på brugervenlighed.",
     images: [
-      "/iphone_images/Login.png",
-      "/iphone_images/LogPitchNSale.png",
-      "/iphone_images/Dashboard.png",
+      "/iphone_images/Login.webp",
+      "/iphone_images/LogPitchNSale.webp",
+      "/iphone_images/Dashboard.webp",
     ],
     link: "/projects/pitch-n-sales",
   },

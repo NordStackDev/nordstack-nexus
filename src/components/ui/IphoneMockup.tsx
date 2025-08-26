@@ -66,13 +66,10 @@ export const IphoneMockup: React.FC<IphoneMockupProps> = ({
         <div className="absolute inset-0 bg-white rounded-[2.7rem] overflow-hidden">
           <AnimatePresence mode="wait">
             <picture>
-              <source
-                srcSet={images[internalIndex] + ".webp"}
-                type="image/webp"
-              />
+              <source srcSet={images[internalIndex]} type="image/webp" />
               <motion.img
                 key={internalIndex}
-                src={images[internalIndex] + ".webp"}
+                src={images[internalIndex]}
                 alt="App Screenshot"
                 loading="lazy"
                 initial={{ y: 120, scale: 0.92, opacity: 0, rotateX: -20 }}
