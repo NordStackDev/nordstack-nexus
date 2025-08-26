@@ -37,10 +37,10 @@ export default function PitchNSales() {
       {/* Features i kort */}
       <div className="grid gap-6 md:grid-cols-2 w-full max-w-4xl mb-16">
         {[
-          "Live dashboard med real-time statistik for hele teamet og den enkelte sælger",
-          "Registrering af pitches, salg og opfølgninger direkte fra mobilen",
-          "Indbygget gamification og leaderboard, der motiverer og engagerer",
-          "Mulighed for at sætte mål, bonusser og give feedback direkte i systemet (under udvikling)",
+          "Live dashboard med real-time statistik for hele teamet og de udvalgte teamleads.",
+          "Registrering af pitches, salg og opfølgninger direkte fra mobilen.",
+          "Indbygget gamification og leaderboard, der motiverer og engagerer.",
+          "Mulighed for at sætte mål, bonusser og give feedback direkte i systemet (under udvikling).",
         ].map((feature, idx) => (
           <motion.div
             key={idx}
@@ -70,7 +70,7 @@ export default function PitchNSales() {
         >
           Med Pitch 'n Sales får du et komplet overblik over dit salgs-team –
           live og historisk. Spot top-performere, giv støtte til dem der har
-          brug for det, og slip for manuelle regneark.
+          brug for det så du kan få danmarks bedste team i direct marketing.
         </motion.p>
 
         <motion.p

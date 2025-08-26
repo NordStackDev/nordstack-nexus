@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Wifi, Signal, Battery } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { IphoneMockup } from "@/components/ui/IphoneMockup";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -8,40 +9,40 @@ import { ArrowRight } from "lucide-react";
 const projects = [
   {
     id: 1,
-    title: "Pitch 'N Sales",
-    description: "Pitch 'N Sales gør det nemt at præsentere, dele og lukke salg direkte fra din mobil. Bygget som en moderne web-app med fokus på brugervenlighed.",
+    title: "Pitch 'N Sales - Demo Version",
+    description:
+      "Pitch 'N Sales gør det nemt at præsentere, dele og lukke salg direkte fra din mobil. Bygget som en moderne web-app med fokus på brugervenlighed.",
     images: [
-      "/iphone_images/IphoneMockup1.png",
-      "/iphone_images/IphoneMockup2.png",
-      "/iphone_images/IphoneMockup3.png",
+      "/iphone_images/Login.png",
+      "/iphone_images/LogPitchNSale.png",
+      "/iphone_images/Dashboard.png",
     ],
-    link: "/projects/pitch-n-sales"
+    link: "/projects/pitch-n-sales",
   },
 ];
 
-  // {
-  //   id: 2,
-  //   title: "NordStack CRM",
-  //   description: "Et kraftfuldt CRM-system bygget til moderne virksomheder. Administrer kunder, leads og salgsprocesser alt sammen på ét sted.",
-  //   images: [
-  //     "/iphone_images/IphoneMockup1.png", // Placeholder - replace with actual images
-  //     "/iphone_images/IphoneMockup2.png",
-  //     "/iphone_images/IphoneMockup3.png",
-  //   ],
-  //   link: "/projects/nordstack-crm"
-  // },
-  // {
-  //   id: 3,
-  //   title: "WebApp Builder",
-  //   description: "En avanceret platform til at bygge custom web-applikationer. Fra prototyper til færdige løsninger med skalerbare funktioner.",
-  //   images: [
-  //     "/iphone_images/IphoneMockup1.png", // Placeholder - replace with actual images
-  //     "/iphone_images/IphoneMockup2.png",
-  //     "/iphone_images/IphoneMockup3.png",
-  //   ],
-  //   link: "/projects/webapp-builder"
-  // }
-
+// {
+//   id: 2,
+//   title: "NordStack CRM",
+//   description: "Et kraftfuldt CRM-system bygget til moderne virksomheder. Administrer kunder, leads og salgsprocesser alt sammen på ét sted.",
+//   images: [
+//     "/iphone_images/IphoneMockup1.png", // Placeholder - replace with actual images
+//     "/iphone_images/IphoneMockup2.png",
+//     "/iphone_images/IphoneMockup3.png",
+//   ],
+//   link: "/projects/nordstack-crm"
+// },
+// {
+//   id: 3,
+//   title: "WebApp Builder",
+//   description: "En avanceret platform til at bygge custom web-applikationer. Fra prototyper til færdige løsninger med skalerbare funktioner.",
+//   images: [
+//     "/iphone_images/IphoneMockup1.png", // Placeholder - replace with actual images
+//     "/iphone_images/IphoneMockup2.png",
+//     "/iphone_images/IphoneMockup3.png",
+//   ],
+//   link: "/projects/webapp-builder"
+// }
 
 const ProjectCarouselComponent: React.FC = () => {
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
@@ -50,7 +51,10 @@ const ProjectCarouselComponent: React.FC = () => {
     new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   );
 
-  const currentProject = useMemo(() => projects[currentProjectIndex], [currentProjectIndex]);
+  const currentProject = useMemo(
+    () => projects[currentProjectIndex],
+    [currentProjectIndex]
+  );
 
   // Auto-rotate images within current project
   useEffect(() => {
@@ -63,13 +67,20 @@ const ProjectCarouselComponent: React.FC = () => {
   // Update time
   useEffect(() => {
     const timer = setInterval(() => {
-      setTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+      setTime(
+        new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      );
     }, 60000);
     return () => clearInterval(timer);
   }, []);
 
   const goToPrevious = useCallback(() => {
-    setCurrentProjectIndex((prev) => (prev - 1 + projects.length) % projects.length);
+    setCurrentProjectIndex(
+      (prev) => (prev - 1 + projects.length) % projects.length
+    );
     setCurrentImageIndex(0);
   }, []);
 
@@ -83,53 +94,12 @@ const ProjectCarouselComponent: React.FC = () => {
       <div className="grid gap-12 lg:grid-cols-2 items-center">
         {/* iPhone Mockup */}
         <div className="order-2 lg:order-1 relative flex justify-center">
-          <motion.div
-            key={currentProjectIndex}
-            className="relative w-64 h-[520px] perspective-[2000px]"
-            initial={{ rotateY: -12, rotateX: 6, opacity: 0, scale: 0.8 }}
-            animate={{ rotateY: -12, rotateX: 6, opacity: 1, scale: 1 }}
-            transition={{ type: "spring", stiffness: 60, damping: 15 }}
-            whileHover={{ rotateY: -18, rotateX: 10, scale: 1.05 }}
-          >
-            {/* Phone frame */}
-            <div className="relative w-full h-full rounded-[3rem] bg-black shadow-[0_30px_80px_rgba(0,0,0,0.7)] border-[6px] border-gray-700 overflow-hidden">
-              {/* Screen content */}
-              <div className="absolute inset-0 bg-white rounded-[2.7rem] overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={`${currentProjectIndex}-${currentImageIndex}`}
-                    src={currentProject.images[currentImageIndex]}
-                    alt={`${currentProject.title} Screenshot`}
-                    loading="lazy"
-                    initial={{ y: 120, scale: 1.1, opacity: 0, rotateX: -20 }}
-                    animate={{ y: 0, scale: 1, opacity: 1, rotateX: 0 }}
-                    exit={{ y: -120, scale: 0.95, opacity: 0, rotateX: 20 }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="absolute inset-0 w-full h-full object-contain p-4 drop-shadow-2xl"
-                  />
-                </AnimatePresence>
-
-                {/* Status bar */}
-                <div className="absolute top-2.5 left-4 right-0 flex items-center justify-between px-4 text-[12px] font-semibold text-black">
-                  <span className="tracking-tight">{time}</span>
-                  <div className="flex items-center space-x-1">
-                    <Signal size={14} strokeWidth={2.2} className="text-black" />
-                    <Wifi size={14} strokeWidth={2.2} className="text-black" />
-                    <Battery size={18} strokeWidth={2.2} className="text-black" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Notch */}
-              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-6 bg-black rounded-full shadow-inner" />
-
-              {/* Home indicator */}
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-28 h-1.5 bg-black/40 rounded-full" />
-            </div>
-
-            {/* Glow behind phone */}
-            <div className="absolute -inset-3 bg-gradient-to-b from-[#fff200]/50 via-[#fff200]/50 to-[#fff200]/50 rounded-[4rem] -z-10"/>
-          </motion.div>
+          <IphoneMockup
+            images={currentProject.images}
+            imageIndex={currentImageIndex}
+            className=""
+            style={{}}
+          />
         </div>
 
         {/* Project Info */}
@@ -140,7 +110,7 @@ const ProjectCarouselComponent: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="order-1 lg:order-2 space-y-6 text-left"
         >
-          <motion.h3 
+          <motion.h3
             className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -148,8 +118,8 @@ const ProjectCarouselComponent: React.FC = () => {
           >
             {currentProject.title}
           </motion.h3>
-          
-          <motion.p 
+
+          <motion.p
             className="text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed max-w-xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -157,17 +127,14 @@ const ProjectCarouselComponent: React.FC = () => {
           >
             {currentProject.description}
           </motion.p>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
             <Button className="relative bg-transparent text-white hover:text-[#FFD700] mt-4 px-8 py-4 text-lg font-medium rounded-lg transition group">
-              <Link
-                to={currentProject.link}
-                className="flex items-center"
-              >
+              <Link to={currentProject.link} className="flex items-center">
                 Læs mere
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -208,9 +175,9 @@ const ProjectCarouselComponent: React.FC = () => {
                 setCurrentImageIndex(0);
               }, [])}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentProjectIndex 
-                  ? 'bg-[#FFD700] scale-125 shadow-lg' 
-                  : 'bg-white/30 hover:bg-white/50'
+                index === currentProjectIndex
+                  ? "bg-[#FFD700] scale-125 shadow-lg"
+                  : "bg-white/30 hover:bg-white/50"
               }`}
             />
           ))}

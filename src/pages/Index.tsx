@@ -1,4 +1,5 @@
 import React from "react";
+import { Seo } from "@/components/Seo";
 import { YellowGradientLine } from "@/components/ui/YellowGradientLine";
 import { BackgroundBeams } from "@/components/BackgroundBeams";
 import { motion } from "framer-motion";
@@ -16,142 +17,150 @@ const Index: React.FC = () => {
   const headerOffset = 84;
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden overflow-y-visible">
-      <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
-      <div className="relative z-10">
-        {/* Hero Section */}
-        <section className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen">
-          <div className="w-full max-w-5xl mx-auto text-center relative z-10 flex flex-col justify-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-8"
-            >
-              <div className="space-y-6">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight tracking-tight">
-                  NordStack Nexus
-                </h1>
-                {/* Mobil: én centreret gul linje, desktop: flere gradient-linjer */}
-                <div className="w-full max-w-2xl mx-auto h-10 relative items-center justify-center mb-8">
-                  {/* Mobil version */}
-                  <div className="absolute left-1/2 top-0 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[2px] w-1/2 sm:hidden" />
-                  {/* Desktop version */}
-                  <div className="hidden sm:block">
-                    <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />
-                    <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-px w-3/4" />
-                    <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[5px] w-1/4 blur-sm" />
-                    <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-1/4" />
+    <Seo
+      title="NordStack Nexus | Digitale løsninger til vækst og effektivitet"
+      description="Vi leverer digitale løsninger til vækst og effektivitet til alle virksomheder i hele verden. Se cases, services og kontakt os for at komme i gang."
+      ogImage="/opengraph-image.webp"
+      url="https://nordstack.dev"
+    >
+      <div className="relative min-h-screen overflow-x-hidden overflow-y-visible">
+        <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
+        <main className="relative z-10">
+          {/* Hero Section */}
+          <section className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen">
+            <div className="w-full max-w-5xl mx-auto text-center relative z-10 flex flex-col justify-center">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="space-y-8"
+              >
+                <div className="space-y-6">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight tracking-tight">
+                    NordStack Nexus
+                  </h1>
+                  {/* Mobil: én centreret gul linje, desktop: flere gradient-linjer */}
+                  <div className="w-full max-w-2xl mx-auto h-10 relative items-center justify-center mb-8">
+                    {/* Mobil version */}
+                    <div className="absolute left-1/2 top-0 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[2px] w-1/2 sm:hidden" />
+                    {/* Desktop version */}
+                    <div className="hidden sm:block">
+                      <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-[2px] w-3/4 blur-sm" />
+                      <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-[#fff200] to-transparent h-px w-3/4" />
+                      <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-[5px] w-1/4 blur-sm" />
+                      <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-[#FFD700] to-transparent h-px w-1/4" />
+                    </div>
                   </div>
+                  <div className="relative w-full flex flex-row items-center justify-center h-7 mt-0 mb-0 left-12">
+                    <FloatingIcons />
+                  </div>
+                  <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-300 max-w-4xl mx-auto leading-relaxed mt-2">
+                    Vi leverer digitale løsninger til vækst og effektivitet til
+                    alle virksomheder i hele verden.
+                  </p>
                 </div>
-                <div className="relative w-full flex flex-row items-center justify-center h-7 mt-0 mb-0 left-12">
-                  <FloatingIcons />
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="bg-white text-black hover:bg-gray-100 hover:scale-105 px-10 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
+                  >
+                    <Link to={user ? "/dashboard" : "/auth"}>
+                      <ArrowRight className="w-5 h-5 mr-2" />
+                      Kom i gang
+                    </Link>
+                  </Button>
+
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="border-white/30 text-white hover:bg-white/10 hover:border-white hover:scale-105 backdrop-blur-sm px-10 py-6 text-lg font-semibold rounded-xl transition-all duration-300"
+                  >
+                    <Link to="/contact">Kontakt os</Link>
+                  </Button>
                 </div>
-                <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-300 max-w-4xl mx-auto leading-relaxed mt-2">
-                  Vi leverer digitale løsninger til vækst og effektivitet.
+
+                <div className="mt-4">
+                  <ScrollArrow offset={80} targetId="services" />
+                </div>
+              </motion.div>
+            </div>
+          </section>
+          {/* Services Section */}
+          <ServicesSection />
+
+          {/* Projects Section */}
+          <section id="projects" className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
+            <div className="w-full max-w-7xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="text-center mb-20"
+              >
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+                  Cases
+                </h2>
+                <YellowGradientLine />
+                <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                  Et udvalg af vores løsninger i praksis. Se hvordan vi hjælper
+                  virksomheder med at transformere deres digitale
+                  tilstedeværelse.
                 </p>
-              </div>
+              </motion.div>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-white text-black hover:bg-gray-100 hover:scale-105 px-10 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
-                >
-                  <Link to={user ? "/dashboard" : "/auth"}>
-                    <ArrowRight className="w-5 h-5 mr-2" />
-                    Kom i gang
-                  </Link>
-                </Button>
+              <ProjectCarousel />
+            </div>
+          </section>
 
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="border-white/30 text-white hover:bg-white/10 hover:border-white hover:scale-105 backdrop-blur-sm px-10 py-6 text-lg font-semibold rounded-xl transition-all duration-300"
-                >
-                  <Link to="/contact">Kontakt os</Link>
-                </Button>
-              </div>
-
-              <div className="pt-16">
-                <ScrollArrow offset={headerOffset} />
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Services Section */}
-        <ServicesSection />
-
-        {/* Projects Section */}
-        <section id="projects" className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
-          <div className="w-full max-w-7xl mx-auto">
+          {/* Final CTA Section */}
+          <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="text-center mb-20"
+              className="text-center max-w-4xl mx-auto"
             >
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                Cases
-              </h2>
-              <YellowGradientLine />
-              <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Et udvalg af vores løsninger i praksis. Se hvordan vi hjælper
-                virksomheder med at transformere deres digitale tilstedeværelse.
-              </p>
-            </motion.div>
+              <div className="bg-gradient-to-r from-[#FFD700]/10 via-[#fff200]/5 to-[#FFD700]/10 backdrop-blur-sm border border-[#FFD700]/20 rounded-3xl p-8 sm:p-12">
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6">
+                  Klar til at transformere din virksomhed?
+                </h3>
+                <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+                  Lad os hjælpe dig med at skabe moderne digitale løsninger, der
+                  driver vækst og effektivitet.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="bg-[#FFD700] text-black hover:bg-[#fff200] hover:scale-105 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
+                  >
+                    <Link to={user ? "/dashboard" : "/auth"}>
+                      <ArrowRight className="w-5 h-5 mr-2" />
+                      Kom i gang nu
+                    </Link>
+                  </Button>
 
-            <ProjectCarousel />
-          </div>
-        </section>
-
-        {/* Final CTA Section */}
-        <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center max-w-4xl mx-auto"
-          >
-            <div className="bg-gradient-to-r from-[#FFD700]/10 via-[#fff200]/5 to-[#FFD700]/10 backdrop-blur-sm border border-[#FFD700]/20 rounded-3xl p-8 sm:p-12">
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6">
-                Klar til at transformere din virksomhed?
-              </h3>
-              <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-                Lad os hjælpe dig med at skabe moderne digitale løsninger, der
-                driver vækst og effektivitet.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-[#FFD700] text-black hover:bg-[#fff200] hover:scale-105 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
-                >
-                  <Link to={user ? "/dashboard" : "/auth"}>
-                    <ArrowRight className="w-5 h-5 mr-2" />
-                    Kom i gang nu
-                  </Link>
-                </Button>
-
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="border-white/30 text-white hover:bg-white/10 hover:border-white hover:scale-105 backdrop-blur-sm px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
-                >
-                  <Link to="/contact">Kontakt os</Link>
-                </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="border-white/30 text-white hover:bg-white/10 hover:border-white hover:scale-105 backdrop-blur-sm px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
+                  >
+                    <Link to="/contact">Kontakt os</Link>
+                  </Button>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        </section>
+            </motion.div>
+          </section>
+        </main>
       </div>
-    </div>
+    </Seo>
   );
 };
 

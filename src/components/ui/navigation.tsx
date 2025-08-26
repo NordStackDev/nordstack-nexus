@@ -39,11 +39,15 @@ export const Navigation = ({
               className="flex items-center space-x-2 ml-4 sm:ml-6 md:ml-8"
             >
               <div className="flex items-center justify-center">
-                <img
-                  src="/nordstacklogonobg.png"
-                  alt="Nordstack"
-                  className="h-16 sm:h-20 md:h-24 w-auto block"
-                />
+                <picture>
+                  <source srcSet="/NS_logo_nobg.webp" type="image/webp" />
+                  <img
+                    src="/NS_logo_nobg.webp"
+                    alt="Nordstack"
+                    className="h-16 sm:h-20 md:h-24 w-auto block"
+                    loading="lazy"
+                  />
+                </picture>
               </div>
               <div className="hidden sm:block ml-2">
                 <span className="text-xl font-bold text-foreground">

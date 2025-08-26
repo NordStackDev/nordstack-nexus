@@ -9,7 +9,7 @@ const services = [
     icon: Globe,
     title: "Hjemmesider",
     description:
-      "Moderne, responsive hjemmesider der konverterer besøgende til kunder. SEO-optimeret og hurtig indlæsning.",
+      "Hos NordStack udvikler vi hjemmesider helt fra bunden, så din side bliver skræddersyet til det, du ønsker at vise. Vi tilbyder alt fra informationssider og mindre 2-3 siders løsninger til komplette webshop-løsninger.",
     gradient: "from-blue-500/20 to-cyan-500/20",
     iconColor: "text-blue-400",
     border: "border-blue-500/20",
@@ -18,7 +18,7 @@ const services = [
     icon: Code2,
     title: "Web Applikationer",
     description:
-      "Skalerbare web-applikationer og systemer tilpasset din virksomheds behov. Fra CRM til custom løsninger.",
+      "Vores webapplikationer gør processer mere effektive i din virksomhed. Et eksempel er Pitch ’n Sales, hvor teamledere kan følge sælgernes performance og omsætte indsatsen og dataen til bedre resultater.",
     gradient: "from-green-500/20 to-emerald-500/20",
     iconColor: "text-green-400",
     border: "border-green-500/20",
@@ -27,16 +27,16 @@ const services = [
     icon: Palette,
     title: "Design & Branding",
     description:
-      "Komplet visuel identitet fra logo til brandguides. Skab en sammenhængende oplevelse på tværs af platforme.",
+      "Vi hjælper dig selvfølgelig også med at designe din hjemmeside eller webapplikation – helt fra bunden, så din idé bliver til virkelighed. Vi inddrager dig i designprocessen, mens vores PR-afdeling tager sig af brandingen.",
     gradient: "from-purple-500/20 to-pink-500/20",
     iconColor: "text-purple-400",
     border: "border-purple-500/20",
   },
   {
     icon: Smartphone,
-    title: "Mobile-First Design",
+    title: "Mobile Design",
     description:
-      "Alle løsninger optimeres til mobil fra dag ét. Perfekt brugeroplevelse på alle enheder.",
+      "Alle løsninger hos NordStack er responsivt designet, så dit produkt altid ser skarpt ud – uanset hvilken enhed du bruger. Vi starter med at designe til bærbare computere og tilpasser derefter layoutet til andre enheder.",
     gradient: "from-orange-500/20 to-red-500/20",
     iconColor: "text-orange-400",
     border: "border-orange-500/20",
@@ -45,16 +45,16 @@ const services = [
     icon: Database,
     title: "Database & Backend",
     description:
-      "Robuste backend-systemer og databaser der skalerer med din vækst. Sikker og pålidelig arkitektur.",
+      "Vi bygger robuste backend-systemer og databaser, der vokser i takt med din forretning. Med en sikker og pålidelig arkitektur guider vi dig gennem hele processen, så vi sammen kan skabe den bedst mulige løsning til dig.",
     gradient: "from-indigo-500/20 to-blue-600/20",
     iconColor: "text-indigo-400",
     border: "border-indigo-500/20",
   },
   {
     icon: Zap,
-    title: "Performance & SEO",
+    title: "SEO & Performance",
     description:
-      "Lynhurtige websites med top SEO-resultater. Optimeret for søgemaskiner og konvertering.",
+      "Vi optimerer din hjemmeside eller webapplikation, så den både kører hurtigt og bliver synlig på søgemaskinerne. Vi arbejder med teknisk SEO og indhold for flere besøgende og bedre resultater.",
     gradient: "from-yellow-500/20 to-amber-500/20",
     iconColor: "text-yellow-400",
     border: "border-yellow-500/20",
@@ -71,7 +71,7 @@ export const ServicesSection: React.FC = () => {
     firstName = user.email.split("@")[0];
   }
   return (
-    <section className="pt-32 pb-24 px-4 sm:px-6 md:px-8">
+    <section id="services" className="pt-32 pb-24 px-4 sm:px-6 md:px-8">
       <div className="w-full max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

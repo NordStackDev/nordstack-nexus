@@ -1,39 +1,3 @@
-// Slet besked
-const deleteMessage = async (id: string) => {
-  try {
-    const { error } = await supabase.from("messages").delete().eq("id", id);
-    if (error) throw error;
-    toast({
-      title: "Success",
-      description: "Besked slettet",
-    });
-    fetchMessages();
-  } catch (error: any) {
-    toast({
-      title: "Fejl",
-      description: error.message || "Kunne ikke slette besked",
-      variant: "destructive",
-    });
-  }
-};
-
-// Markér som læst/ulæst
-const toggleReadMessage = async (id: string, isRead: boolean) => {
-  try {
-    const { error } = await supabase
-      .from("messages")
-      .update({ is_read: !isRead })
-      .eq("id", id);
-    if (error) throw error;
-    fetchMessages();
-  } catch (error: any) {
-    toast({
-      title: "Fejl",
-      description: error.message || "Kunne ikke opdatere besked",
-      variant: "destructive",
-    });
-  }
-};
 import { useState, useEffect, useMemo } from "react";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -367,6 +331,43 @@ const Admin = () => {
       });
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  // Slet besked
+  const deleteMessage = async (id: string) => {
+    try {
+      const { error } = await supabase.from("messages").delete().eq("id", id);
+      if (error) throw error;
+      toast({
+        title: "Success",
+        description: "Besked slettet",
+      });
+      fetchMessages();
+    } catch (error: any) {
+      toast({
+        title: "Fejl",
+        description: error.message || "Kunne ikke slette besked",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Markér som læst/ulæst
+  const toggleReadMessage = async (id: string, isRead: boolean) => {
+    try {
+      const { error } = await supabase
+        .from("messages")
+        .update({ is_read: !isRead })
+        .eq("id", id);
+      if (error) throw error;
+      fetchMessages();
+    } catch (error: any) {
+      toast({
+        title: "Fejl",
+        description: error.message || "Kunne ikke opdatere besked",
+        variant: "destructive",
+      });
     }
   };
 

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Wifi, Signal, Battery } from "lucide-react";
+import { Wifi, Signal, BatteryFull } from "lucide-react";
 
 const iphoneImages = [
-  "/iphone_images/IphoneMockup1.png",
-  "/iphone_images/IphoneMockup3.png",
-  "/iphone_images/IphoneMockup2.png",
+  "/iphone_images/Login.png",
+  "/iphone_images/LogPitchNSale.png",
+  "/iphone_images/Dashboard.png",
 ];
 
 export const IPhoneMockup: React.FC = () => {
   const [index, setIndex] = useState(0);
 
-  // Auto-skift hvert 5 sekunder
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % iphoneImages.length);
@@ -25,7 +24,12 @@ export const IPhoneMockup: React.FC = () => {
   );
   useEffect(() => {
     const timer = setInterval(() => {
-      setTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+      setTime(
+        new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      );
     }, 60000);
     return () => clearInterval(timer);
   }, []);
@@ -65,7 +69,7 @@ export const IPhoneMockup: React.FC = () => {
             <div className="flex items-center space-x-1">
               <Signal size={14} strokeWidth={2.2} className="text-black" />
               <Wifi size={14} strokeWidth={2.2} className="text-black" />
-              <Battery size={18} strokeWidth={2.2} className="text-black" />
+              <BatteryFull size={18} strokeWidth={2.2} className="text-black" />
             </div>
           </div>
         </div>
@@ -78,7 +82,7 @@ export const IPhoneMockup: React.FC = () => {
       </div>
 
       {/* Glow bag telefonen */}
-      <div className="absolute -inset-3 bg-gradient-to-b from-[#fff200]/50 via-[#fff200]/50 to-[#fff200]/50 rounded-[4rem] -z-10"/>
+      <div className="absolute -inset-3 bg-gradient-to-b from-[#fff200]/50 via-[#fff200]/50 to-[#fff200]/50 rounded-[4rem] -z-10" />
     </motion.div>
   );
 };

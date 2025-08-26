@@ -10,6 +10,9 @@ import PageTransitionWrapper from "@/components/PageTransitionWrapper";
 import { PublicOnlyRoute } from "@/components/RouteGuards";
 import { AdminProtectedRoute } from "@/components/AdminProtectedRoute";
 import NotFound from "./pages/NotFound";
+import CookiePolicy from "./pages/cookiepolicy";
+
+import CookieConsentBanner from "@/components/CookieConsentBanner";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +33,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <CookieConsentBanner />
         <BrowserRouter>
           <AppShell>
             <Routes>
@@ -49,6 +53,7 @@ const App = () => (
                 />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
+                <Route path="/cookiepolicy" element={<CookiePolicy />} />
                 <Route path="/tos" element={<Tos />} />
                 <Route path="*" element={<NotFound />} />
               </Route>

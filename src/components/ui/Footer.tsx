@@ -4,12 +4,12 @@ import { Instagram, Linkedin } from "lucide-react";
 
 const CVR = "CVR: 45785513"; // Opdater med jeres rigtige CVR
 
-
 const Footer: React.FC = () => {
   const location = useLocation();
   const links = [
     { to: "/terms", label: "Handelsbetingelser" },
     { to: "/privacy", label: "Privatlivspolitik" },
+    { to: "/cookiepolicy", label: "Cookiepolitik" },
     { to: "/tos", label: "Terms of Service" },
   ];
   return (
@@ -20,7 +20,12 @@ const Footer: React.FC = () => {
           <span className="text-xs text-gray-400 mt-1">{CVR}</span>
         </div>
         <div className="flex items-center gap-6">
-          <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <a
+            href="https://www.instagram.com/bynordstack/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
             <Instagram className="w-6 h-6 hover:text-[#FFD700] transition" />
           </a>
           {/* <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
@@ -28,7 +33,7 @@ const Footer: React.FC = () => {
           </a> */}
         </div>
         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6 text-xs">
-          {links.map(link => (
+          {links.map((link) => (
             <span key={link.to} className="flex items-center gap-1">
               <Link
                 to={link.to}
