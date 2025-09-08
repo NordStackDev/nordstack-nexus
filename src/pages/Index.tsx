@@ -10,11 +10,55 @@ import { useAuth } from "@/hooks/useAuth";
 import { ProjectCarousel } from "@/components/ui/ProjectCarousel";
 import { ServicesSection } from "@/components/ui/ServicesSection";
 import FloatingIcons from "@/components/ui/FloatingIcons";
-import ScrollArrow from "@/components/ui/ScrollArrow";
 
 const Index: React.FC = () => {
   const { user } = useAuth();
-  const headerOffset = 84;
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <main
+        aria-busy="true"
+        aria-label="Indlæser forsiden"
+        className="min-h-screen flex items-center justify-center relative overflow-hidden"
+      >
+        {/* Transparent gradient overlay */}
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 55%, rgba(255,215,0,0.04) 0%, rgba(24,24,27,0.85) 40%, rgba(17,17,17,1) 100%)",
+          }}
+        />
+        {/* Blurred glow layer */}
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-2xl z-0" />
+
+        <div className="absolute inset-0 flex flex-col items-center justify-start pt-32 gap-8 z-10">
+          {/* Logo loader */}
+          <div className="relative flex flex-col items-center justify-center">
+            <div className="w-32 h-32 flex items-center justify-center">
+              <img
+                src="/NS_logo_nobg.webp"
+                alt="NordStack logo"
+                className="w-24 h-24 animate-fade-in"
+                style={{ filter: "drop-shadow(0 0 24px #FFD700)" }}
+              />
+              <div className="absolute w-32 h-32 border-4 border-[#FFD700]/80 border-t-transparent rounded-full animate-spin" />
+            </div>
+          </div>
+
+          <span className="animate-pulse text-3xl text-[#FFD700] font-bold drop-shadow-lg mt-2 tracking-wide">
+            Indlæser...
+          </span>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <Seo
@@ -25,9 +69,12 @@ const Index: React.FC = () => {
     >
       <div className="relative min-h-screen overflow-x-hidden overflow-y-visible">
         <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
-        <main className="relative z-10">
+        <main className="relative z-10" aria-label="Forside hovedindhold">
           {/* Hero Section */}
-          <section className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen">
+          <section
+            className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-32 sm:pt-32 sm:pb-40 min-h-screen"
+            aria-labelledby="hero-title"
+          >
             <div className="w-full max-w-5xl mx-auto text-center relative z-10 flex flex-col justify-center">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -36,7 +83,10 @@ const Index: React.FC = () => {
                 className="space-y-8"
               >
                 <div className="space-y-6">
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight tracking-tight">
+                  <h1
+                    id="hero-title"
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight tracking-tight"
+                  >
                     NordStack Nexus
                   </h1>
                   {/* Mobil: én centreret gul linje, desktop: flere gradient-linjer */}
@@ -59,7 +109,6 @@ const Index: React.FC = () => {
                     alle virksomheder i hele verden.
                   </p>
                 </div>
-
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
                   <Button
@@ -72,7 +121,6 @@ const Index: React.FC = () => {
                       Kom i gang
                     </Link>
                   </Button>
-
                   <Button
                     asChild
                     variant="outline"
@@ -81,14 +129,12 @@ const Index: React.FC = () => {
                   >
                     <Link to="/contact">Kontakt os</Link>
                   </Button>
-                </div>
-
-                <div className="mt-4">
-                  <ScrollArrow offset={80} targetId="services" />
-                </div>
+                </div>{" "}
+                {/* <-- den manglede lukning her */}
               </motion.div>
             </div>
           </section>
+
           {/* Services Section */}
           <ServicesSection />
 
@@ -112,7 +158,6 @@ const Index: React.FC = () => {
                   tilstedeværelse.
                 </p>
               </motion.div>
-
               <ProjectCarousel />
             </div>
           </section>
@@ -145,7 +190,6 @@ const Index: React.FC = () => {
                       Kom i gang nu
                     </Link>
                   </Button>
-
                   <Button
                     asChild
                     variant="outline"

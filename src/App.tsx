@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import CookiePolicy from "./pages/cookiepolicy";
 
 import CookieConsentBanner from "@/components/CookieConsentBanner";
+import Akita from "./pages/projects/Akita";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,8 @@ const App = () => (
                   path="/projects/pitch-n-sales"
                   element={<PitchNSales />}
                 />
+
+                <Route path="/projects/nordstack-akita" element={<Akita />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/cookiepolicy" element={<CookiePolicy />} />

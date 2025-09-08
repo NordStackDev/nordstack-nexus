@@ -33,37 +33,35 @@ export default function CookieConsentBanner() {
 
   return (
     <div
+      role="dialog"
+      aria-live="polite"
+      aria-label="Cookie samtykke"
       className="fixed z-50 w-[95vw] max-w-sm card-modern p-4 flex flex-col gap-4 items-start border border-border bg-background/95 text-foreground shadow-elegant backdrop-blur-md animate-in fade-in slide-in-from-bottom-4"
       style={{
         left: "50%",
         right: "auto",
         transform: "translateX(-50%)",
-        bottom: "5.5rem",
-        maxWidth: "95vw",
       }}
     >
-  <div className="text-sm md:text-base">
-        Vi bruger cookies for at forbedre din oplevelse. Læs vores{" "}
-        <a
-          href="/cookiepolicy"
-          className="underline text-primary hover:text-primary/80 transition-colors font-medium"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+      <span className="text-sm" id="cookie-banner-desc">
+        Vi bruger cookies til at forbedre din oplevelse. Læs vores{" "}
+        <a href="/cookiepolicy" className="underline">
           cookiepolitik
         </a>
         .
-      </div>
-  <div className="flex gap-2 self-end">
+      </span>
+      <div className="flex gap-2 mt-2">
         <button
+          className="bg-[#FFD700] text-black px-4 py-2 rounded font-semibold hover:bg-yellow-400 transition focus:outline-none focus:ring-2 focus:ring-yellow-400"
           onClick={handleAccept}
-          className="btn-primary px-5 py-2 font-semibold shadow-card hover:scale-[1.04] focus-visible:ring-2 focus-visible:ring-primary/60"
+          aria-label="Acceptér cookies"
         >
-          Accepter
+          Acceptér
         </button>
         <button
+          className="bg-gray-200 text-black px-4 py-2 rounded font-semibold hover:bg-gray-300 transition focus:outline-none focus:ring-2 focus:ring-gray-400"
           onClick={handleReject}
-          className="btn-cta px-5 py-2 font-semibold hover:scale-[1.04] focus-visible:ring-2 focus-visible:ring-border"
+          aria-label="Afvis cookies"
         >
           Afvis
         </button>

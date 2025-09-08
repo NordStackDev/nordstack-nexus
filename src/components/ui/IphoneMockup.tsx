@@ -65,18 +65,17 @@ export const IphoneMockup: React.FC<IphoneMockupProps> = ({
         {/* Screen content */}
         <div className="absolute inset-0 bg-white rounded-[2.7rem] overflow-hidden">
           <AnimatePresence mode="wait">
-            <picture>
+            <picture key={internalIndex}>
               <source srcSet={images[internalIndex]} type="image/webp" />
               <motion.img
-                key={internalIndex}
                 src={images[internalIndex]}
                 alt="App Screenshot"
                 loading="lazy"
-                initial={{ y: 120, scale: 0.92, opacity: 0, rotateX: -20 }}
-                animate={{ y: 0, scale: 0.92, opacity: 1, rotateX: 0 }}
-                exit={{ y: -120, scale: 0.9, opacity: 0, rotateX: 20 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="absolute inset-0 w-full h-full object-cover object-center bg-white"
+                initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -40, filter: "blur(8px)" }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="absolute inset-0 w-full h-full object-contain object-center bg-white p-4"
               />
             </picture>
           </AnimatePresence>

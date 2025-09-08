@@ -138,11 +138,11 @@ export const ServicesSection: React.FC = () => {
                     </div>
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 group-hover:text-[#FFD700] transition-colors duration-300">
+                  <h3 className="service-desc-mono text-xl sm:text-2xl font-bold text-white mb-4 group-hover:text-[#FFD700] transition-colors duration-300">
                     {service.title}
                   </h3>
 
-                  <p className="text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-300">
+                  <p className="service-desc-mono text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-300">
                     {service.description}
                   </p>
                 </div>

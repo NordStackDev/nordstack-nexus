@@ -1,3 +1,11 @@
+/* For service descriptions with Kode Mono font */
+.service-desc-mono {
+  font-family: "Kode Mono", "Fira Mono", "Menlo", "Monaco", "Consolas",
+    monospace;
+  font-size: 1em;
+}
+@import url("https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,35 +35,25 @@
     --transition-smooth: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.36s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     --radius: 0.75rem;
+
+    .light {
+      /* reserved for accessibility light theme */
+    }
+
+    * {
+      @apply border-border;
+    }
+
+    body,
+    html {
+      @apply bg-background text-foreground;
+      font-family: "Satoshi", "Inter", "Segoe UI", "Arial", sans-serif;
+      transition: background-color 0.4s ease, color 0.35s ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
   }
 
-  .light {
-    /* reserved for accessibility light theme */
-  }
-
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    transition: background-color 0.4s ease, color 0.35s ease;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-}
-
-/* 🧩 Components */
-@layer components {
-  /* Cards */
-  .card-modern {
-    @apply rounded-[var(--radius)];
-    background: transparent;
-    border: 1px solid hsl(var(--border));
-    color: var(--card-foreground);
-    box-shadow: var(--shadow-card);
-    transition: var(--transition-spring);
-  }
   .card-modern:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-elegant);
@@ -156,4 +154,12 @@
 /* Small helper */
 .rounded-lg {
   border-radius: var(--radius);
+}
+
+code,
+pre,
+.font-mono {
+  font-family: "Kode Mono", "Fira Mono", "Menlo", "Monaco", "Consolas",
+    monospace;
+  font-size: 1em;
 }

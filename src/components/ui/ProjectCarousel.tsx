@@ -8,6 +8,21 @@ import { ArrowRight } from "lucide-react";
 
 const projects = [
   {
+    id: 2,
+    title: "Akita",
+    description:
+      "En kraftfuld Sales Performance Management platform bygget til moderne virksomheder indefor direct marketing. Administrer sælgere, kunder, performance, leads og salgsprocesser alt sammen på ét sted.",
+    images: [
+      "AKITA/AKITA_Login.webp",
+      "AKITA/AKITA_Login2.webp",
+      "AKITA/AKITA_Dashboard1.webp",
+      "AKITA/AKITA_Dashboard2.webp",
+      "AKITA/AKITA_Dashboard3.webp",
+      "AKITA/AKITA_Dashboard4.webp",
+    ],
+    link: "/projects/nordstack-akita",
+  },
+  {
     id: 1,
     title: "Pitch 'N Sales - Demo Version",
     description:
@@ -20,18 +35,6 @@ const projects = [
     link: "/projects/pitch-n-sales",
   },
 ];
-
-// {
-//   id: 2,
-//   title: "NordStack CRM",
-//   description: "Et kraftfuldt CRM-system bygget til moderne virksomheder. Administrer kunder, leads og salgsprocesser alt sammen på ét sted.",
-//   images: [
-//     "/iphone_images/IphoneMockup1.png", // Placeholder - replace with actual images
-//     "/iphone_images/IphoneMockup2.png",
-//     "/iphone_images/IphoneMockup3.png",
-//   ],
-//   link: "/projects/nordstack-crm"
-// },
 // {
 //   id: 3,
 //   title: "WebApp Builder",
