@@ -1,4 +1,10 @@
-  {
+{
+  "cookieBanner": {
+    "text": "Vi bruger cookies til at forbedre din oplevelse og til statistik. Du kan læse mere i vores ",
+    "policyLink": "cookiepolitik",
+    "accept": "Acceptér cookies",
+    "reject": "Afvis cookies"
+  },
   "loading": {
     "text": "Indlæser...",
     "ariaLabel": "Indlæser forsiden"

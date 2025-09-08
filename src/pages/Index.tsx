@@ -30,16 +30,8 @@ const Index: React.FC = () => {
         aria-label={t("loading.ariaLabel")}
         className="min-h-screen flex items-center justify-center relative overflow-hidden"
       >
-        {/* Transparent gradient overlay */}
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 55%, rgba(255,215,0,0.04) 0%, rgba(24,24,27,0.85) 40%, rgba(17,17,17,1) 100%)",
-          }}
-        />
-        {/* Blurred glow layer */}
-        <div className="absolute inset-0 bg-black/30 backdrop-blur-2xl z-0" />
+        {/* Animated beams background only */}
+        <BackgroundBeams className="pointer-events-none fixed top-0 left-0 w-full h-full z-0" />
 
         <div className="absolute inset-0 flex flex-col items-center justify-start pt-32 gap-8 z-10">
           {/* Logo loader */}
