@@ -25,7 +25,7 @@ export default function CookieConsentBanner() {
   };
 
   const handleReject = () => {
-    localStorage.setItem(COOKIE_CONSENT_KEY, "rejected");
+    localStorage.removeItem(COOKIE_CONSENT_KEY);
     setVisible(false);
   };
 
@@ -36,30 +36,29 @@ export default function CookieConsentBanner() {
       role="dialog"
       aria-live="polite"
       aria-label="Cookie samtykke"
-      className="fixed z-50 w-[95vw] max-w-sm card-modern p-4 flex flex-col gap-4 items-start border border-border bg-background/95 text-foreground shadow-elegant backdrop-blur-md animate-in fade-in slide-in-from-bottom-4"
-      style={{
-        left: "50%",
-        right: "auto",
-        transform: "translateX(-50%)",
-      }}
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-md p-6 flex flex-col gap-4 items-start border border-border bg-background/95 text-foreground shadow-lg rounded-xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-4"
+      style={{}}
     >
       <span className="text-sm" id="cookie-banner-desc">
         Vi bruger cookies til at forbedre din oplevelse. Læs vores{" "}
-        <a href="/cookiepolicy" className="underline">
+        <a
+          href="/cookiepolicy"
+          className="underline font-semibold hover:text-yellow-500 transition"
+        >
           cookiepolitik
         </a>
         .
       </span>
       <div className="flex gap-2 mt-2">
         <button
-          className="bg-[#FFD700] text-black px-4 py-2 rounded font-semibold hover:bg-yellow-400 transition focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="bg-yellow-400 text-black px-5 py-2 rounded-lg font-semibold shadow hover:bg-yellow-500 transition focus:outline-none focus:ring-2 focus:ring-yellow-400"
           onClick={handleAccept}
           aria-label="Acceptér cookies"
         >
           Acceptér
         </button>
         <button
-          className="bg-gray-200 text-black px-4 py-2 rounded font-semibold hover:bg-gray-300 transition focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="bg-gray-200 text-black px-5 py-2 rounded-lg font-semibold shadow hover:bg-gray-300 transition focus:outline-none focus:ring-2 focus:ring-gray-400"
           onClick={handleReject}
           aria-label="Afvis cookies"
         >
