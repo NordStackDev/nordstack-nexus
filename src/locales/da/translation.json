@@ -1,4 +1,8 @@
   {
+  "loading": {
+    "text": "Indlæser...",
+    "ariaLabel": "Indlæser forsiden"
+  },
   "contact": {
     "title": "Kontakt os",
     "intro": "Har du spørgsmål, brug for support eller ønsker du et samarbejde? Udfyld formularen, så vender vi hurtigt tilbage.",

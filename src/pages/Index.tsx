@@ -27,7 +27,7 @@ const Index: React.FC = () => {
     return (
       <main
         aria-busy="true"
-        aria-label="Indlæser forsiden"
+        aria-label={t("loading.ariaLabel")}
         className="min-h-screen flex items-center justify-center relative overflow-hidden"
       >
         {/* Transparent gradient overlay */}
@@ -56,7 +56,7 @@ const Index: React.FC = () => {
           </div>
 
           <span className="animate-pulse text-3xl text-[#FFD700] font-bold drop-shadow-lg mt-2 tracking-wide">
-            Indlæser...
+            {t("loading.text")}
           </span>
         </div>
       </main>
