@@ -32,6 +32,22 @@
       "title": "Pitch 'N Sales - Demo Version",
       "description": "Pitch 'N Sales gør det nemt at præsentere, dele og lukke salg direkte fra din mobil. Bygget som en moderne web-app med fokus på brugervenlighed."
     },
+    "akita": {
+  "title": "Akita",
+  "description": "En kraftfuld Sales Performance Management platform bygget til moderne virksomheder indenfor direct marketing. Administrer sælgere, kunder, performance, leads og salgsprocesser alt sammen på ét sted.",
+  "intro": "Akita er en kraftfuld Sales Performance Management platform bygget til moderne virksomheder indenfor direct marketing. Platformen hjælper ledere med at holde styr på sælgere, performance, leads og kunder – og skaber et motiverende men også automatiseret, datadrevet miljø.",
+      "features": {
+        "0": "Live dashboard med real-time overblik over salg, aktiviteter og teamets samlede performance, så du hurtigt kan træffe beslutninger.",
+        "1": "Registrering af leads, kunder, salg og opfølgninger direkte fra mobilen gennem vores intuitive kundeformular, der sparer tid og minimerer fejl.",
+        "2": "Centraliseret styring af salgs-lokationer, så teamet altid er placeret optimalt for maksimal performance.",
+        "3": "Automatisk opdaterede data, der giver et komplet overblik over både aktuelle og historiske tal til datadrevet beslutningsstøtte.",
+        "4": "Sæt mål, tildel bonusser og giv feedback direkte i systemet, så teamets indsats belønnes og udvikles (under udvikling).",
+        "5": "Motiver teamet med gamification, leaderboard, achievements og battles, der skaber engagement og konkurrenceånd (under udvikling)."
+      },
+      "overview": "Med Akita får du et komplet overblik over din salgsorganisation – live og historisk. Spot top-performere, giv støtte til dem der har brug for det, og skab Danmarks bedste team i direct marketing.",
+      "ctaStrong": "Vil du have mere ud af din salgsorganisation?",
+      "ctaText": "Kontakt os for en demo og hør, hvordan Akita kan styrke jeres direct marketing og skabe bedre resultater."
+    },
     "cta": "Læs mere"
   },
   "servicesSection": {

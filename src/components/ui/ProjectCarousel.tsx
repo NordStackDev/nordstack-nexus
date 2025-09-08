@@ -10,9 +10,8 @@ import { useTranslation } from "react-i18next";
 const projects = [
   {
     id: 2,
-    title: "Akita",
-    description:
-      "En kraftfuld Sales Performance Management platform bygget til moderne virksomheder indefor direct marketing. Administrer sælgere, kunder, performance, leads og salgsprocesser alt sammen på ét sted.",
+    titleKey: "projects.akita.title",
+    descriptionKey: "projects.akita.description",
     images: [
       "AKITA/AKITA_Login.webp",
       "AKITA/AKITA_Login2.webp",

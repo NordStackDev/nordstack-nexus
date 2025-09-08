@@ -15,7 +15,7 @@ export default function PitchNSales() {
         transition={{ duration: 0.6 }}
         className="text-4xl sm:text-5xl font-bold mb-4 text-center text-white drop-shadow"
       >
-        Pitch 'n Sales
+                {t("pitchnsales.title")}
       </motion.h1>
 
       {/* Dekorativ streg */}
@@ -46,7 +46,7 @@ export default function PitchNSales() {
               <CardContent className="flex items-start gap-3 p-6">
                 <CheckCircle className="w-6 h-6 text-yellow-400 shrink-0 mt-1" />
                 <p className="text-gray-200 text-base leading-snug">
-                  {t(`pitchnsales.features.${idx}`)}
+                                    {t(`pitchnsales.features.${idx}`)}
                 </p>
               </CardContent>
             </Card>

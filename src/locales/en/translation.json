@@ -16,11 +16,12 @@
     "info": "We will get back to you via the provided phone or email within 24 hours."
   },
   "pitchnsales": {
+    "title": "Pitch 'N Sales",
     "overview": "With Pitch 'n Sales you get a complete overview of your sales team – live and historical. Spot top performers, support those who need it, so you can have Denmark's best direct marketing team.",
     "ctaStrong": "Want to get more out of your sales team?",
-  "ctaText": "Contact us for a demo and hear how Pitch 'n Sales can strengthen your direct marketing and create better results.",
-  "intro": "Pitch 'n Sales is a specialized tool for companies working with direct marketing and outbound sales. The platform helps team leaders keep track of their salespeople, monitor performance, and create a motivating, data-driven environment.",
-  "features": {
+    "ctaText": "Contact us for a demo and hear how Pitch 'n Sales can strengthen your direct marketing and create better results.",
+    "intro": "Pitch 'n Sales is a specialized tool for companies working with direct marketing and outbound sales. The platform helps team leaders keep track of their salespeople, monitor performance, and create a motivating, data-driven environment.",
+    "features": {
       "0": "Live dashboard with real-time statistics for the whole team and selected team leads.",
       "1": "Register pitches, sales, and follow-ups directly from your mobile.",
       "2": "Built-in gamification and leaderboard to motivate and engage.",
@@ -31,6 +32,22 @@
     "pitchnsales": {
       "title": "Pitch 'N Sales - Demo Version",
       "description": "Pitch 'N Sales makes it easy to present, share, and close sales directly from your mobile. Built as a modern web app with a focus on user-friendliness."
+    },
+    "akita": {
+  "title": "Akita",
+  "description": "A powerful Sales Performance Management platform built for modern companies in direct marketing. Manage sellers, customers, performance, leads, and sales processes all in one place.",
+  "intro": "Akita is a powerful Sales Performance Management platform built for modern companies in direct marketing. The platform helps managers keep track of sellers, performance, leads, and customers – and creates a motivating yet automated, data-driven environment.",
+      "features": {
+        "0": "Live dashboard with real-time overview of sales, activities, and the team's overall performance, so you can make decisions quickly.",
+        "1": "Register leads, customers, sales, and follow-ups directly from your mobile through our intuitive customer form, saving time and minimizing errors.",
+        "2": "Centralized management of sales locations, so the team is always optimally placed for maximum performance.",
+        "3": "Automatically updated data provides a complete overview of both current and historical figures for data-driven decision support.",
+        "4": "Set goals, assign bonuses, and give feedback directly in the system, so the team's efforts are rewarded and developed (under development).",
+        "5": "Motivate the team with gamification, leaderboard, achievements, and battles that create engagement and a competitive spirit (under development)."
+      },
+      "overview": "With Akita you get a complete overview of your sales organization – live and historical. Spot top performers, support those who need it, and create Denmark's best direct marketing team.",
+      "ctaStrong": "Want to get more out of your sales organization?",
+      "ctaText": "Contact us for a demo and hear how Akita can strengthen your direct marketing and create better results."
     },
     "cta": "Read more"
   },
