@@ -1,60 +1,55 @@
 import React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { YellowGradientLine } from "@/components/ui/YellowGradientLine";
 import { Globe, Code2, Palette, Smartphone, Database, Zap } from "lucide-react";
 
 const services = [
   {
     icon: Globe,
-    title: "Hjemmesider",
-    description:
-      "Hos NordStack udvikler vi hjemmesider helt fra bunden, så din side bliver skræddersyet til det, du ønsker at vise. Vi tilbyder alt fra informationssider og mindre 2-3 siders løsninger til komplette webshop-løsninger.",
+    titleKey: "services.web.title",
+    descKey: "services.web.description",
     gradient: "from-blue-500/20 to-cyan-500/20",
     iconColor: "text-blue-400",
     border: "border-blue-500/20",
   },
   {
     icon: Code2,
-    title: "Web Applikationer",
-    description:
-      "Vores webapplikationer gør processer mere effektive i din virksomhed. Et eksempel er Pitch ’n Sales, hvor teamledere kan følge sælgernes performance og omsætte indsatsen og dataen til bedre resultater.",
+    titleKey: "services.app.title",
+    descKey: "services.app.description",
     gradient: "from-green-500/20 to-emerald-500/20",
     iconColor: "text-green-400",
     border: "border-green-500/20",
   },
   {
     icon: Palette,
-    title: "Design & Branding",
-    description:
-      "Vi hjælper dig selvfølgelig også med at designe din hjemmeside eller webapplikation – helt fra bunden, så din idé bliver til virkelighed. Vi inddrager dig i designprocessen, mens vores PR-afdeling tager sig af brandingen.",
+    titleKey: "services.design.title",
+    descKey: "services.design.description",
     gradient: "from-purple-500/20 to-pink-500/20",
     iconColor: "text-purple-400",
     border: "border-purple-500/20",
   },
   {
     icon: Smartphone,
-    title: "Mobile Design",
-    description:
-      "Alle løsninger hos NordStack er responsivt designet, så dit produkt altid ser skarpt ud – uanset hvilken enhed du bruger. Vi starter med at designe til bærbare computere og tilpasser derefter layoutet til andre enheder.",
+    titleKey: "services.mobile.title",
+    descKey: "services.mobile.description",
     gradient: "from-orange-500/20 to-red-500/20",
     iconColor: "text-orange-400",
     border: "border-orange-500/20",
   },
   {
     icon: Database,
-    title: "Database & Backend",
-    description:
-      "Vi bygger robuste backend-systemer og databaser, der vokser i takt med din forretning. Med en sikker og pålidelig arkitektur guider vi dig gennem hele processen, så vi sammen kan skabe den bedst mulige løsning til dig.",
+    titleKey: "services.backend.title",
+    descKey: "services.backend.description",
     gradient: "from-indigo-500/20 to-blue-600/20",
     iconColor: "text-indigo-400",
     border: "border-indigo-500/20",
   },
   {
     icon: Zap,
-    title: "SEO & Performance",
-    description:
-      "Vi optimerer din hjemmeside eller webapplikation, så den både kører hurtigt og bliver synlig på søgemaskinerne. Vi arbejder med teknisk SEO og indhold for flere besøgende og bedre resultater.",
+    titleKey: "services.seo.title",
+    descKey: "services.seo.description",
     gradient: "from-yellow-500/20 to-amber-500/20",
     iconColor: "text-yellow-400",
     border: "border-yellow-500/20",
@@ -63,6 +58,7 @@ const services = [
 
 export const ServicesSection: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   // Udtræk fornavn fra full_name eller email
   let firstName = "";
   if (user?.user_metadata?.full_name) {
@@ -81,21 +77,19 @@ export const ServicesSection: React.FC = () => {
           className="text-center mb-20"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Her er hvad vi kan tilbyde dig {firstName}
+            {t("servicesSection.title", { firstName })}
           </h2>
           <YellowGradientLine />
           {/* Mobil: én centreret gul linje, desktop: flere gradient-linjer */}
           <p className="text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
-            NordStack leverer moderne løsninger til virksomheder, der ønsker at
-            optimere deres digitale tilstedeværelse og processer med avanceret
-            teknologi.
+            {t("servicesSection.description")}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <motion.div
-              key={service.title}
+           {services.map((service, index) => (
+             <motion.div
+               key={service.titleKey}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -144,6 +138,12 @@ export const ServicesSection: React.FC = () => {
 
                   <p className="service-desc-mono text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-300">
                     {service.description}
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 group-hover:text-[#FFD700] transition-colors duration-300">
+                    {t(service.titleKey)}
+                  </h3>
+
+                  <p className="text-gray-300 leading-relaxed group-hover:text-white transition-colors duration-300">
+                    {t(service.descKey)}
                   </p>
                 </div>
 
@@ -162,12 +162,13 @@ export const ServicesSection: React.FC = () => {
           viewport={{ once: true }}
           className="text-center mt-16"
         >
-          <div className="inline-flex items-center space-x-4 bg-gradient-to-r from-[#FFD700]/10 to-[#fff200]/10 backdrop-blur-sm border border-[#FFD700]/20 rounded-2xl px-8 py-6">
-            <Zap className="h-6 w-6 text-[#FFD700] animate-pulse" />
-            <p className="text-lg text-white">
-              Klar til at transformere din digitale tilstedeværelse?
-            </p>
-          </div>
+           <div className="inline-flex items-center space-x-4 bg-gradient-to-r from-[#FFD700]/10 to-[#fff200]/10 backdrop-blur-sm border border-[#FFD700]/20 rounded-2xl px-8 py-6">
+             <Zap className="h-6 w-6 text-[#FFD700] animate-pulse" />
+             <div>
+               <h2 className="text-2xl font-bold text-white mb-2">{t("cta.title")}</h2>
+               <p className="text-lg text-white">{t("cta.description")}</p>
+             </div>
+           </div>
         </motion.div>
       </div>
     </section>

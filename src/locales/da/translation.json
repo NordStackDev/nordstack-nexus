@@ -1,0 +1,96 @@
+  {
+  "contact": {
+    "title": "Kontakt os",
+    "intro": "Har du spørgsmål, brug for support eller ønsker du et samarbejde? Udfyld formularen, så vender vi hurtigt tilbage.",
+    "name": "Navn",
+    "namePlaceholder": "Dit navn",
+    "email": "E-mail",
+    "emailPlaceholder": "Din e-mailadresse",
+    "phone": "Telefonnummer",
+    "phonePlaceholder": "Dit telefonnummer (valgfrit)",
+    "message": "Besked",
+    "messagePlaceholder": "Skriv din besked her...",
+    "send": "Send besked",
+    "sending": "Sender...",
+    "success": "Besked sendt! Tak for din henvendelse, vi vender tilbage til dig indenfor 24 timer.",
+    "info": "Vi vender tilbage via angivet telefon eller mail indenfor 24 timer."
+  },
+  "pitchnsales": {
+    "overview": "Med Pitch 'n Sales får du et komplet overblik over dit salgs-team – live og historisk. Spot top-performere, giv støtte til dem der har brug for det så du kan få danmarks bedste team i direct marketing.",
+    "ctaStrong": "Vil du have mere ud af dit salgs-team?",
+  "ctaText": "Kontakt os for en demo og hør, hvordan Pitch 'n Sales kan styrke jeres direct marketing og skabe bedre resultater.",
+  "intro": "Pitch 'n Sales er et specialiseret værktøj til virksomheder, der arbejder med direct marketing og opsøgende salg. Platformen hjælper teamledere med at holde styr på deres sælgere, følge performance og skabe et motiverende, datadrevet miljø.",
+  "features": {
+      "0": "Live dashboard med real-time statistik for hele teamet og de udvalgte teamleads.",
+      "1": "Registrering af pitches, salg og opfølgninger direkte fra mobilen.",
+      "2": "Indbygget gamification og leaderboard, der motiverer og engagerer.",
+      "3": "Mulighed for at sætte mål, bonusser og give feedback direkte i systemet (under udvikling)."
+    }
+  },
+  "projects": {
+    "pitchnsales": {
+      "title": "Pitch 'N Sales - Demo Version",
+      "description": "Pitch 'N Sales gør det nemt at præsentere, dele og lukke salg direkte fra din mobil. Bygget som en moderne web-app med fokus på brugervenlighed."
+    },
+    "cta": "Læs mere"
+  },
+  "servicesSection": {
+    "title": "Her er hvad vi kan tilbyde dig {{firstName}}",
+    "description": "NordStack leverer moderne løsninger til virksomheder, der ønsker at optimere deres digitale tilstedeværelse og processer med avanceret teknologi."
+  },
+  "hero": {
+    "description": "Vi leverer digitale løsninger til vækst og effektivitet til alle virksomheder i hele verden.",
+    "cta": "Kom i gang",
+    "contact": "Kontakt os"
+  },
+  "welcome": "Velkommen til NordStack!",
+  "description": "Dette er et eksempel på internationalisering.",
+  "services": {
+    "web": {
+      "title": "Hjemmesider",
+      "description": "Hos NordStack udvikler vi hjemmesider helt fra bunden, så din side bliver skræddersyet til det, du ønsker at vise. Vi tilbyder alt fra informationssider og mindre 2-3 siders løsninger til komplette webshop-løsninger."
+    },
+    "app": {
+      "title": "Web Applikationer",
+      "description": "Vores webapplikationer gør processer mere effektive i din virksomhed. Et eksempel er Pitch ’n Sales, hvor teamledere kan følge sælgernes performance og omsætte indsatsen og dataen til bedre resultater."
+    },
+    "design": {
+      "title": "Design & Branding",
+      "description": "Vi hjælper dig selvfølgelig også med at designe din hjemmeside eller webapplikation – helt fra bunden, så din idé bliver til virkelighed. Vi inddrager dig i designprocessen, mens vores PR-afdeling tager sig af brandingen."
+    },
+    "mobile": {
+      "title": "Mobile Design",
+      "description": "Alle løsninger hos NordStack er responsivt designet, så dit produkt altid ser skarpt ud – uanset hvilken enhed du bruger. Vi starter med at designe til bærbare computere og tilpasser derefter layoutet til andre enheder."
+    },
+    "backend": {
+      "title": "Database & Backend",
+      "description": "Vi bygger robuste backend-systemer og databaser, der vokser i takt med din forretning. Med en sikker og pålidelig arkitektur guider vi dig gennem hele processen, så vi sammen kan skabe den bedst mulige løsning til dig."
+    },
+    "seo": {
+      "title": "SEO & Performance",
+      "description": "Vi optimerer din hjemmeside eller webapplikation, så den både kører hurtigt og bliver synlig på søgemaskinerne. Vi arbejder med teknisk SEO og indhold for flere besøgende og bedre resultater."
+    }
+  },
+  "cases": {
+    "title": "Cases",
+    "description": "Et udvalg af vores løsninger i praksis. Se hvordan vi hjælper virksomheder med at transformere deres digitale tilstedeværelse."
+  },
+  "cta": {
+  "title": "Klar til at transformere din virksomhed?",
+  "description": "Lad os hjælpe dig med at skabe moderne digitale løsninger, der driver vækst og effektivitet.",
+  "ctaButton": "Kom i gang nu",
+  "contactButton": "Kontakt os"
+  },
+  "footer": {
+    "terms": "Handelsbetingelser",
+    "privacy": "Privatlivspolitik",
+    "cookie": "Cookiepolitik",
+    "tos": "Terms of Service"
+  },
+  "nav": {
+    "home": "Hjem",
+    "admin": "Admin",
+    "logout": "Log ud",
+    "login": "Log ind"
+  }
+}

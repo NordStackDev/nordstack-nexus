@@ -2,8 +2,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function PitchNSales() {
+  const { t } = useTranslation();
   return (
     <div className="max-w-5xl mx-auto py-16 px-6 flex flex-col items-center text-gray-100">
       {/* Overskrift */}
@@ -28,20 +30,12 @@ export default function PitchNSales() {
         transition={{ delay: 0.2, duration: 0.6 }}
         className="mb-12 text-lg text-center max-w-3xl leading-relaxed text-gray-200"
       >
-        Pitch 'n Sales er et specialiseret værktøj til virksomheder, der
-        arbejder med direct marketing og opsøgende salg. Platformen hjælper
-        teamledere med at holde styr på deres sælgere, følge performance og
-        skabe et motiverende, datadrevet miljø.
+        {t("pitchnsales.intro")}
       </motion.p>
 
       {/* Features i kort */}
       <div className="grid gap-6 md:grid-cols-2 w-full max-w-4xl mb-16">
-        {[
-          "Live dashboard med real-time statistik for hele teamet og de udvalgte teamleads.",
-          "Registrering af pitches, salg og opfølgninger direkte fra mobilen.",
-          "Indbygget gamification og leaderboard, der motiverer og engagerer.",
-          "Mulighed for at sætte mål, bonusser og give feedback direkte i systemet (under udvikling).",
-        ].map((feature, idx) => (
+        {[0, 1, 2, 3].map((idx) => (
           <motion.div
             key={idx}
             initial={{ opacity: 0, y: 20 }}
@@ -52,7 +46,7 @@ export default function PitchNSales() {
               <CardContent className="flex items-start gap-3 p-6">
                 <CheckCircle className="w-6 h-6 text-yellow-400 shrink-0 mt-1" />
                 <p className="text-gray-200 text-base leading-snug">
-                  {feature}
+                  {t(`pitchnsales.features.${idx}`)}
                 </p>
               </CardContent>
             </Card>
@@ -68,9 +62,7 @@ export default function PitchNSales() {
           transition={{ delay: 0.8, duration: 0.6 }}
           className="text-lg leading-relaxed"
         >
-          Med Pitch 'n Sales får du et komplet overblik over dit salgs-team –
-          live og historisk. Spot top-performere, giv støtte til dem der har
-          brug for det så du kan få danmarks bedste team i direct marketing.
+          {t("pitchnsales.overview")}
         </motion.p>
 
         <motion.p
@@ -80,10 +72,9 @@ export default function PitchNSales() {
           className="text-lg leading-relaxed"
         >
           <span className="font-semibold text-yellow-300">
-            Vil du have mere ud af dit salgs-team?
+            {t("pitchnsales.ctaStrong")}
           </span>{" "}
-          Kontakt os for en demo og hør, hvordan Pitch 'n Sales kan styrke jeres
-          direct marketing og skabe bedre resultater.
+          {t("pitchnsales.ctaText")}
         </motion.p>
       </div>
     </div>

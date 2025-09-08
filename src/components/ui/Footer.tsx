@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { Instagram, Linkedin } from "lucide-react";
 
@@ -6,11 +7,12 @@ const CVR = "CVR: 45785513"; // Opdater med jeres rigtige CVR
 
 const Footer: React.FC = () => {
   const location = useLocation();
+  const { t } = useTranslation();
   const links = [
-    { to: "/terms", label: "Handelsbetingelser" },
-    { to: "/privacy", label: "Privatlivspolitik" },
-    { to: "/cookiepolicy", label: "Cookiepolitik" },
-    { to: "/tos", label: "Terms of Service" },
+    { to: "/terms", label: t("footer.terms") },
+    { to: "/privacy", label: t("footer.privacy") },
+    { to: "/cookiepolicy", label: t("footer.cookie") },
+    { to: "/tos", label: t("footer.tos") },
   ];
   return (
     <footer className="w-full bg-black/80 text-gray-300 border-t border-white/10 py-8 mt-16">

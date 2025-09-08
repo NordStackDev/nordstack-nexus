@@ -5,6 +5,7 @@ import { IphoneMockup } from "@/components/ui/IphoneMockup";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const projects = [
   {
@@ -24,9 +25,8 @@ const projects = [
   },
   {
     id: 1,
-    title: "Pitch 'N Sales - Demo Version",
-    description:
-      "Pitch 'N Sales gør det nemt at præsentere, dele og lukke salg direkte fra din mobil. Bygget som en moderne web-app med fokus på brugervenlighed.",
+    titleKey: "projects.pitchnsales.title",
+    descriptionKey: "projects.pitchnsales.description",
     images: [
       "/iphone_images/Login.webp",
       "/iphone_images/LogPitchNSale.webp",
@@ -54,6 +54,7 @@ const ProjectCarouselComponent: React.FC = () => {
     new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   );
 
+  const { t } = useTranslation();
   const currentProject = useMemo(
     () => projects[currentProjectIndex],
     [currentProjectIndex]
@@ -119,7 +120,7 @@ const ProjectCarouselComponent: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            {currentProject.title}
+            {t(currentProject.titleKey)}
           </motion.h3>
 
           <motion.p
@@ -128,7 +129,7 @@ const ProjectCarouselComponent: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            {currentProject.description}
+            {t(currentProject.descriptionKey)}
           </motion.p>
 
           <motion.div
@@ -138,7 +139,7 @@ const ProjectCarouselComponent: React.FC = () => {
           >
             <Button className="relative bg-transparent text-white hover:text-[#FFD700] mt-4 px-8 py-4 text-lg font-medium rounded-lg transition group">
               <Link to={currentProject.link} className="flex items-center">
-                Læs mere
+                {t("projects.cta")}
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
               <span className="absolute -bottom-1 left-0 w-full h-[2px] rounded bg-gradient-to-r from-transparent via-[#FFD700] to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>

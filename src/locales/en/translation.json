@@ -1,0 +1,96 @@
+  {
+  "contact": {
+    "title": "Contact us",
+    "intro": "Do you have questions, need support, or want to collaborate? Fill out the form and we will get back to you quickly.",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "email": "E-mail",
+    "emailPlaceholder": "Your email address",
+    "phone": "Phone number",
+    "phonePlaceholder": "Your phone number (optional)",
+    "message": "Message",
+    "messagePlaceholder": "Write your message here...",
+    "send": "Send message",
+    "sending": "Sending...",
+    "success": "Message sent! Thank you for your inquiry, we will get back to you within 24 hours.",
+    "info": "We will get back to you via the provided phone or email within 24 hours."
+  },
+  "pitchnsales": {
+    "overview": "With Pitch 'n Sales you get a complete overview of your sales team – live and historical. Spot top performers, support those who need it, so you can have Denmark's best direct marketing team.",
+    "ctaStrong": "Want to get more out of your sales team?",
+  "ctaText": "Contact us for a demo and hear how Pitch 'n Sales can strengthen your direct marketing and create better results.",
+  "intro": "Pitch 'n Sales is a specialized tool for companies working with direct marketing and outbound sales. The platform helps team leaders keep track of their salespeople, monitor performance, and create a motivating, data-driven environment.",
+  "features": {
+      "0": "Live dashboard with real-time statistics for the whole team and selected team leads.",
+      "1": "Register pitches, sales, and follow-ups directly from your mobile.",
+      "2": "Built-in gamification and leaderboard to motivate and engage.",
+      "3": "Ability to set goals, bonuses, and give feedback directly in the system (under development)."
+    }
+  },
+  "projects": {
+    "pitchnsales": {
+      "title": "Pitch 'N Sales - Demo Version",
+      "description": "Pitch 'N Sales makes it easy to present, share, and close sales directly from your mobile. Built as a modern web app with a focus on user-friendliness."
+    },
+    "cta": "Read more"
+  },
+  "servicesSection": {
+    "title": "Here is what we can offer you {{firstName}}",
+    "description": "NordStack delivers modern solutions for companies looking to optimize their digital presence and processes with advanced technology."
+  },
+  "hero": {
+    "description": "We deliver digital solutions for growth and efficiency to businesses worldwide.",
+    "cta": "Get started",
+    "contact": "Contact us"
+  },
+  "welcome": "Welcome to NordStack!",
+  "description": "This is an example of internationalization.",
+  "services": {
+    "web": {
+      "title": "Websites",
+      "description": "At NordStack, we develop websites from scratch, tailored to what you want to show. We offer everything from informational sites and small 2-3 page solutions to complete webshop solutions."
+    },
+    "app": {
+      "title": "Web Applications",
+      "description": "Our web applications make processes more efficient in your business. An example is Pitch ’n Sales, where team leaders can track sales performance and turn effort and data into better results."
+    },
+    "design": {
+      "title": "Design & Branding",
+      "description": "We also help you design your website or web application from scratch, turning your idea into reality. We involve you in the design process, while our PR department handles the branding."
+    },
+    "mobile": {
+      "title": "Mobile Design",
+      "description": "All NordStack solutions are responsively designed, so your product always looks sharp – no matter which device you use. We start by designing for laptops and then adapt the layout to other devices."
+    },
+    "backend": {
+      "title": "Database & Backend",
+      "description": "We build robust backend systems and databases that grow with your business. With a secure and reliable architecture, we guide you through the whole process to create the best possible solution for you."
+    },
+    "seo": {
+      "title": "SEO & Performance",
+      "description": "We optimize your website or web application so it runs fast and is visible on search engines. We work with technical SEO and content for more visitors and better results."
+    }
+  },
+  "cases": {
+    "title": "Cases",
+    "description": "A selection of our solutions in practice. See how we help companies transform their digital presence."
+  },
+  "cta": {
+  "title": "Ready to transform your business?",
+  "description": "Let us help you create modern digital solutions that drive growth and efficiency.",
+  "ctaButton": "Get started now",
+  "contactButton": "Contact us"
+  },
+  "footer": {
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "cookie": "Cookie Policy",
+    "tos": "Terms of Service"
+  },
+  "nav": {
+    "home": "Home",
+    "admin": "Admin",
+    "logout": "Log out",
+    "login": "Log in"
+  }
+}

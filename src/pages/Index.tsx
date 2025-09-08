@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Seo } from "@/components/Seo";
 import { YellowGradientLine } from "@/components/ui/YellowGradientLine";
 import { BackgroundBeams } from "@/components/BackgroundBeams";
@@ -13,7 +14,9 @@ import FloatingIcons from "@/components/ui/FloatingIcons";
 
 const Index: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [loading, setLoading] = React.useState(true);
+  const headerOffset = 84;
 
   React.useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1200);
@@ -105,8 +108,7 @@ const Index: React.FC = () => {
                     <FloatingIcons />
                   </div>
                   <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-300 max-w-4xl mx-auto leading-relaxed mt-2">
-                    Vi leverer digitale løsninger til vækst og effektivitet til
-                    alle virksomheder i hele verden.
+                    {t("hero.description")}
                   </p>
                 </div>
                 {/* CTA Buttons */}
@@ -118,7 +120,7 @@ const Index: React.FC = () => {
                   >
                     <Link to={user ? "/dashboard" : "/auth"}>
                       <ArrowRight className="w-5 h-5 mr-2" />
-                      Kom i gang
+                      {t("hero.cta")}
                     </Link>
                   </Button>
                   <Button
@@ -127,7 +129,7 @@ const Index: React.FC = () => {
                     size="lg"
                     className="border-white/30 text-white hover:bg-white/10 hover:border-white hover:scale-105 backdrop-blur-sm px-10 py-6 text-lg font-semibold rounded-xl transition-all duration-300"
                   >
-                    <Link to="/contact">Kontakt os</Link>
+                    <Link to="/contact">{t("hero.contact")}</Link>
                   </Button>
                 </div>{" "}
                 {/* <-- den manglede lukning her */}
@@ -149,13 +151,11 @@ const Index: React.FC = () => {
                 className="text-center mb-20"
               >
                 <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                  Cases
+                  {t("cases.title")}
                 </h2>
                 <YellowGradientLine />
                 <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                  Et udvalg af vores løsninger i praksis. Se hvordan vi hjælper
-                  virksomheder med at transformere deres digitale
-                  tilstedeværelse.
+                  {t("cases.description")}
                 </p>
               </motion.div>
               <ProjectCarousel />
@@ -173,30 +173,29 @@ const Index: React.FC = () => {
             >
               <div className="bg-gradient-to-r from-[#FFD700]/10 via-[#fff200]/5 to-[#FFD700]/10 backdrop-blur-sm border border-[#FFD700]/20 rounded-3xl p-8 sm:p-12">
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6">
-                  Klar til at transformere din virksomhed?
+                  {t("cta.title")}
                 </h3>
                 <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-                  Lad os hjælpe dig med at skabe moderne digitale løsninger, der
-                  driver vækst og effektivitet.
+                  {t("cta.description")}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-8">
                   <Button
                     asChild
                     size="lg"
-                    className="bg-[#FFD700] text-black hover:bg-[#fff200] hover:scale-105 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
+                    className="bg-[#FFD700] text-black hover:bg-yellow-400 hover:scale-105 px-10 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
                   >
                     <Link to={user ? "/dashboard" : "/auth"}>
                       <ArrowRight className="w-5 h-5 mr-2" />
-                      Kom i gang nu
+                      {t("cta.ctaButton")}
                     </Link>
                   </Button>
                   <Button
                     asChild
                     variant="outline"
                     size="lg"
-                    className="border-white/30 text-white hover:bg-white/10 hover:border-white hover:scale-105 backdrop-blur-sm px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
+                    className="border-white/30 text-white hover:bg-white/10 hover:border-white hover:scale-105 backdrop-blur-sm px-10 py-6 text-lg font-semibold rounded-xl transition-all duration-300"
                   >
-                    <Link to="/contact">Kontakt os</Link>
+                    <Link to="/contact">{t("cta.contactButton")}</Link>
                   </Button>
                 </div>
               </div>
