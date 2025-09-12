@@ -1,4 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 import {
   Card,
   CardContent,
@@ -101,6 +120,88 @@ export default function FinanceDashboard() {
   const lifetimeProfit =
     lifetimeRevenue - expenses.reduce((sum, e) => sum + e.amount, 0);
 
+  // Format currency
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat("da-DK", {
+      style: "currency",
+      currency: "DKK",
+      minimumFractionDigits: 0,
+    }).format(value);
+
+  // Chart data
+  const chartData = {
+    labels: productStats.map((p) => p.name),
+    datasets: [
+      {
+        label: "Omsætning",
+        data: productStats.map((p) => p.totalRevenue),
+        backgroundColor: "rgba(34,197,94,0.8)",
+        borderRadius: 6,
+        barPercentage: 0.6,
+      },
+      {
+        label: "Udgifter",
+        data: productStats.map((p) => p.totalExpense),
+        backgroundColor: "rgba(239,68,68,0.8)",
+        borderRadius: 6,
+        barPercentage: 0.6,
+      },
+      {
+        label: "Indtjening",
+        data: productStats.map((p) => p.profit),
+        backgroundColor: "rgba(59,130,246,0.8)",
+        borderRadius: 6,
+        barPercentage: 0.6,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: "y" as const,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          color: "#FFD700",
+          font: { size: 14, family: "inherit", weight: 600 },
+        },
+      },
+      title: {
+        display: true,
+        text: "Produktøkonomi",
+        color: "#FFD700",
+        font: { size: 18, family: "inherit", weight: 700 },
+      },
+      tooltip: {
+        backgroundColor: "#1e1e1e",
+        titleColor: "#FFD700",
+        bodyColor: "#fff",
+        borderColor: "#FFD700",
+        borderWidth: 1,
+        padding: 10,
+        callbacks: {
+          label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: "#FFD700",
+          font: { size: 12 },
+          callback: (value) => formatCurrency(value),
+        },
+        grid: { color: "#333" },
+      },
+      y: {
+        ticks: { color: "#FFD700", font: { size: 12 } },
+        grid: { color: "#333" },
+      },
+    },
+  };
+
   return (
     <div className="space-y-8">
       <Card>
@@ -111,12 +212,32 @@ export default function FinanceDashboard() {
           <div className="flex gap-8 text-lg font-bold">
             <div>
               Omsætning:{" "}
-              <span className="text-green-500">{lifetimeRevenue}</span>
+              <span className="text-green-500">
+                {formatCurrency(lifetimeRevenue)}
+              </span>
             </div>
             <div>
               Indtjening:{" "}
-              <span className="text-blue-500">{lifetimeProfit}</span>
+              <span className="text-blue-500">
+                {formatCurrency(lifetimeProfit)}
+              </span>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Grafisk oversigt</CardTitle>
+          <CardDescription>
+            Omsætning, udgifter og indtjening pr. produkt
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div
+            className="bg-background p-4 rounded-xl shadow-lg"
+            style={{ height: 400 }}
+          >
+            <Bar data={chartData} options={chartOptions} />
           </div>
         </CardContent>
       </Card>
@@ -144,10 +265,10 @@ export default function FinanceDashboard() {
                 {productStats.map((p) => (
                   <tr key={p.id}>
                     <td>{p.name}</td>
-                    <td>{p.price}</td>
-                    <td>{p.totalExpense}</td>
-                    <td>{p.totalRevenue}</td>
-                    <td>{p.profit}</td>
+                    <td>{formatCurrency(p.price)}</td>
+                    <td>{formatCurrency(p.totalExpense)}</td>
+                    <td>{formatCurrency(p.totalRevenue)}</td>
+                    <td>{formatCurrency(p.profit)}</td>
                     <td>{p.margin}</td>
                   </tr>
                 ))}
@@ -156,6 +277,7 @@ export default function FinanceDashboard() {
           </div>
         </CardContent>
       </Card>
+      {/* Forms er uændrede */}
       <Card>
         <CardHeader>
           <CardTitle>Opret Produkt</CardTitle>
