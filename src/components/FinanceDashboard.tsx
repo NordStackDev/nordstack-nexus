@@ -18,6 +18,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
 import {
   Card,
   CardContent,
@@ -37,6 +38,7 @@ import {
 } from "@/integrations/supabase/finance";
 
 export default function FinanceDashboard() {
+  const [selectedProductId, setSelectedProductId] = useState("");
   const [products, setProducts] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [revenues, setRevenues] = useState([]);
@@ -105,7 +107,15 @@ export default function FinanceDashboard() {
     fetchAll();
   }
 
-  // Calculate totals
+  // Format til DKK
+  const formatCurrency = (num: number) =>
+    new Intl.NumberFormat("da-DK", {
+      style: "currency",
+      currency: "DKK",
+      minimumFractionDigits: 0,
+    }).format(num);
+
+  // Beregninger pr. produkt
   const productStats = products.map((p) => {
     const prodExpenses = expenses.filter((e) => e.product_id === p.id);
     const prodRevenues = revenues.filter((r) => r.product_id === p.id);
@@ -116,42 +126,43 @@ export default function FinanceDashboard() {
       totalRevenue > 0 ? ((profit / totalRevenue) * 100).toFixed(1) : "0";
     return { ...p, totalExpense, totalRevenue, profit, margin };
   });
+
   const lifetimeRevenue = revenues.reduce((sum, r) => sum + r.amount, 0);
   const lifetimeProfit =
     lifetimeRevenue - expenses.reduce((sum, e) => sum + e.amount, 0);
 
-  // Format currency
-  const formatCurrency = (value) =>
-    new Intl.NumberFormat("da-DK", {
-      style: "currency",
-      currency: "DKK",
-      minimumFractionDigits: 0,
-    }).format(value);
+  // Filtrering til chart
+  const filteredStats = selectedProductId
+    ? productStats.filter((p) => p.id === selectedProductId)
+    : productStats;
 
   // Chart data
   const chartData = {
-    labels: productStats.map((p) => p.name),
+    labels: filteredStats.map((p) => p.name),
     datasets: [
       {
         label: "Omsætning",
-        data: productStats.map((p) => p.totalRevenue),
-        backgroundColor: "rgba(34,197,94,0.8)",
+        data: filteredStats.map((p) => p.totalRevenue),
+        backgroundColor: "rgba(34,197,94,0.7)",
         borderRadius: 6,
-        barPercentage: 0.6,
+        barPercentage: 0.4,
+        categoryPercentage: 0.4,
       },
       {
         label: "Udgifter",
-        data: productStats.map((p) => p.totalExpense),
-        backgroundColor: "rgba(239,68,68,0.8)",
+        data: filteredStats.map((p) => p.totalExpense),
+        backgroundColor: "rgba(239,68,68,0.7)",
         borderRadius: 6,
-        barPercentage: 0.6,
+        barPercentage: 0.4,
+        categoryPercentage: 0.4,
       },
       {
         label: "Indtjening",
-        data: productStats.map((p) => p.profit),
-        backgroundColor: "rgba(59,130,246,0.8)",
+        data: filteredStats.map((p) => p.profit),
+        backgroundColor: "rgba(59,130,246,0.7)",
         borderRadius: 6,
-        barPercentage: 0.6,
+        barPercentage: 0.4,
+        categoryPercentage: 0.4,
       },
     ],
   };
@@ -159,44 +170,46 @@ export default function FinanceDashboard() {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    indexAxis: "y" as const,
     plugins: {
       legend: {
-        position: "top",
+        position: "top" as const,
         labels: {
           color: "#FFD700",
-          font: { size: 14, family: "inherit", weight: 600 },
+          font: { size: 14, weight: 600 },
         },
       },
       title: {
         display: true,
         text: "Produktøkonomi",
         color: "#FFD700",
-        font: { size: 18, family: "inherit", weight: 700 },
+        font: { size: 18, weight: 700 },
       },
       tooltip: {
-        backgroundColor: "#1e1e1e",
+        callbacks: {
+          label: function (context) {
+            let value = context.raw as number;
+            return `${context.dataset.label}: ${formatCurrency(value)}`;
+          },
+        },
+        backgroundColor: "#222",
         titleColor: "#FFD700",
         bodyColor: "#fff",
         borderColor: "#FFD700",
         borderWidth: 1,
-        padding: 10,
-        callbacks: {
-          label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}`,
-        },
+        padding: 12,
       },
     },
     scales: {
       x: {
-        ticks: {
-          color: "#FFD700",
-          font: { size: 12 },
-          callback: (value) => formatCurrency(value),
-        },
+        ticks: { color: "#FFD700", font: { size: 12 } },
         grid: { color: "#333" },
       },
       y: {
-        ticks: { color: "#FFD700", font: { size: 12 } },
+        ticks: {
+          color: "#FFD700",
+          font: { size: 12 },
+          callback: (val: number) => formatCurrency(val),
+        },
         grid: { color: "#333" },
       },
     },
@@ -225,6 +238,8 @@ export default function FinanceDashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Chart med filter */}
       <Card>
         <CardHeader>
           <CardTitle>Grafisk oversigt</CardTitle>
@@ -233,6 +248,27 @@ export default function FinanceDashboard() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-4">
+            <label
+              htmlFor="product-select"
+              className="block text-yellow-400 font-semibold mb-2"
+            >
+              Vælg produkt for graf:
+            </label>
+            <select
+              id="product-select"
+              className="bg-background text-white border rounded px-2 py-1"
+              value={selectedProductId}
+              onChange={(e) => setSelectedProductId(e.target.value)}
+            >
+              <option value="">Alle produkter</option>
+              {products.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <div
             className="bg-background p-4 rounded-xl shadow-lg"
             style={{ height: 400 }}
@@ -241,6 +277,8 @@ export default function FinanceDashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Produktstatistik */}
       <Card>
         <CardHeader>
           <CardTitle>Produkter & Statistik</CardTitle>
@@ -277,7 +315,8 @@ export default function FinanceDashboard() {
           </div>
         </CardContent>
       </Card>
-      {/* Forms er uændrede */}
+
+      {/* Forms */}
       <Card>
         <CardHeader>
           <CardTitle>Opret Produkt</CardTitle>
@@ -315,6 +354,7 @@ export default function FinanceDashboard() {
           </form>
         </CardContent>
       </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Tilføj Udgift</CardTitle>
@@ -358,15 +398,13 @@ export default function FinanceDashboard() {
           </form>
         </CardContent>
       </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Tilføj Omsætning</CardTitle>
         </CardHeader>
         <CardContent>
-          <form
-            className=" flex gap-2 flex-wrap"
-            onSubmit={handleRevenueSubmit}
-          >
+          <form className="flex gap-2 flex-wrap" onSubmit={handleRevenueSubmit}>
             <select
               className="bg-background text-white border rounded px-2 py-1"
               value={revenueForm.product_id}
@@ -375,12 +413,7 @@ export default function FinanceDashboard() {
               }
               required
             >
-              <option
-                className="bg-background text-white border border-gray-700 rounded px-2 py-1"
-                value=""
-              >
-                Vælg produkt
-              </option>
+              <option value="">Vælg produkt</option>
               {products.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
