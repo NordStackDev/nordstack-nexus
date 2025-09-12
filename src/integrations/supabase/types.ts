@@ -14,20 +14,82 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
-    }
+      products: {
+        Row: {
+          id: string;
+          name: string;
+          price: number;
+          description: string | null;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          price: number;
+          description?: string | null;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          price?: number;
+          description?: string | null;
+        };
+      };
+      expenses: {
+        Row: {
+          id: string;
+          product_id: string;
+          amount: number;
+          description: string | null;
+          date: string;
+        };
+        Insert: {
+          id?: string;
+          product_id: string;
+          amount: number;
+          description?: string | null;
+          date?: string;
+        };
+        Update: {
+          id?: string;
+          product_id?: string;
+          amount?: number;
+          description?: string | null;
+          date?: string;
+        };
+      };
+      revenues: {
+        Row: {
+          id: string;
+          product_id: string;
+          amount: number;
+          date: string;
+        };
+        Insert: {
+          id?: string;
+          product_id: string;
+          amount: number;
+          date?: string;
+        };
+        Update: {
+          id?: string;
+          product_id?: string;
+          amount?: number;
+          date?: string;
+        };
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
   }
 }
 

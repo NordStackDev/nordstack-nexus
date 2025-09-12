@@ -42,6 +42,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { BackgroundBeams } from "@/components/BackgroundBeams";
 import { MessagesList } from "@/components/ui/admin/MessagesList";
+import FinanceDashboard from "@/components/FinanceDashboard";
 
 interface Document {
   id: string;
@@ -100,7 +101,7 @@ const Admin = () => {
     isPublic: boolean;
   } | null>(null);
   const [activeTab, setActiveTab] = useState<
-    "documents" | "upload" | "messages" | "stats"
+    "documents" | "upload" | "messages" | "stats" | "finance"
   >("documents");
   // Track which file is selected for preview
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
@@ -485,264 +486,266 @@ const Admin = () => {
                   <User className="h-4 w-4" />
                   <span>Brugerhåndtering</span>
                 </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setActiveTab("finance")}
+                  className={tabClasses(activeTab === "finance")}
+                >
+                  <BarChart3 className="h-4 w-4" />
+                  <span>Finance</span>
+                </Button>
               </>
             );
           })()}
         </div>
-        {/* Documents Tab inkl. statistik */}
-        {activeTab === "documents" && (
-          <>
-            <AdminStatsCards
-              totalDocuments={documents.length}
-              totalDownloads={documents.reduce(
-                (sum, doc) => sum + doc.download_count,
-                0
-              )}
-              unreadMessages={messages.filter((m) => !m.is_read).length}
+        {/* Tab indhold */}
+        <>
+          {activeTab === "documents" && (
+            <>
+              <AdminStatsCards
+                totalDocuments={documents.length}
+                totalDownloads={documents.reduce(
+                  (sum, doc) => sum + doc.download_count,
+                  0
+                )}
+                unreadMessages={messages.filter((m) => !m.is_read).length}
+              />
+              <br />
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <FileText className="h-5 w-5" />
+                    <span className="text-[#FFD700]">Dokumenter</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Administrer uploadede dokumenter
+                  </CardDescription>
+                </CardHeader>
+                <div className="w-full max-w-5xl mx-auto mt-4 sm:mt-6">
+                  <div className="rounded-2xl p-2 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                    <div className="mx-auto max-w-3xl">
+                      <div className="px-2 py-2 sm:px-6 sm:py-4 mb-6 sm:mb-8">
+                        <FileUpload onChange={uploadFiles} />
+                      </div>
+                      <div className="h-4 sm:h-8" />
+                      <CategoryModal
+                        open={isCategoryModalOpen}
+                        pendingFiles={pendingFiles}
+                        pendingCategories={pendingCategories}
+                        bulkCategory={bulkCategory}
+                        isUploading={isUploading}
+                        onBulkCategoryChange={setBulkCategory}
+                        onCategoryChange={(fileName, value) =>
+                          setPendingCategories((s) => ({
+                            ...s,
+                            [fileName]: value,
+                          }))
+                        }
+                        onBulkApply={() => {
+                          if (!bulkCategory || !pendingFiles) return;
+                          const updated: Record<string, string> = {
+                            ...pendingCategories,
+                          };
+                          pendingFiles.forEach(
+                            (f) => (updated[f.name] = bulkCategory)
+                          );
+                          setPendingCategories(updated);
+                        }}
+                        onCancel={cancelPendingUpload}
+                        onConfirm={confirmUpload}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <CardContent>
+                  {!activeFolderFilter ? (
+                    <div className="mt-6">
+                      <FolderGrid
+                        categoryCounts={categoryCounts}
+                        onOpenFolder={(cat) => {
+                          setActiveFolderFilter(cat);
+                          setFolderPage(1);
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="flex items-center justify-between mt-4">
+                        <div className="mb-6">
+                          <Button
+                            variant="ghost"
+                            onClick={() => setActiveFolderFilter(null)}
+                            className="flex items-center space-x-2 text-yellow-400 hover:bg-yellow-900/10 transition-colors px-3 py-2 rounded-full font-medium"
+                          >
+                            <ArrowLeft className="h-4 w-4 mr-1 text-yellow-400" />
+                            <span className="text-yellow-400">
+                              Tilbage til mapper
+                            </span>
+                          </Button>
+                        </div>
+                        <div className="text-sm text-[#FFD700]">
+                          Viser mappe: {activeFolderFilter}
+                        </div>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <Table className="min-w-[600px]">
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Titel</TableHead>
+                              <TableHead>Preview</TableHead>
+                              <TableHead>Størrelse</TableHead>
+                              <TableHead>Downloads</TableHead>
+                              <TableHead>Oprettet</TableHead>
+                              <TableHead>Handlinger</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {pagedFiles.map((doc) => (
+                              <TableRow key={doc.id}>
+                                <TableCell className="font-medium">
+                                  {doc.title}
+                                </TableCell>
+                                <TableCell>
+                                  <div className="w-10 h-10 rounded bg-muted/10 flex items-center justify-center">
+                                    {doc.file_type.startsWith("image/") ? (
+                                      <img
+                                        src={doc.file_url}
+                                        alt={`thumb-${doc.title}`}
+                                        className="w-10 h-10 object-cover rounded"
+                                        loading="lazy"
+                                      />
+                                    ) : (
+                                      <FileIcon className="h-5 w-5" />
+                                    )}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  {formatFileSize(doc.file_size)}
+                                </TableCell>
+                                <TableCell>{doc.download_count}</TableCell>
+                                <TableCell>
+                                  {formatDate(doc.created_at)}
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex flex-wrap gap-2">
+                                    <Button
+                                      size="sm"
+                                      variant="secondary"
+                                      onClick={async () => {
+                                        try {
+                                          const response = await fetch(
+                                            doc.file_url
+                                          );
+                                          const blob = await response.blob();
+                                          const url =
+                                            window.URL.createObjectURL(blob);
+                                          const link =
+                                            document.createElement("a");
+                                          link.href = url;
+                                          link.download =
+                                            doc.file_name || "download";
+                                          document.body.appendChild(link);
+                                          link.click();
+                                          setTimeout(() => {
+                                            window.URL.revokeObjectURL(url);
+                                            document.body.removeChild(link);
+                                          }, 100);
+                                        } catch (e) {
+                                          alert("Kunne ikke downloade filen.");
+                                        }
+                                      }}
+                                    >
+                                      <Download className="h-4 w-4 text-yellow-400" />
+                                    </Button>
+                                    {selectedDocId === doc.id ? (
+                                      <Button
+                                        size="sm"
+                                        variant="secondary"
+                                        onClick={() =>
+                                          window.open(doc.file_url, "_blank")
+                                        }
+                                      >
+                                        <Eye className="h-4 w-4 text-yellow-400" />
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        size="sm"
+                                        variant="secondary"
+                                        onClick={() => setSelectedDocId(doc.id)}
+                                      >
+                                        <Eye className="h-4 w-4 text-yellow-400" />
+                                      </Button>
+                                    )}
+                                    <Button
+                                      size="sm"
+                                      variant="destructive"
+                                      onClick={() => deleteDocument(doc.id)}
+                                    >
+                                      <Trash2 className="h-4 w-4 text-yellow-400" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                      <div className="flex items-center justify-between mt-4">
+                        <div className="text-sm text-muted">
+                          Side {folderPage} af {totalPages}
+                        </div>
+                        <div className="space-x-2">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() =>
+                              setFolderPage((p) => Math.max(1, p - 1))
+                            }
+                            disabled={folderPage <= 1}
+                          >
+                            Forrige
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              setFolderPage((p) => Math.min(totalPages, p + 1))
+                            }
+                            disabled={folderPage >= totalPages}
+                          >
+                            Næste
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </>
+          )}
+          {activeTab === "finance" && <FinanceDashboard />}
+          {activeTab === "messages" && (
+            <MessagesList
+              messages={messages}
+              formatDate={formatDate}
+              toggleReadMessage={toggleReadMessage}
+              deleteMessage={deleteMessage}
             />
-            <br />
-            {/* Dokument under dokumentlisten */}
+          )}
+          {activeTab === "stats" && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <FileText className="h-5 w-5" />
-                  <span className="text-[#FFD700]">Dokumenter</span>
+                  <User className="h-5 w-5" />
+                  <span>Brugerhåndtering</span>
                 </CardTitle>
                 <CardDescription>
-                  Administrer uploadede dokumenter
+                  Administrer brugere, roller og adgang
                 </CardDescription>
               </CardHeader>
-              <div className="w-full max-w-5xl mx-auto mt-4 sm:mt-6">
-                <div className="rounded-2xl p-2 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
-                  <div className="mx-auto max-w-3xl">
-                    <div className="px-2 py-2 sm:px-6 sm:py-4 mb-6 sm:mb-8">
-                      <FileUpload onChange={uploadFiles} />
-                    </div>
-                    {/* Extra spacing below upload before folder grid/table */}
-                    <div className="h-4 sm:h-8" />
-                    {/* Category confirmation modal for pending uploads */}
-                    <CategoryModal
-                      open={isCategoryModalOpen}
-                      pendingFiles={pendingFiles}
-                      pendingCategories={pendingCategories}
-                      bulkCategory={bulkCategory}
-                      isUploading={isUploading}
-                      onBulkCategoryChange={setBulkCategory}
-                      onCategoryChange={(fileName, value) =>
-                        setPendingCategories((s) => ({
-                          ...s,
-                          [fileName]: value,
-                        }))
-                      }
-                      onBulkApply={() => {
-                        if (!bulkCategory || !pendingFiles) return;
-                        const updated: Record<string, string> = {
-                          ...pendingCategories,
-                        };
-                        pendingFiles.forEach(
-                          (f) => (updated[f.name] = bulkCategory)
-                        );
-                        setPendingCategories(updated);
-                      }}
-                      onCancel={cancelPendingUpload}
-                      onConfirm={confirmUpload}
-                    />
-                  </div>
-                </div>
-              </div>
-              <CardContent>
-                {!activeFolderFilter ? (
-                  <div className="mt-6">
-                    <FolderGrid
-                      categoryCounts={categoryCounts}
-                      onOpenFolder={(cat) => {
-                        setActiveFolderFilter(cat);
-                        setFolderPage(1);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <div className="flex items-center justify-between mt-4">
-                      <div className="mb-6">
-                        <Button
-                          variant="ghost"
-                          onClick={() => setActiveFolderFilter(null)}
-                          className="flex items-center space-x-2 text-yellow-400 hover:bg-yellow-900/10 transition-colors px-3 py-2 rounded-full font-medium"
-                        >
-                          <ArrowLeft className="h-4 w-4 mr-1 text-yellow-400" />
-                          <span className="text-yellow-400">
-                            Tilbage til mapper
-                          </span>
-                        </Button>
-                      </div>
-                      <div className="text-sm text-[#FFD700]">
-                        Viser mappe: {activeFolderFilter}
-                      </div>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <Table className="min-w-[600px]">
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Titel</TableHead>
-                            <TableHead>Preview</TableHead>
-                            <TableHead>Størrelse</TableHead>
-                            <TableHead>Downloads</TableHead>
-                            <TableHead>Oprettet</TableHead>
-                            <TableHead>Handlinger</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {pagedFiles.map((doc) => (
-                            <TableRow key={doc.id}>
-                              <TableCell className="font-medium">
-                                {doc.title}
-                              </TableCell>
-                              <TableCell>
-                                <div className="w-10 h-10 rounded bg-muted/10 flex items-center justify-center">
-                                  {doc.file_type.startsWith("image/") ? (
-                                    // small image thumbnail
-                                    // eslint-disable-next-line jsx-a11y/img-redundant-alt
-                                    <img
-                                      src={doc.file_url}
-                                      alt={`thumb-${doc.title}`}
-                                      className="w-10 h-10 object-cover rounded"
-                                      loading="lazy"
-                                    />
-                                  ) : (
-                                    <FileIcon className="h-5 w-5" />
-                                  )}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                {formatFileSize(doc.file_size)}
-                              </TableCell>
-                              <TableCell>{doc.download_count}</TableCell>
-                              <TableCell>
-                                {formatDate(doc.created_at)}
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex flex-wrap gap-2">
-                                  {/* Download button always visible */}
-                                  <Button
-                                    size="sm"
-                                    variant="secondary"
-                                    onClick={async () => {
-                                      try {
-                                        const response = await fetch(
-                                          doc.file_url
-                                        );
-                                        const blob = await response.blob();
-                                        const url =
-                                          window.URL.createObjectURL(blob);
-                                        const link =
-                                          document.createElement("a");
-                                        link.href = url;
-                                        link.download =
-                                          doc.file_name || "download";
-                                        document.body.appendChild(link);
-                                        link.click();
-                                        setTimeout(() => {
-                                          window.URL.revokeObjectURL(url);
-                                          document.body.removeChild(link);
-                                        }, 100);
-                                      } catch (e) {
-                                        alert("Kunne ikke downloade filen.");
-                                      }
-                                    }}
-                                  >
-                                    <Download className="h-4 w-4 text-yellow-400" />
-                                  </Button>
-                                  {/* Preview button only visible if selected */}
-                                  {selectedDocId === doc.id ? (
-                                    <Button
-                                      size="sm"
-                                      variant="secondary"
-                                      onClick={() =>
-                                        window.open(doc.file_url, "_blank")
-                                      }
-                                    >
-                                      <Eye className="h-4 w-4 text-yellow-400" />
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      size="sm"
-                                      variant="secondary"
-                                      onClick={() => setSelectedDocId(doc.id)}
-                                    >
-                                      <Eye className="h-4 w-4 text-yellow-400" />
-                                    </Button>
-                                  )}
-                                  <Button
-                                    size="sm"
-                                    variant="destructive"
-                                    onClick={() => deleteDocument(doc.id)}
-                                  >
-                                    <Trash2 className="h-4 w-4 text-yellow-400" />
-                                  </Button>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                    <div className="flex items-center justify-between mt-4">
-                      <div className="text-sm text-muted">
-                        Side {folderPage} af {totalPages}
-                      </div>
-                      <div className="space-x-2">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() =>
-                            setFolderPage((p) => Math.max(1, p - 1))
-                          }
-                          disabled={folderPage <= 1}
-                        >
-                          Forrige
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() =>
-                            setFolderPage((p) => Math.min(totalPages, p + 1))
-                          }
-                          disabled={folderPage >= totalPages}
-                        >
-                          Næste
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
+              <CardContent>{/* <UserManagementTable /> */}</CardContent>
             </Card>
-          </>
-        )}
-        {/* Messages Tab */}
-        {activeTab === "messages" && (
-          <MessagesList
-            messages={messages}
-            formatDate={formatDate}
-            toggleReadMessage={toggleReadMessage}
-            deleteMessage={deleteMessage}
-          />
-        )}
-        {/* User Management Tab */}
-        {activeTab === "stats" && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <User className="h-5 w-5" />
-                <span>Brugerhåndtering</span>
-              </CardTitle>
-              <CardDescription>
-                Administrer brugere, roller og adgang
-              </CardDescription>
-            </CardHeader>
-            <CardContent>{/* <UserManagementTable /> */}</CardContent>
-          </Card>
-        )}
+          )}
+        </>
       </div>
     </div>
   );
