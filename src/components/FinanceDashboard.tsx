@@ -105,112 +105,19 @@ export default function FinanceDashboard() {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Opret Produkt</CardTitle>
-          <CardDescription>Navn, pris og beskrivelse</CardDescription>
+          <CardTitle>Lifetime Totals</CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="flex gap-2 flex-wrap" onSubmit={handleProductSubmit}>
-            <Input
-              placeholder="Navn"
-              value={productForm.name}
-              onChange={(e) =>
-                setProductForm((f) => ({ ...f, name: e.target.value }))
-              }
-              required
-            />
-            <Input
-              placeholder="Pris"
-              type="number"
-              value={productForm.price}
-              onChange={(e) =>
-                setProductForm((f) => ({ ...f, price: e.target.value }))
-              }
-              required
-            />
-            <Input
-              placeholder="Beskrivelse"
-              value={productForm.description}
-              onChange={(e) =>
-                setProductForm((f) => ({ ...f, description: e.target.value }))
-              }
-            />
-            <Button type="submit">Opret</Button>
-          </form>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Tilføj Udgift</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form className="flex gap-2 flex-wrap" onSubmit={handleExpenseSubmit}>
-            <select
-              className="border rounded px-2 py-1"
-              value={expenseForm.product_id}
-              onChange={(e) =>
-                setExpenseForm((f) => ({ ...f, product_id: e.target.value }))
-              }
-              required
-            >
-              <option value="">Vælg produkt</option>
-              {products.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-            <Input
-              placeholder="Beløb"
-              type="number"
-              value={expenseForm.amount}
-              onChange={(e) =>
-                setExpenseForm((f) => ({ ...f, amount: e.target.value }))
-              }
-              required
-            />
-            <Input
-              placeholder="Beskrivelse"
-              value={expenseForm.description}
-              onChange={(e) =>
-                setExpenseForm((f) => ({ ...f, description: e.target.value }))
-              }
-            />
-            <Button type="submit">Tilføj</Button>
-          </form>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Tilføj Omsætning</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form className="flex gap-2 flex-wrap" onSubmit={handleRevenueSubmit}>
-            <select
-              className="border rounded px-2 py-1"
-              value={revenueForm.product_id}
-              onChange={(e) =>
-                setRevenueForm((f) => ({ ...f, product_id: e.target.value }))
-              }
-              required
-            >
-              <option value="">Vælg produkt</option>
-              {products.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-            <Input
-              placeholder="Beløb"
-              type="number"
-              value={revenueForm.amount}
-              onChange={(e) =>
-                setRevenueForm((f) => ({ ...f, amount: e.target.value }))
-              }
-              required
-            />
-            <Button type="submit">Tilføj</Button>
-          </form>
+          <div className="flex gap-8 text-lg font-bold">
+            <div>
+              Omsætning:{" "}
+              <span className="text-green-500">{lifetimeRevenue}</span>
+            </div>
+            <div>
+              Indtjening:{" "}
+              <span className="text-blue-500">{lifetimeProfit}</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
       <Card>
@@ -251,19 +158,126 @@ export default function FinanceDashboard() {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Lifetime Totals</CardTitle>
+          <CardTitle>Opret Produkt</CardTitle>
+          <CardDescription>Navn, pris og beskrivelse</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-8 text-lg font-bold">
-            <div>
-              Omsætning:{" "}
-              <span className="text-green-500">{lifetimeRevenue}</span>
-            </div>
-            <div>
-              Indtjening:{" "}
-              <span className="text-blue-500">{lifetimeProfit}</span>
-            </div>
-          </div>
+          <form className="flex gap-2 flex-wrap" onSubmit={handleProductSubmit}>
+            <Input
+              placeholder="Navn"
+              value={productForm.name}
+              onChange={(e) =>
+                setProductForm((f) => ({ ...f, name: e.target.value }))
+              }
+              required
+            />
+            <Input
+              placeholder="Pris"
+              type="number"
+              value={productForm.price}
+              onChange={(e) =>
+                setProductForm((f) => ({ ...f, price: e.target.value }))
+              }
+              required
+            />
+            <Input
+              placeholder="Beskrivelse"
+              value={productForm.description}
+              onChange={(e) =>
+                setProductForm((f) => ({ ...f, description: e.target.value }))
+              }
+            />
+            <Button className="bg-yellow-400" type="submit">
+              Opret
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Tilføj Udgift</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form className="flex gap-2 flex-wrap" onSubmit={handleExpenseSubmit}>
+            <select
+              className="bg-background text-white border rounded px-2 py-1"
+              value={expenseForm.product_id}
+              onChange={(e) =>
+                setExpenseForm((f) => ({ ...f, product_id: e.target.value }))
+              }
+              required
+            >
+              <option value="">Vælg produkt</option>
+              {products.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            <Input
+              placeholder="Beløb"
+              type="number"
+              value={expenseForm.amount}
+              onChange={(e) =>
+                setExpenseForm((f) => ({ ...f, amount: e.target.value }))
+              }
+              required
+            />
+            <Input
+              placeholder="Beskrivelse"
+              value={expenseForm.description}
+              onChange={(e) =>
+                setExpenseForm((f) => ({ ...f, description: e.target.value }))
+              }
+            />
+            <Button className="bg-yellow-400" type="submit">
+              Tilføj
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Tilføj Omsætning</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form
+            className=" flex gap-2 flex-wrap"
+            onSubmit={handleRevenueSubmit}
+          >
+            <select
+              className="bg-background text-white border rounded px-2 py-1"
+              value={revenueForm.product_id}
+              onChange={(e) =>
+                setRevenueForm((f) => ({ ...f, product_id: e.target.value }))
+              }
+              required
+            >
+              <option
+                className="bg-background text-white border border-gray-700 rounded px-2 py-1"
+                value=""
+              >
+                Vælg produkt
+              </option>
+              {products.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            <Input
+              placeholder="Beløb"
+              type="number"
+              value={revenueForm.amount}
+              onChange={(e) =>
+                setRevenueForm((f) => ({ ...f, amount: e.target.value }))
+              }
+              required
+            />
+            <Button className="bg-yellow-400" type="submit">
+              Tilføj
+            </Button>
+          </form>
         </CardContent>
       </Card>
     </div>
