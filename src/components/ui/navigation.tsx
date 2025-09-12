@@ -1,5 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "./button";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { LogIn, Home, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogOut } from "lucide-react";
@@ -16,6 +18,7 @@ export const Navigation = ({
   onLogout,
 }: NavigationProps) => {
   const location = useLocation();
+  const { t } = useTranslation();
 
   const navLinkClasses = (active: boolean) =>
     cn(
@@ -28,12 +31,12 @@ export const Navigation = ({
     );
 
   return (
-    <>
-      {/* Top navigation kun på desktop/tablet */}
-      <nav className="border-b border-border bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 hidden md:block">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
-            {/* Brand */}
+    // Top navigation kun på desktop/tablet
+    <nav className="border-b border-border bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 hidden md:block">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20 w-full">
+          {/* Venstre: Brand */}
+          <div className="flex items-center">
             <Link
               to="/"
               className="flex items-center space-x-2 ml-4 sm:ml-6 md:ml-8"
@@ -55,49 +58,51 @@ export const Navigation = ({
                 </span>
               </div>
             </Link>
+          </div>
 
-            {/* Actions */}
-            <div className="flex items-center space-x-4">
-              <Link
-                to="/"
-                className={navLinkClasses(location.pathname === "/")}
-              >
-                <Home className="h-5 w-5" />
-                <span>Hjem</span>
-              </Link>
-              {isAuthenticated ? (
-                <>
-                  {isAdmin && (
-                    <Link
-                      to="/admin"
-                      className={navLinkClasses(location.pathname === "/admin")}
-                    >
-                      <Shield className="h-5 w-5" />
-                      <span>Admin</span>
-                    </Link>
-                  )}
-
-                  <button onClick={onLogout} className={navLinkClasses(false)}>
-                    <LogOut className="h-5 w-5" />
-                    <span>Log ud</span>
-                  </button>
-                </>
-              ) : (
-                <Link to="/auth">
-                  <Button
-                    variant="default"
-                    size="sm"
-                    className="flex items-center space-x-2"
+          {/* Navigation/actions til højre */}
+          <div className="flex items-center space-x-4">
+            <Link
+              to="/"
+              className={navLinkClasses(location.pathname === "/")}
+            >
+              <Home className="h-5 w-5" />
+              <span>{t("nav.home")}</span>
+            </Link>
+            {isAuthenticated ? (
+              <>
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className={navLinkClasses(location.pathname === "/admin")}
                   >
-                    <LogIn className="h-4 w-4" />
-                    <span>Log ind</span>
-                  </Button>
-                </Link>
-              )}
+                    <Shield className="h-5 w-5" />
+                    <span>{t("nav.admin")}</span>
+                  </Link>
+                )}
+                <button onClick={onLogout} className={navLinkClasses(false)}>
+                  <LogOut className="h-5 w-5" />
+                  <span>{t("nav.logout")}</span>
+                </button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="flex items-center space-x-2"
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span>{t("nav.login")}</span>
+                </Button>
+              </Link>
+            )}
+            <div className="ml-4">
+              <LanguageSwitcher />
             </div>
           </div>
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
-};
+}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Seo } from "@/components/Seo";
 import { Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -13,6 +14,7 @@ export default function Contact() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const { t } = useTranslation();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,11 +54,10 @@ export default function Contact() {
       <main className="min-h-[60vh] flex items-center justify-center py-16 px-2">
         <section className="w-full max-w-xl bg-background/80 border border-white/10 shadow-xl rounded-2xl p-8 md:p-12 backdrop-blur-lg">
           <h1 className="text-3xl font-bold mb-4 text-center text-white drop-shadow">
-            Kontakt os
+            {t("contact.title")}
           </h1>
           <p className="mb-2 text-center text-gray-300">
-            Har du spørgsmål eller ønsker du at komme i kontakt med os? Udfyld
-            formularen nedenfor.
+            {t("contact.intro")}
           </p>
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
@@ -64,7 +65,7 @@ export default function Contact() {
                 htmlFor="name"
                 className="block mb-1 font-semibold text-white/80 tracking-wide"
               >
-                Navn
+                {t("contact.name")}
               </label>
               <input
                 id="name"
@@ -74,7 +75,7 @@ export default function Contact() {
                 value={form.name}
                 onChange={handleChange}
                 className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:border-[#FFD700] transition"
-                placeholder="Dit navn"
+                placeholder={t("contact.namePlaceholder")}
                 disabled={loading}
               />
             </div>
@@ -83,7 +84,7 @@ export default function Contact() {
                 htmlFor="email"
                 className="block mb-1 font-semibold text-white/80 tracking-wide"
               >
-                Email
+                {t("contact.email")}
               </label>
               <input
                 id="email"
@@ -93,7 +94,7 @@ export default function Contact() {
                 value={form.email}
                 onChange={handleChange}
                 className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:border-[#FFD700] transition"
-                placeholder="din@email.dk"
+                placeholder={t("contact.emailPlaceholder")}
                 disabled={loading}
               />
             </div>
@@ -102,7 +103,7 @@ export default function Contact() {
                 htmlFor="phone"
                 className="block mb-1 font-semibold text-white/80 tracking-wide"
               >
-                Telefonnummer
+                {t("contact.phone")}
               </label>
               <input
                 id="phone"
@@ -112,7 +113,7 @@ export default function Contact() {
                 value={form.phone}
                 onChange={handleChange}
                 className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:border-[#FFD700] transition"
-                placeholder="Dit telefonnummer (valgfrit)"
+                placeholder={t("contact.phonePlaceholder")}
                 disabled={loading}
               />
             </div>
@@ -121,7 +122,7 @@ export default function Contact() {
                 htmlFor="message"
                 className="block mb-1 font-semibold text-white/80 tracking-wide"
               >
-                Besked
+                {t("contact.message")}
               </label>
               <textarea
                 id="message"
@@ -131,7 +132,7 @@ export default function Contact() {
                 value={form.message}
                 onChange={handleChange}
                 className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-2 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:border-[#FFD700] transition"
-                placeholder="Skriv din besked her..."
+                placeholder={t("contact.messagePlaceholder")}
                 disabled={loading}
               />
             </div>
@@ -142,8 +143,7 @@ export default function Contact() {
             )}
             {success && (
               <div className="text-green-400 text-center font-medium">
-                Besked sendt! Tak for din henvendelse, vi vender tilbage til dig
-                indefor 24 timer.
+                {t("contact.success")}
               </div>
             )}
             <button
@@ -152,11 +152,10 @@ export default function Contact() {
               disabled={loading}
             >
               <Send className="w-5 h-5" />
-              {loading ? "Sender..." : "Send besked"}
+              {loading ? t("contact.sending") : t("contact.send")}
             </button>
             <div className="mb-8 text-center text-yellow-300 font-medium">
-              Vi vender tilbage via angivet telefon eller mail indenfor 24
-              timer.
+              {t("contact.info")}
             </div>
           </form>
         </section>

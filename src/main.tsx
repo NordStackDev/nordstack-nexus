@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import "./i18n";
 import { createRoot } from 'react-dom/client';
 import './index.css';
 
