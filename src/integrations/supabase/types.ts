@@ -63,18 +63,21 @@ export type Database = {
           product_id: string;
           amount: number;
           date: string;
+          description?: string | null;
         };
         Insert: {
           id?: string;
           product_id: string;
           amount: number;
           date?: string;
+          description?: string | null;
         };
         Update: {
           id?: string;
           product_id?: string;
           amount?: number;
           date?: string;
+          description?: string | null;
         };
       };
     };

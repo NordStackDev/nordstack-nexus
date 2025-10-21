@@ -205,9 +205,19 @@ const Admin = () => {
         .order("created_at", { ascending: false });
 
       console.log("[DEBUG] Fetched messages:", data, error);
+      
+      // Log hver besked's ID for at se hvad vi faktisk får
+      if (data) {
+        console.log("[DEBUG] Message IDs:", data.map(m => ({ id: m.id, name: m.name })));
+      }
+      
       if (error) throw error;
+      
+      // Rens state først og opdater med frisk data
+      setMessages([]);
       setMessages(data || []);
     } catch (error) {
+      console.error("[ERROR] Fetch messages failed:", error);
       toast({
         title: "Fejl",
         description: "Kunne ikke hente beskeder",
@@ -337,20 +347,46 @@ const Admin = () => {
 
   // Slet besked
   const deleteMessage = async (id: string) => {
+    console.log("[DEBUG] Attempting to delete message with ID:", id);
     try {
-      const { error } = await supabase.from("messages").delete().eq("id", id);
-      if (error) throw error;
+      const { data, error } = await supabase
+        .from("messages")
+        .delete()
+        .eq("id", id)
+        .select(); // Tilføj select for at se hvad der blev slettet
+      
+      console.log("[DEBUG] Delete result:", { data, error });
+      
+      if (error) {
+        console.error("[ERROR] Supabase delete error:", error);
+        throw error;
+      }
+      
+      // Opdater state optimistisk
+      setMessages((prev) => prev.filter((msg) => msg.id !== id));
+      
       toast({
         title: "Success",
         description: "Besked slettet",
       });
-      fetchMessages();
+      
+      // Hent beskeder igen for at sikre synkronisering
+      await fetchMessages();
     } catch (error: any) {
+      console.error("[ERROR] Delete message failed:", error);
+      console.error("[ERROR] Error details:", {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint
+      });
       toast({
         title: "Fejl",
-        description: error.message || "Kunne ikke slette besked",
+        description: error.message || "Kunne ikke slette besked. Tjek konsollen for detaljer.",
         variant: "destructive",
       });
+      // Genindlæs beskeder ved fejl
+      await fetchMessages();
     }
   };
 

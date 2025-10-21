@@ -34,12 +34,11 @@ export const Navigation = ({
     // Top navigation kun på desktop/tablet
     <nav className="border-b border-border bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 hidden md:block">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 w-full">
-          {/* Venstre: Brand */}
-          <div className="flex items-center">
+        <div className="flex items-center h-20 w-full">
+          <div className="flex items-center flex-shrink-0">
             <Link
               to="/"
-              className="flex items-center space-x-2 ml-4 sm:ml-6 md:ml-8"
+              className="flex items-center space-x-3"
             >
               <div className="flex items-center justify-center">
                 <picture>
@@ -47,13 +46,13 @@ export const Navigation = ({
                   <img
                     src="/NS_logo_nobg.webp"
                     alt="Nordstack"
-                    className="h-16 sm:h-20 md:h-24 w-auto block"
+                    className="h-20 sm:h-24 lg:h-28 w-auto block"
                     loading="lazy"
                   />
                 </picture>
               </div>
-              <div className="hidden sm:block ml-2">
-                <span className="text-xl font-bold text-foreground">
+              <div className="hidden lg:block">
+                <span className="text-xl font-bold text-foreground whitespace-nowrap">
                   Nordstack Nexus
                 </span>
               </div>
@@ -61,7 +60,7 @@ export const Navigation = ({
           </div>
 
           {/* Navigation/actions til højre */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 lg:space-x-6 ml-auto">
             <Link
               to="/"
               className={navLinkClasses(location.pathname === "/")}
@@ -97,7 +96,7 @@ export const Navigation = ({
                 </Button>
               </Link>
             )}
-            <div className="ml-4">
+            <div className="pl-2 border-l border-border/50">
               <LanguageSwitcher />
             </div>
           </div>

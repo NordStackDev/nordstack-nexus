@@ -30,3 +30,14 @@ export async function getRevenues(product_id?: string) {
   const query = supabase.from("revenues").select("*");
   return product_id ? query.eq("product_id", product_id) : query;
 }
+
+// Delete functions
+export async function deleteExpense(id: string) {
+  return supabase.from("expenses").delete().eq("id", id);
+}
+export async function deleteRevenue(id: string) {
+  return supabase.from("revenues").delete().eq("id", id);
+}
+export async function deleteProduct(id: string) {
+  return supabase.from("products").delete().eq("id", id);
+}

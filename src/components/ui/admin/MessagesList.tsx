@@ -43,7 +43,9 @@ export const MessagesList: React.FC<MessagesListProps> = ({
     </CardHeader>
     <CardContent>
       <div className="space-y-4">
-        {messages.map((message) => (
+        {messages.map((message) => {
+          console.log("[MessagesList] Rendering message:", { id: message.id, name: message.name });
+          return (
           <Card
             key={message.id}
             className={!message.is_read ? "border-primary" : ""}
@@ -60,6 +62,8 @@ export const MessagesList: React.FC<MessagesListProps> = ({
                         {message.phone}
                       </>
                     )}
+                    <br />
+                    <span className="text-xs font-mono">ID: {message.id}</span>
                   </CardDescription>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -85,14 +89,17 @@ export const MessagesList: React.FC<MessagesListProps> = ({
                 <Button
                   size="sm"
                   variant="destructive"
-                  onClick={() => deleteMessage(message.id)}
+                  onClick={() => {
+                    console.log("[MessagesList] Delete button clicked for ID:", message.id);
+                    deleteMessage(message.id);
+                  }}
                 >
                   Slet
                 </Button>
               </div>
             </CardContent>
           </Card>
-        ))}
+        )})}
       </div>
     </CardContent>
   </Card>
